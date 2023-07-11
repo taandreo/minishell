@@ -6,7 +6,7 @@ LIBFT = ./lib/libft.a
 LIBFT_DIR = ./libft
 CFLAGS = -Wall -Wextra -Werror
 UNAME := $(shell uname)
-LIBS := -lft
+LIBS := -lft -lreadline
 
 ifeq ($(UNAME), Darwin)
 	CFLAGS = -Wall -Wextra -Werror -arch x86_64

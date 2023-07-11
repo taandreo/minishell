@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:28:51 by tairribe          #+#    #+#             */
-/*   Updated: 2023/07/09 16:35:57 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/07/09 22:54:21 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,15 @@
 
 int	main(void)
 {
-	readline("~> ");
+	char *re;
+	
+
+
+	while (true)
+	{
+		re = readline("~> ");
+		
+		free(re);
+	}
 	return 0;
 }
