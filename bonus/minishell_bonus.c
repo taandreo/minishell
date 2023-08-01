@@ -10,19 +10,18 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "minishell_bonus.h"
 
 int	main(void)
 {
-	char *re;
-	
+	char *prompt;
 
-
+	t_grammar	*grammar;
 	while (true)
 	{
-		re = readline("~> ");
-		
-		free(re);
+		prompt = readline("~> ");
+		tokenizer(grammar, prompt);
+		free(prompt);
 	}
 	return 0;
 }

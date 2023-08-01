@@ -2,3 +2,4 @@ libft/
 minishell
 *.o
 .vscode/
+.idea/

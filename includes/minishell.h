@@ -19,3 +19,5 @@ typedef enum e_bool
 	false,
 	true
 }			t_bool;
+
+void	tokenizer(char *line);
