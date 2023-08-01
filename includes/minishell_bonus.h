@@ -42,4 +42,4 @@ typedef struct e_grammar
 	t_bool	has_append;
 }	t_grammar;
 
-void	tokenizer_bonus(char *line);
+void	tokenizer_bonus(char *line, t_grammar *grammar);

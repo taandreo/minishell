@@ -17,10 +17,12 @@ int	main(void)
 	char *prompt;
 
 	t_grammar	*grammar;
+
+	grammar = NULL;
 	while (true)
 	{
 		prompt = readline("~> ");
-		tokenizer(grammar, prompt);
+		tokenizer_bonus(prompt, grammar);
 		free(prompt);
 	}
 	return 0;
