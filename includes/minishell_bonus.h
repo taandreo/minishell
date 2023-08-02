@@ -10,21 +10,17 @@
 /*                                                                            */
 /* ************************************************************************** */
 
+#include "libft.h"
+#include "ft_printf.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <readline/readline.h>
-
-typedef enum e_bool
-{
-	false,
-	true
-}			t_bool;
 
 typedef struct e_grammar
 {
 	char	*command;
 	char	*arguments;
-	char	**built_ins;
+	char	**builtins;
 	char 	*redirection;
 	char 	*command_part;
 	char	*file_name;
@@ -32,8 +28,7 @@ typedef struct e_grammar
 	char 	*tag;
 	char 	*command_name;
 	char	*path;
-	t_bool	is_command;
-	t_bool	is_builtin;
+	t_bool	has_command;
 	t_bool	has_double_quotes;
 	t_bool	has_single_quotes;
 	t_bool	has_pipe;
@@ -42,4 +37,7 @@ typedef struct e_grammar
 	t_bool	has_append;
 }	t_grammar;
 
-void	tokenizer_bonus(char *line, t_grammar *grammar);
+void	tokenizer_bonus(char *input, t_grammar *grammar);
+void	init_grammar(t_grammar *grammar);
+void	init_builtins(t_grammar *grammar);
+void	copy_builtins_values(t_grammar *grammar);

@@ -11,19 +11,23 @@
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
+#include "ft_printf.h"
+
+
 
 int	main(void)
 {
 	char *prompt;
 
-	t_grammar	*grammar;
+	t_grammar	grammar;
 
-	grammar = NULL;
+	init_grammar(&grammar);
 	while (true)
 	{
 		prompt = readline("~> ");
-		tokenizer_bonus(prompt, grammar);
+		tokenizer_bonus(prompt, &grammar);
 		free(prompt);
 	}
 	return 0;
 }
+
