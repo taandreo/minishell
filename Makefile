@@ -24,6 +24,7 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/tokenizer_bonus.c\
+			tokenizer/command_validation.c\
 			init/init_grammar_bonus.c\
 		)
 

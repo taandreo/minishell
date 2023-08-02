@@ -26,7 +26,7 @@ void	init_builtins(t_grammar *grammar)
 	int i;
 
 	i = 0;
-	grammar->builtins = ft_calloc(8, sizeof(char *));
+	grammar->builtins = ft_calloc(NBR_BUILTINS + 1, sizeof(char *));
 	if (!grammar->builtins)
 	{
 		ft_dprintf(STDERR_FILENO, "Malloc Error\n");
@@ -34,7 +34,7 @@ void	init_builtins(t_grammar *grammar)
 	}
 	while (i < 7)
 	{
-		grammar->builtins[i] = ft_calloc(7, sizeof(char));
+		grammar->builtins[i] = ft_calloc(NBR_BUILTINS, sizeof(char));
 		if (!grammar->builtins[i]) {
 			ft_dprintf(STDERR_FILENO, "Malloc Error\n");
 			exit(1);

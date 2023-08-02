@@ -15,6 +15,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <readline/readline.h>
+#include <sys/stat.h>
+
+# define NBR_BUILTINS 7
+# define NOTEXEC 126
+# define CMDNFND 127
+# define EXIT_OFFSET 128
 
 typedef struct e_grammar
 {
@@ -41,3 +47,5 @@ void	tokenizer_bonus(char *input, t_grammar *grammar);
 void	init_grammar(t_grammar *grammar);
 void	init_builtins(t_grammar *grammar);
 void	copy_builtins_values(t_grammar *grammar);
+t_bool	is_builtin(char *token, t_grammar *grammar);
+t_bool	is_command(char *token);
