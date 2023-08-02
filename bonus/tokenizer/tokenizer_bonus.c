@@ -23,14 +23,14 @@ void	parser_loop(char **split_input, t_grammar *grammar, size_t word_count)
 		if (!grammar->has_command)
 		{
 			if (is_builtin(split_input[i]))
-				handle_builtin(split_input[i], grammar);
+				handle_builtin(split_input, grammar, &i);
 			else if (is_command(split_input[i]))
-				handle_command(split_input, grammar, i);
+				handle_command(split_input, grammar, &i);
 			else
 				handle_not_command_error(split_input[i], grammar);
 		}
 		if (ft_strcmp("<", split_input[i]) == 0)
-			handle_input_redirection(split_input, grammar, i);
+			handle_input_redirection(split_input, grammar, &i);
 		i++;
 	}
 }
