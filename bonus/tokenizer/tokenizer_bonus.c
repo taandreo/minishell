@@ -25,10 +25,10 @@ void	parser_loop(char **split_input, t_grammar *grammar, size_t word_count)
 		{
 			if (is_builtin(split_input[i], grammar))
 				handle_builtin(split_input, grammar, &i);
-			else if (is_command(split_input[i]))
+			else if (is_command(split_input[i], grammar))
 				handle_command(split_input, grammar, &i);
 			else
-				handle_not_command_error(split_input[i], grammar);
+				handle_not_command_error(split_input[i]);
 		}
 		else
 		{
