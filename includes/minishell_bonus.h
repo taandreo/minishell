@@ -20,6 +20,7 @@
 # define NBR_BUILTINS 7
 # define NOTEXEC 126
 # define CMDNFND 127
+# define MISUSE 2
 # define GENERAL_ERROR 1
 # define EXIT_OFFSET 128
 
@@ -30,7 +31,8 @@ typedef struct e_grammar
 	char	**builtins;
 	char 	*redirection;
 	char 	*command_part;
-	char	*file_name;
+	char	*input_file_name;
+	char	*output_file_name;
 	char	*string;
 	char 	*tag;
 	char 	*command_name;
@@ -39,7 +41,8 @@ typedef struct e_grammar
 	t_bool	has_double_quotes;
 	t_bool	has_single_quotes;
 	t_bool	has_pipe;
-	t_bool	has_redirection;
+	t_bool	has_input_redirection;
+	t_bool	has_output_redirection;
 	t_bool	has_heredoc;
 	t_bool	has_append;
 }	t_grammar;
