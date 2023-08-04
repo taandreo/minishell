@@ -20,6 +20,7 @@
 # define NBR_BUILTINS 7
 # define NOTEXEC 126
 # define CMDNFND 127
+# define GENERAL_ERROR 1
 # define EXIT_OFFSET 128
 
 typedef struct e_grammar
@@ -52,3 +53,5 @@ t_bool	is_command(char *token, t_grammar *grammar);
 t_bool	is_redirections(char *token);
 t_bool	is_pipe_or_bonus_operators(char *token);
 void	handle_not_command_error(char *token);
+void	handle_input_redirection(char **split_input, t_grammar *grammar
+		, size_t *i);

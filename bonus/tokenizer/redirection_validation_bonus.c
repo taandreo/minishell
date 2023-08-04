@@ -2,10 +2,10 @@
 
 t_bool	is_redirections(char *token)
 {
-	if (strcmp(token, "<") == 0
-		|| strcmp(token, ">") == 0
-		|| strcmp(token, "<<") == 0
-		|| strcmp(token, ">>") == 0)
+	if (ft_strcmp(token, "<") == 0
+		|| ft_strcmp(token, ">") == 0
+		|| ft_strcmp(token, "<<") == 0
+		|| ft_strcmp(token, ">>") == 0)
 		return (true);
 	return (false);
 }

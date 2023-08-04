@@ -26,17 +26,17 @@ t_bool	is_command(char *token, t_grammar *grammar)
 	struct	stat stats;
 
 	if (stat(token, &stats) == -1) {
-		ft_dprintf(2,"Failed to get file status");
-		exit (1);
+		ft_dprintf(2,"Failed to get file status\n");
+		exit (GENERAL_ERROR);
 	}
 	if (S_ISDIR(stats.st_mode))
 	{
-		ft_dprintf(2, "minishell: %s: Is a directory", token);
+		ft_dprintf(2, "minishell: %s: Is a directory\n", token);
 		exit(NOTEXEC);
 	}
 	if (access(token, F_OK) == 0 && access(token, X_OK) == -1)
 	{
-		ft_dprintf(2, "minishell: %s: Permission denied", token);
+		ft_dprintf(2, "minishell: %s: Permission denied\n", token);
 		exit(NOTEXEC);
 	}
 	if (access(token, F_OK) == -1)
