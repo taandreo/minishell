@@ -8,5 +8,3 @@ t_bool	is_pipe_or_bonus_operators(char *token)
 		return (true);
 	return (false);
 }
-
-
