@@ -34,9 +34,7 @@ void	parser_loop(char **split_input, t_grammar *grammar, size_t word_count)
 		{
 			if (is_redirections(split_input[i]))
 				handle_redirections(split_input, grammar, &i);
-			else if (ft_strcmp("|", split_input[i]) == 0
-				|| ft_strcmp("||", split_input[i]) == 0
-				|| ft_strcmp("&&", split_input[i]) == 0)
+			else if (is_pipe_or_bonus_operators(split_input[i]))
 				handle_pipes_and_bonus_operators(split_input, grammar, &i);
 		}
 		i++;

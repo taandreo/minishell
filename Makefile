@@ -23,9 +23,11 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 		)
 
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
-			tokenizer/tokenizer_bonus.c\
 			tokenizer/command_validation_bonus.c\
+			tokenizer/tokenizer_bonus.c\
 			tokenizer/command_not_found_bonus.c\
+			tokenizer/redirection_validation_bonus.c\
+			tokenizer/pipe_and_bonus_operator_bonus.c\
 			init/init_grammar_bonus.c\
 		)
 
@@ -67,11 +69,12 @@ libft:
 	make -C $(LIBFT_DIR)
 
 clean:
-	rm -f $(OBJS)
+	rm -rf $(OBJS_DIR)
+	rm -rf $(BONUS_OBJS_DIR)
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean
-	rm -f $(NAME) $(LIBFT)
+	rm -f $(NAME) $(NAME_BONUS) $(LIBFT)
 	make fclean -C $(LIBFT_DIR)
 
 re: fclean all

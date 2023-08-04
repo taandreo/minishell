@@ -49,4 +49,6 @@ void	init_builtins(t_grammar *grammar);
 void	copy_builtins_values(t_grammar *grammar);
 t_bool	is_builtin(char *token, t_grammar *grammar);
 t_bool	is_command(char *token, t_grammar *grammar);
+t_bool	is_redirections(char *token);
+t_bool	is_pipe_or_bonus_operators(char *token);
 void	handle_not_command_error(char *token);
