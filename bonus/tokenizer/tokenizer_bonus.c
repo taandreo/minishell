@@ -31,7 +31,7 @@ void	parser_loop(char **split_input, t_grammar *grammar)
 		{
 			if (is_redirections(split_input[i]))
 				handle_redirections(split_input, grammar, &i);
-			else if (is_pipe_or_bonus_operators(split_input[i]))
+			if (is_pipe_or_bonus_operators(split_input[i]))
 				handle_pipes_and_bonus_operators(split_input, grammar, &i);
 		}
 		i++;
@@ -42,10 +42,10 @@ void	handle_redirections(char **split_input, t_grammar *grammar, size_t *i)
 {
 	if (ft_strcmp("<", split_input[*i]) == 0)
 		handle_input_redirection(split_input, grammar, i);
-	else if (ft_strcmp(">", split_input[*i]) == 0)
+	if (ft_strcmp(">", split_input[*i]) == 0)
 		handle_output_redirection(split_input, grammar, i);
-	else if (ft_strcmp(">>", split_input[*i]) == 0)
+	if (ft_strcmp(">>", split_input[*i]) == 0)
 		handle_output_append(split_input, grammar, i);
-	else if (ft_strcmp("<<", split_input[*i]) == 0)
+	if (ft_strcmp("<<", split_input[*i]) == 0)
 		handle_heredoc(split_input, grammar, i);
 }

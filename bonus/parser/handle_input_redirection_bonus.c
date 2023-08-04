@@ -7,6 +7,7 @@ void	handle_input_redirection(char **split_input, t_grammar *grammar
 	check_input_redirection_error(split_input, i);
 	grammar->has_input_redirection = true;
 	grammar->redirection = "<";
+	// TODO: Need rework cause bash implementation is different
 	while (split_input[*i] && !is_pipe_or_bonus_operators(split_input[*i]))
 	{
 		if (ft_strcmp(split_input[*i], "<") == 0)
@@ -34,7 +35,7 @@ void	check_input_redirection_error(char **split_input, const size_t *i)
 {
 	if (access(split_input[*i + 1], F_OK) == -1)
 	{
-		ft_dprintf(2,"minishell: %s:No such file or directory\n", split_input[*i + 1]);
+		ft_dprintf(2,"minishell: %s: No such file or directory\n", split_input[*i + 1]);
 		exit (GENERAL_ERROR);
 	}
 }
