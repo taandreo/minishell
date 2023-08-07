@@ -1,7 +1,7 @@
 #include "minishell_bonus.h"
 
 void	parser_loop(char **split_input, t_grammar *grammar);
-void	handle_redirections(char **split_input, t_grammar *grammar, size_t *i);
+
 
 void	tokenizer_bonus(char *input, t_grammar *grammar)
 {
