@@ -17,15 +17,16 @@
 
 int	main(void)
 {
-	char *prompt;
-
-	t_grammar	grammar;
+	char			*prompt;
+	t_grammar		grammar;
+	t_parse_tree	parse_tree;
 
 	init_grammar(&grammar);
+	init_parse_tree(&parse_tree);
 	while (true)
 	{
 		prompt = readline("~> ");
-		tokenizer_bonus(prompt, &grammar);
+		tokenizer_bonus(prompt, &grammar, &parse_tree);
 		free(prompt);
 	}
 	return 0;
