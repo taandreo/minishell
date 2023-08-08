@@ -13,8 +13,6 @@ void	tokenizer_bonus(char *input, t_grammar *grammar
 	parser_loop(split_input, grammar, parse_tree);
 }
 
-
-
 void	parser_loop(char **split_input, t_grammar *grammar,
 					t_parse_tree *parse_tree)
 {
@@ -45,18 +43,13 @@ void	parser_loop(char **split_input, t_grammar *grammar,
 	}
 }
 
-void	handle_redirections(char **split_input, t_parse_tree *parse_tree, size_t *i)
+void	handle_redirections(char **split_input, t_grammar *grammar,
+							t_parse_tree *parse_tree, size_t *i)
 {
-	if (!parse_tree->pair)
-		parse_tree->pair = allocate_pair();
-	else if (!parse_tree->pair->left)
-		parse_tree->pair->left = allocate_node();
-	else if (!parse_tree->pair->right)
-		parse_tree->pair->right = allocate_node();
 	if (ft_strcmp("<", split_input[*i]) == 0)
-		handle_input_redirection(split_input, grammar, i);
+		handle_input_redirection(split_input, parse_tree, i);
 	else if (ft_strcmp(">", split_input[*i]) == 0)
-		handle_output_redirection(split_input, grammar, i);
+		handle_output_redirection(split_input, parse_tree, i);
 	else if (ft_strcmp(">>", split_input[*i]) == 0)
 		handle_output_append(split_input, grammar, i);
 	else if (ft_strcmp("<<", split_input[*i]) == 0)
