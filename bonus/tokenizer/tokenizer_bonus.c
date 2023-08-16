@@ -159,6 +159,7 @@ void	tokenize_strings(const char *input, size_t *position,
 		else
 			add_token(tokens, TOKEN_COMMAND_NAME, return_string);
 		flags->is_command = false;
+		flags->has_command = true;
 	}
 	else if (flags->is_redirection)
 	{
