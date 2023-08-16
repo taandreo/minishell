@@ -20,12 +20,13 @@ int	main(void)
 	char			*prompt;
 	t_token_list	tokens;
 	size_t			input_len;
+	t_token_flags	flags;
 
 	while (true)
 	{
 		prompt = readline("~> ");
-		input_len = ft_strlen(prompt);
-		tokens = tokenizer(prompt, input_len);
+		flags = init_flags(ft_strlen(prompt));
+		tokens = tokenizer(prompt, &flags);
 		free(prompt);
 	}
 	return 0;

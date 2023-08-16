@@ -1,27 +1,39 @@
 #include "minishell_bonus.h"
 
-char *handle_quotes(const char *input, size_t *position);
+char	*handle_quotes(const char *input, size_t *position);
+void	tokenize_redirections(const char *input, size_t *position,
+							  t_token_list *tokens, t_token_flags *flags);
+void	tokenize_operators(const char *input, size_t *position,
+							  t_token_list *tokens, t_token_flags *flags);
+void	tokenize_strings(const char *input, size_t *position,
+						   t_token_list *tokens, t_token_flags *flags);
 
-t_token_list	tokenizer(char *input, size_t input_len)
+t_token_list	tokenizer(char *input, t_token_flags *flags)
 {
 	t_token_list	tokens;
 	size_t			position;
 	char			c;
-	t_bool			is_command;
-	t_bool			is_redirection;
 
 	position = 0;
-	is_command = true;
-	is_redirection = false;
 	tokens = create_token_list();
-	while (position < input_len)
+	while (position < flags->input_len)
 	{
-		while (ft_is_space(c))
+		c = input[position];
+		if (ft_is_space(c))
+		{
 			position++;
+			continue ;
+		}
 		if (has_quotes(c))
 			add_token(&tokens, TOKEN_STRING, handle_quotes(input, &position));
-		position++;
+		else if (c == '<' || c == '>')
+			tokenize_redirections(input, &position, &tokens, flags);
+		else if (c == '&' || c == '|')
+			tokenize_operators(input, &position, &tokens, flags);
+		else
+			tokenize_strings(input, &position, &tokens, flags);
 	}
+	return (tokens);
 }
 
 char	*handle_quotes(const char *input, size_t *position)
@@ -58,55 +70,90 @@ char	*handle_quotes(const char *input, size_t *position)
 	return (quoted_string);
 }
 
-//void	parser_loop(char **split_input, t_grammar *grammar,
-//					t_parse_tree *parse_tree)
-//{
-//	size_t	i;
-//
-//	i = 0;
-//	while (split_input[i])
-//	{
-//		if (!grammar->has_command)
-//			handle_first_tokens(split_input, grammar, parse_tree, &i);
-//		else
-//		{
-//			if (is_redirections(split_input[i]))
-//				handle_redirections(split_input, grammar, parse_tree, &i);
-//			if (is_pipe_or_bonus_operators(split_input[i]))
-//				handle_pipes_and_bonus_operators(split_input, grammar, &i);
-//		}
-//		i++;
-//	}
-//}
-//
-//void	handle_first_tokens(char **split_input, t_grammar *grammar,
-//							t_parse_tree *parse_tree, size_t *i)
-//{
-//	if (ft_strcmp(split_input[0], "|") == 0
-//		|| ft_strcmp(split_input[0], "||") == 0
-//		|| ft_strcmp(split_input[0], "&&") == 0)
-//		syntax_error(split_input[0]);
-//	if (is_redirections(split_input[*i]))
-//		handle_redirections(split_input, grammar, parse_tree, i);
-//	else if (is_builtin(split_input[*i], grammar))
-//		handle_builtin(split_input, grammar, i);
-//	else if (is_command(split_input[*i], grammar))
-//		handle_command(split_input, grammar, i);
-//	else
-//		handle_not_command_error(split_input[*i]);
-//}
-//
-//void	handle_redirections(char **split_input, t_grammar *grammar,
-//							t_parse_tree *parse_tree, size_t *i)
-//{
-//	if (ft_strncmp("<", split_input[*i], 1) == 0)
-//		handle_input_redirection(split_input, grammar, parse_tree, i);
-//	else if (ft_strncmp(">", split_input[*i], 1) == 0)
-//		handle_output_redirection(split_input, grammar, parse_tree, i);
-//	else if (ft_strncmp(">>", split_input[*i], 2) == 0)
-//		handle_output_append(split_input, grammar, i);
-//	else if (ft_strncmp("<<", split_input[*i], 2) == 0)
-//		handle_heredoc(split_input, grammar, i);
-//	if (!is_pipe_or_bonus_operators(split_input[*i]))
-//		append_command_arguments(split_input, grammar, i);
-//}
+void	tokenize_redirections(const char *input, size_t *position,
+							  t_token_list *tokens, t_token_flags *flags)
+{
+	flags->is_command = false;
+	flags->is_redirection = true;
+	if (input[*position] == '<' && peek_next(input, *position,
+											 flags->input_len) == '<')
+	{
+		*position += 2;
+		add_token(tokens, TOKEN_REDIRECTION_HEREDOC, "<<");
+	}
+	else if (input[*position] == '<')
+	{
+		(*position)++;
+		add_token(tokens, TOKEN_REDIRECTION_INPUT, "<");
+	}
+	else if (input[*position] == '>' && peek_next(input, *position,
+												  flags->input_len) == '>')
+	{
+		*position += 2;
+		add_token(tokens, TOKEN_REDIRECTION_APPEND, ">>");
+	}
+	else if (input[*position] == '>')
+	{
+		(*position)++;
+		add_token(tokens, TOKEN_REDIRECTION_OUTPUT, ">");
+	}
+}
+
+void	tokenize_operators(const char *input, size_t *position,
+						   t_token_list *tokens, t_token_flags *flags)
+{
+	flags->is_command = true;
+	flags->is_redirection = false;
+	if (input[*position] == '|' && peek_next(input, *position,
+											 flags->input_len) == '|')
+	{
+		*position += 2;
+		add_token(tokens, TOKEN_OR, "||");
+	}
+	else if (input[*position] == '|')
+	{
+		(*position)++;
+		add_token(tokens, TOKEN_PIPE, "|");
+	}
+	else if (input[*position] == '&' && peek_next(input, *position,
+												  flags->input_len) == '&')
+	{
+		*position += 2;
+		add_token(tokens, TOKEN_AND, "&&");
+	}
+	else
+	{
+		(*position)++;
+		add_token(tokens, TOKEN_INVALID, "&");
+	}
+}
+
+void	tokenize_strings(const char *input, size_t *position,
+						 t_token_list *tokens, t_token_flags *flags)
+{
+	const char	*start;
+	char		*return_string;
+
+	start = input + *position;
+	while (input[*position] && is_string_start(input[*position]))
+		(*position)++;
+	return_string = ft_strndup(start, input + *position - start);
+	if (!return_string)
+	{
+		ft_dprintf(2, "Error: Failed to allocate memory.");
+		add_token(tokens, TOKEN_ERROR, "Error: Failed to allocate memory.");
+	}
+	if (flags->is_command)
+	{
+		add_token(tokens, TOKEN_COMMAND_NAME, return_string);
+		flags->is_command = false;
+	}
+	else if (flags->is_redirection)
+	{
+		add_token(tokens, TOKEN_FILENAME, return_string);
+		flags->is_redirection = false;
+	}
+	else
+		add_token(tokens, TOKEN_STRING, return_string);
+	free(return_string);
+}
