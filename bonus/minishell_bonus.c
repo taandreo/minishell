@@ -17,7 +17,6 @@ int	main(void)
 {
 	char			*prompt;
 	t_token_list	tokens;
-	size_t			input_len;
 	t_token_flags	flags;
 
 	while (true)

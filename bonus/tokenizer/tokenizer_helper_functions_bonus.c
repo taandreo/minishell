@@ -28,3 +28,21 @@ t_token_flags	init_flags(size_t input_len)
 	flags.has_command = false;
 	return (flags);
 }
+
+t_token_type  get_builtin_token(char *token)
+{
+	if (ft_strcmp(token, "echo") == 0)
+		return (TOKEN_ECHO);
+	else if (ft_strcmp(token, "cd") == 0)
+		return (TOKEN_CD);
+	else if (ft_strcmp(token, "pwd") == 0)
+		return (TOKEN_PWD);
+	else if (ft_strcmp(token, "export") == 0)
+		return (TOKEN_EXPORT);
+	else if (ft_strcmp(token, "unset") == 0)
+		return (TOKEN_UNSET);
+	else if (ft_strcmp(token, "env") == 0)
+		return (TOKEN_ENV);
+	else
+		return (TOKEN_EXIT);
+}

@@ -77,10 +77,8 @@ typedef struct e_token_list
 
 t_token_list	tokenizer(char *input, t_token_flags *flags);
 
-void			init_builtins(t_grammar *grammar);
-void			copy_builtins_values(t_grammar *grammar);
-t_bool			is_builtin(char *token, t_grammar *grammar);
-t_bool			is_command(char *token, t_grammar *grammar);
+t_bool			is_builtin(char *token);
+t_bool			is_command(char *token);
 t_bool			is_redirections(char *token);
 t_bool			is_pipe_or_bonus_operators(char *token);
 void			handle_not_command_error(char *token);
@@ -93,3 +91,4 @@ t_bool			has_quotes(char c);
 char			peek_next(const char *input, size_t position, size_t input_len);
 t_bool			is_string_start(char c);
 t_token_flags	init_flags(size_t input_len);
+t_token_type	get_builtin_token(char *token);

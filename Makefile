@@ -1,6 +1,6 @@
 .PHONY: all clean fclean re log bonus libft
 
-CC = cc
+CC = clang
 NAME = minishell
 NAME_BONUS = minishell_bonus
 LIBFT = lib/libft.a

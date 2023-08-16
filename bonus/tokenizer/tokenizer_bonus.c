@@ -142,7 +142,10 @@ void	tokenize_strings(const char *input, size_t *position,
 	while (input[*position] && is_string_start(input[*position]))
 	{
 		if (input[*position] == '\'' || input[*position] == '\"')
+		{
 			handle_quotes(input, position, tokens);
+			(*position)--;
+		}
 		(*position)++;
 	}
 	return_string = ft_strndup(start, input + *position - start);
@@ -150,7 +153,10 @@ void	tokenize_strings(const char *input, size_t *position,
 		add_token(tokens, TOKEN_ERROR, "Error: Failed to allocate memory.");
 	if (flags->is_command)
 	{
-		add_token(tokens, TOKEN_COMMAND_NAME, return_string);
+		if (is_builtin(return_string))
+			add_token(tokens, get_builtin_token(return_string), return_string);
+		else
+			add_token(tokens, TOKEN_COMMAND_NAME, return_string);
 		flags->is_command = false;
 	}
 	else if (flags->is_redirection)
