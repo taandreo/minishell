@@ -52,6 +52,7 @@ void	tokenize_quotes(const char *input, size_t *position,
 	}
 	else
 		add_token(tokens, TOKEN_STRING, quoted_string);
+	free(quoted_string);
 }
 
 void	tokenize_redirections(const char *input, size_t *pos,
