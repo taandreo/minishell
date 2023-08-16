@@ -19,14 +19,15 @@ int	main(void)
 {
 	char			*prompt;
 	t_grammar		grammar;
-	t_parse_tree	parse_tree;
+	t_parse_tree	*parse_tree;
 
 	init_grammar(&grammar);
-	init_parse_tree(&parse_tree);
+	parse_tree = ft_calloc(1, sizeof(parse_tree));
+	init_parse_tree(parse_tree);
 	while (true)
 	{
 		prompt = readline("~> ");
-		tokenizer_bonus(prompt, &grammar, &parse_tree);
+		tokenizer(prompt, &grammar, parse_tree);
 		free(prompt);
 	}
 	return 0;

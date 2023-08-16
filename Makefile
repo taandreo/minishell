@@ -25,6 +25,7 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/command_validation_bonus.c\
 			tokenizer/tokenizer_bonus.c\
+			tokenizer/tokenizer_utils_bonus.c\
 			tokenizer/command_not_found_bonus.c\
 			tokenizer/redirection_validation_bonus.c\
 			tokenizer/pipe_and_bonus_operator_bonus.c\

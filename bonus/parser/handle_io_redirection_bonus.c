@@ -1,9 +1,9 @@
 #include "minishell_bonus.h"
 
-void	syntax_error(char *token);
 
-void	handle_input_redirection(char **split_input, t_parse_tree *parse_tree,
-								 size_t *i)
+
+void	handle_input_redirection(char **split_input, t_grammar *grammar,
+								 t_parse_tree *parse_tree, size_t *i)
 {
 
 	(*i)++;
@@ -17,11 +17,11 @@ void	handle_input_redirection(char **split_input, t_parse_tree *parse_tree,
 	grammar->input_file_name = split_input[*i];
 	(*i)++;
 	if (is_redirections(split_input[*i]))
-		handle_redirections(split_input, grammar, i);
+		handle_redirections(split_input, grammar, parse_tree, i);
 }
 
 void	handle_output_redirection(char **split_input, t_grammar *grammar,
-								  size_t *i)
+								  t_parse_tree *parse_tree, size_t *i)
 {
 	grammar->has_input_redirection = true;
 	grammar->redirection = ">";
