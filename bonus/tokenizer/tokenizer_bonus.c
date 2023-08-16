@@ -108,6 +108,7 @@ void	tokenize_operators(const char *input, size_t *position,
 {
 	flags->is_command = true;
 	flags->is_redirection = false;
+	flags->has_command = false;
 	if (input[*position] == '|'
 		&& peek_next(input, *position, flags->input_len) == '|')
 	{
@@ -163,6 +164,8 @@ void	tokenize_strings(const char *input, size_t *position,
 	{
 		add_token(tokens, TOKEN_FILENAME, return_string);
 		flags->is_redirection = false;
+		if (!flags->has_command)
+			flags->is_command = true;
 	}
 	else
 		add_token(tokens, TOKEN_STRING, return_string);
