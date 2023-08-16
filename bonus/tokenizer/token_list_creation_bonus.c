@@ -3,6 +3,7 @@
 t_token_list	create_token_list(void)
 {
 	t_token_list	token_list;
+
 	token_list.head = NULL;
 	token_list.tail = NULL;
 	token_list.count = 0;
@@ -10,7 +11,7 @@ t_token_list	create_token_list(void)
 }
 
 void	add_token(t_token_list *token_list, t_token_type type,
-				  const char *value)
+			const char *value)
 {
 	t_token_node	*new_node;
 

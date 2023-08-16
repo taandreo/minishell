@@ -4,7 +4,7 @@ t_bool	free_vars_and_return_true(char **dir, char *cmd, t_grammar *grammar);
 t_bool	check_path_var(char *token, t_grammar *grammar);
 void	free_dir(char **dir);
 
-t_bool	is_builtin(char *token, t_grammar *grammar)
+t_bool	is_builtin(char *token)
 {
 	size_t	i;
 
@@ -23,10 +23,11 @@ t_bool	is_builtin(char *token, t_grammar *grammar)
 
 t_bool	is_command(char *token, t_grammar *grammar)
 {
-	struct	stat stats;
+	struct stat	stats;
 
-	if (stat(token, &stats) == -1) {
-		ft_dprintf(2,"Failed to get file status\n");
+	if (stat(token, &stats) == -1)
+	{
+		ft_dprintf(2, "Failed to get file status\n");
 		exit (GENERAL_ERROR);
 	}
 	if (S_ISDIR(stats.st_mode))
@@ -56,7 +57,7 @@ t_bool	check_path_var(char *token, t_grammar *grammar)
 	i = 0;
 	path = getenv("PATH");
 	dir = ft_split(path, ':');
-	while(dir[i])
+	while (dir[i])
 	{
 		tmp = ft_strjoin(dir[i], "/");
 		cmd = ft_strjoin(tmp, token);
@@ -76,7 +77,7 @@ void	free_dir(char **dir)
 	int	i;
 
 	i = 0;
-	while(dir[i])
+	while (dir[i])
 		free(dir[i++]);
 	free(dir);
 }

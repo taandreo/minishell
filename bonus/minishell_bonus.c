@@ -13,8 +13,6 @@
 #include "minishell_bonus.h"
 #include "ft_printf.h"
 
-
-
 int	main(void)
 {
 	char			*prompt;
@@ -29,6 +27,5 @@ int	main(void)
 		tokens = tokenizer(prompt, &flags);
 		free(prompt);
 	}
-	return 0;
+	return (0);
 }
-

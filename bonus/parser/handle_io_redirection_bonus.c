@@ -1,17 +1,15 @@
 #include "minishell_bonus.h"
 
-
-
 void	handle_input_redirection(char **split_input, t_grammar *grammar,
-								 t_parse_tree *parse_tree, size_t *i)
+								t_parse_tree *parse_tree, size_t *i)
 {
-
 	(*i)++;
 	if (is_redirections(split_input[*i]))
 		syntax_error(split_input[*i]);
 	if (access(split_input[*i], F_OK) == -1)
 	{
-		ft_dprintf(2,"minishell: %s: No such file or directory\n", split_input[*i]);
+		ft_dprintf(2, "minishell: %s: No such file or directory\n",
+			split_input[*i]);
 		exit (GENERAL_ERROR);
 	}
 	grammar->input_file_name = split_input[*i];
@@ -21,7 +19,7 @@ void	handle_input_redirection(char **split_input, t_grammar *grammar,
 }
 
 void	handle_output_redirection(char **split_input, t_grammar *grammar,
-								  t_parse_tree *parse_tree, size_t *i)
+								 t_parse_tree *parse_tree, size_t *i)
 {
 	grammar->has_input_redirection = true;
 	grammar->redirection = ">";
