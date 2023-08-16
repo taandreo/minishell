@@ -1,7 +1,7 @@
 #include "minishell_bonus.h"
 
-char	*handle_quotes(const char *input, size_t *position,
-			t_token_list *tokens);
+void	tokenize_quotes(const char *input, size_t *position,
+			t_token_list *tokens, t_token_flags *flags);
 void	tokenize_redirections(const char *input, size_t *position,
 			t_token_list *tokens, t_token_flags *flags);
 void	tokenize_operators(const char *input, size_t *position,
@@ -26,8 +26,7 @@ t_token_list	tokenizer(char *input, t_token_flags *flags)
 			continue ;
 		}
 		if (has_quotes(c))
-			add_token(&tokens, TOKEN_STRING,
-				handle_quotes(input, &position, &tokens));
+			tokenize_quotes(input, &position, &tokens, flags);
 		else if (c == '<' || c == '>')
 			tokenize_redirections(input, &position, &tokens, flags);
 		else if (c == '&' || c == '|')
@@ -38,136 +37,94 @@ t_token_list	tokenizer(char *input, t_token_flags *flags)
 	return (tokens);
 }
 
-char	*handle_quotes(const char *input, size_t *position,
-			t_token_list *tokens)
+void	tokenize_quotes(const char *input, size_t *position,
+			t_token_list *tokens, t_token_flags *flags)
 {
-	char	quote_type;
-	size_t	start;
-	size_t	length;
 	char	*quoted_string;
 
-	quote_type = input[*position];
-	start = *position + 1;
-	(*position)++;
-	while (input[*position] && input[*position] != quote_type)
+	quoted_string = handle_quotes(input, position, tokens);
+	if (flags->is_command)
 	{
-		if (quote_type == '\"' && input[*position] == '$')
-		{
-			// TODO: Variable Expansion
-			(*position)++;
-		}
-		(*position)++;
+		if (is_builtin(quoted_string))
+			add_token(tokens, get_builtin_token(quoted_string), quoted_string);
+		else
+			add_token(tokens, TOKEN_COMMAND_NAME, quoted_string);
 	}
-	if (input[*position] != quote_type)
-	{
-		add_token(tokens, TOKEN_ERROR, "Error: Unclosed quotes.");
-		return (NULL);
-	}
-	length = *position - start;
-	quoted_string = ft_strndup(input + start, length);
-	if (!quoted_string)
-	{
-		add_token(tokens, TOKEN_ERROR, "Error: Unable to alloc memory");
-		return (NULL);
-	}
-	(*position)++;
-	return (quoted_string);
+	else
+		add_token(tokens, TOKEN_STRING, quoted_string);
 }
 
-void	tokenize_redirections(const char *input, size_t *position,
+void	tokenize_redirections(const char *input, size_t *pos,
 			t_token_list *tokens, t_token_flags *flags)
 {
 	flags->is_command = false;
 	flags->is_redirection = true;
-	if (input[*position] == '<'
-		&& peek_next(input, *position, flags->input_len) == '<')
+	flags->has_heredoc = !flags->has_heredoc;
+	if (input[*pos] == '<' && peek_next(input, *pos, flags->input_len) == '<')
 	{
-		*position += 2;
+		*pos += 2;
 		add_token(tokens, TOKEN_REDIRECTION_HEREDOC, "<<");
+		flags->has_heredoc = true;
 	}
-	else if (input[*position] == '<')
+	else if (input[*pos] == '<')
 	{
-		(*position)++;
+		(*pos)++;
 		add_token(tokens, TOKEN_REDIRECTION_INPUT, "<");
 	}
-	else if (input[*position] == '>'
-		&& peek_next(input, *position, flags->input_len) == '>')
+	else if (input[*pos] == '>'
+		&& peek_next(input, *pos, flags->input_len) == '>')
 	{
-		*position += 2;
+		*pos += 2;
 		add_token(tokens, TOKEN_REDIRECTION_APPEND, ">>");
 	}
-	else if (input[*position] == '>')
+	else if (input[*pos] == '>')
 	{
-		(*position)++;
+		(*pos)++;
 		add_token(tokens, TOKEN_REDIRECTION_OUTPUT, ">");
 	}
 }
 
-void	tokenize_operators(const char *input, size_t *position,
+void	tokenize_operators(const char *input, size_t *pos,
 				t_token_list *tokens, t_token_flags *flags)
 {
 	flags->is_command = true;
 	flags->is_redirection = false;
 	flags->has_command = false;
-	if (input[*position] == '|'
-		&& peek_next(input, *position, flags->input_len) == '|')
+	if (input[*pos] == '|' && peek_next(input, *pos, flags->input_len) == '|')
 	{
-		*position += 2;
+		*pos += 2;
 		add_token(tokens, TOKEN_OR, "||");
 	}
-	else if (input[*position] == '|')
+	else if (input[*pos] == '|')
 	{
-		(*position)++;
+		(*pos)++;
 		add_token(tokens, TOKEN_PIPE, "|");
 	}
-	else if (input[*position] == '&'
-		&& peek_next(input, *position, flags->input_len) == '&')
+	else if (input[*pos] == '&'
+		&& peek_next(input, *pos, flags->input_len) == '&')
 	{
-		*position += 2;
+		*pos += 2;
 		add_token(tokens, TOKEN_AND, "&&");
 	}
 	else
 	{
-		(*position)++;
+		(*pos)++;
 		add_token(tokens, TOKEN_INVALID, "&");
 	}
 }
 
-void	tokenize_strings(const char *input, size_t *position,
+void	tokenize_strings(const char *input, size_t *pos,
 				t_token_list *tokens, t_token_flags *flags)
 {
-	const char	*start;
 	char		*return_string;
 
-	start = input + *position;
-	while (input[*position] && is_string_start(input[*position]))
-	{
-		if (input[*position] == '\'' || input[*position] == '\"')
-		{
-			handle_quotes(input, position, tokens);
-			(*position)--;
-		}
-		(*position)++;
-	}
-	return_string = ft_strndup(start, input + *position - start);
+	return_string = get_string_from_input(input, pos, tokens, flags);
 	if (!return_string)
-		add_token(tokens, TOKEN_ERROR, "Error: Failed to allocate memory.");
+		return ;
 	if (flags->is_command)
-	{
-		if (is_builtin(return_string))
-			add_token(tokens, get_builtin_token(return_string), return_string);
-		else
-			add_token(tokens, TOKEN_COMMAND_NAME, return_string);
-		flags->is_command = false;
-		flags->has_command = true;
-	}
+		add_builtin_or_command(return_string, tokens, flags);
 	else if (flags->is_redirection)
-	{
-		add_token(tokens, TOKEN_FILENAME, return_string);
-		flags->is_redirection = false;
-		if (!flags->has_command)
-			flags->is_command = true;
-	}
+		add_filename_or_string(return_string, tokens, flags);
 	else
 		add_token(tokens, TOKEN_STRING, return_string);
 	free(return_string);

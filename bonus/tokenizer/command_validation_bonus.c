@@ -1,6 +1,7 @@
 #include "minishell_bonus.h"
 //
-//t_bool	free_vars_and_return_true(char **dir, char *cmd, t_grammar *grammar);
+//t_bool	free_vars_and_return_true(char **dir, char *cmd,
+// 				t_grammar *grammar);
 //t_bool	check_path_var(char *token, t_grammar *grammar);
 //void	free_dir(char **dir);
 //

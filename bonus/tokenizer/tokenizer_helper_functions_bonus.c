@@ -26,10 +26,11 @@ t_token_flags	init_flags(size_t input_len)
 	flags.is_redirection = false;
 	flags.is_command = true;
 	flags.has_command = false;
+	flags.has_heredoc = false;
 	return (flags);
 }
 
-t_token_type  get_builtin_token(char *token)
+t_token_type	get_builtin_token(char *token)
 {
 	if (ft_strcmp(token, "echo") == 0)
 		return (TOKEN_ECHO);

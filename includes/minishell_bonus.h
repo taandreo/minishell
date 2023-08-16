@@ -10,12 +10,15 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
-#include "ft_printf.h"
-#include <stdlib.h>
-#include <stdio.h>
-#include <readline/readline.h>
-#include <sys/stat.h>
+#ifndef MINISHELL_BONUS_H
+# define MINISHELL_BONUS_H
+
+# include "libft.h"
+# include "ft_printf.h"
+# include <stdlib.h>
+# include <stdio.h>
+# include <readline/readline.h>
+# include <sys/stat.h>
 
 # define NBR_BUILTINS 7
 # define NOTEXEC 126
@@ -47,26 +50,28 @@ typedef enum e_token_type
 	TOKEN_INVALID,
 	TOKEN_ERROR,
 	TOKEN_END
-} t_token_type;
+}	t_token_type;
 
 typedef struct e_token_flags
 {
 	t_bool	is_command;
 	t_bool	is_redirection;
+	t_bool	has_heredoc;
 	t_bool	has_command;
 	size_t	input_len;
-} t_token_flags;
+	char	chr;
+}	t_token_flags;
 
 typedef struct e_token
 {
 	t_token_type	type;
 	char			*value;
-} t_token;
+}	t_token;
 
 typedef struct e_token_node {
 	t_token				token;
 	struct e_token_node	*next;
-} t_token_node;
+}	t_token_node;
 
 typedef struct e_token_list
 {
@@ -76,7 +81,8 @@ typedef struct e_token_list
 }	t_token_list;
 
 t_token_list	tokenizer(char *input, t_token_flags *flags);
-
+char			*handle_quotes(const char *input, size_t *position,
+					t_token_list *tokens);
 t_bool			is_builtin(char *token);
 t_bool			is_command(char *token);
 t_bool			is_redirections(char *token);
@@ -85,10 +91,18 @@ void			handle_not_command_error(char *token);
 void			syntax_error(char *token);
 t_token_list	create_token_list(void);
 void			add_token(t_token_list *token_list, t_token_type type,
-						  const char *value);
+					const char *value);
 void			free_token_list(t_token_list *token_list);
 t_bool			has_quotes(char c);
 char			peek_next(const char *input, size_t position, size_t input_len);
 t_bool			is_string_start(char c);
 t_token_flags	init_flags(size_t input_len);
 t_token_type	get_builtin_token(char *token);
+char			*get_string_from_input(const char *input, size_t *pos,
+					t_token_list *tokens, t_token_flags *flags);
+void			add_builtin_or_command(char *return_string,
+					t_token_list *tokens, t_token_flags *flags);
+void			add_filename_or_string(char *return_string,
+					t_token_list *tokens, t_token_flags *flags);
+
+#endif

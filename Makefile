@@ -30,6 +30,8 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/command_not_found_bonus.c\
 			tokenizer/redirection_validation_bonus.c\
 			tokenizer/pipe_and_bonus_operator_bonus.c\
+			tokenizer/handle_quotes_bonus.c\
+			tokenizer/strings_tokenizer_helper_bonus.c\
 			parser/handle_io_redirection_bonus.c\
 			parser/allocate_parse_tree_bonus.c\
 			init/init_grammar_bonus.c\
