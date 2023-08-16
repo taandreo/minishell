@@ -25,7 +25,8 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/command_validation_bonus.c\
 			tokenizer/tokenizer_bonus.c\
-			tokenizer/tokenizer_utils_bonus.c\
+			tokenizer/token_list_creation_bonus.c\
+			tokenizer/tokenizer_helper_functions_bonus.c\
 			tokenizer/command_not_found_bonus.c\
 			tokenizer/redirection_validation_bonus.c\
 			tokenizer/pipe_and_bonus_operator_bonus.c\
@@ -44,7 +45,7 @@ OBJS_SUBDIR := $(subst $(MANDATORY_DIR), $(OBJS_DIR), $(SRC_SUBDIR))
 BONUS_OBJS_SUBDIR := $(subst $(BONUS_DIR), $(BONUS_OBJS_DIR), $(BONUS_SUBDIR))
 
 $(NAME): $(OBJS) | libft
-	$(CC) $(CFLAGS) $(OBJS) -o $@ -L$(LIBFT_DIR) $(LIBS)
+	$(CC) $(CFLAGS) $(OBJS) -o minishell -L$(LIBFT_DIR) $(LIBS)
 
 $(NAME_BONUS): $(BONUS_OBJS) | libft
 	@if [ -f "$(NAME)" ]; then \

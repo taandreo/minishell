@@ -18,16 +18,14 @@
 int	main(void)
 {
 	char			*prompt;
-	t_grammar		grammar;
-	t_parse_tree	*parse_tree;
+	t_token_list	tokens;
+	size_t			input_len;
 
-	init_grammar(&grammar);
-	parse_tree = ft_calloc(1, sizeof(parse_tree));
-	init_parse_tree(parse_tree);
 	while (true)
 	{
 		prompt = readline("~> ");
-		tokenizer(prompt, &grammar, parse_tree);
+		input_len = ft_strlen(prompt);
+		tokens = tokenizer(prompt, input_len);
 		free(prompt);
 	}
 	return 0;

@@ -26,6 +26,7 @@
 
 typedef enum e_token_type
 {
+	TOKEN_COMMAND_NAME,
 	TOKEN_ECHO,
 	TOKEN_CD,
 	TOKEN_PWD,
@@ -100,8 +101,7 @@ typedef struct e_token_list
 //	t_bool	has_heredoc;
 //}	t_command;
 
-void			tokenizer(char *input, t_grammar *grammar,
-						  t_parse_tree *parse_tree);
+t_token_list	tokenizer(char *input, size_t input_len);
 void			init_grammar(t_grammar *grammar);
 void			init_builtins(t_grammar *grammar);
 void			copy_builtins_values(t_grammar *grammar);
@@ -127,3 +127,4 @@ t_token_list	create_token_list(void);
 void			add_token(t_token_list *token_list, t_token_type type,
 						  const char *value);
 void			free_token_list(t_token_list *token_list);
+t_bool			has_quotes(char c);
