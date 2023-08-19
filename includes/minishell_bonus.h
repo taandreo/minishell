@@ -80,6 +80,65 @@ typedef struct e_token_list
 	size_t			count;
 }	t_token_list;
 
+typedef struct s_argument
+{
+	t_token_type	type;
+	char			*value;
+}	t_argument;
+
+typedef struct s_arguments
+{
+	t_argument			*argument;
+	struct s_arguments	*next;
+}	t_arguments;
+
+typedef struct s_redirection
+{
+	t_token_type	type; // TOKEN_REDIRECTION_INPUT, TOKEN_REDIRECTION_OUTPUT, etc.
+	char			*filename;
+}	t_redirection;
+
+typedef struct s_redirections
+{
+	t_redirection			*redirection;
+	struct s_redirections	*next;
+}	t_redirections;
+
+typedef struct s_builtin_command
+{
+	t_token_type	type;
+	t_arguments		*arguments;
+}	t_builtin_command;
+
+typedef struct s_command_part {
+	t_token_type			type;
+	union {
+		t_builtin_command	*builtin_command;
+		char				*command_name;
+	} u_cmd;
+	t_arguments				*arguments;
+	t_redirections			*redirections;
+}	t_command_part;
+
+typedef struct s_pipeline
+{
+	t_command_part		*command_part;
+	struct s_pipeline	*next; // next command_part in the pipeline
+}	t_pipeline;
+
+typedef struct s_conjunction
+{
+	t_token_type			type; // TOKEN_AND or TOKEN_OR
+	t_pipeline				*pipeline;
+	struct s_conjunction	*next; // next conjunction
+}	t_conjunction;
+
+typedef struct s_command
+{
+	t_pipeline		*pipeline;
+	t_conjunction	*conjunctions;
+}	t_command;
+
 t_token_list	tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(const char *input, size_t *position,
 					t_token_list *tokens);
@@ -99,7 +158,7 @@ t_bool			is_string_start(char c);
 t_token_flags	init_flags(size_t input_len);
 t_token_type	get_builtin_token(char *token);
 char			*get_string_from_input(const char *input, size_t *pos,
-					t_token_list *tokens, t_token_flags *flags);
+					t_token_list *tokens);
 void			add_builtin_or_command(char *return_string,
 					t_token_list *tokens, t_token_flags *flags);
 void			add_filename_or_string(char *return_string,

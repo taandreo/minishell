@@ -1,7 +1,7 @@
 #include "minishell_bonus.h"
 
 char	*get_string_from_input(const char *input, size_t *pos,
-				t_token_list *tokens, t_token_flags *flags)
+				t_token_list *tokens)
 {
 	char		*return_string;
 	const char	*start;

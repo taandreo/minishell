@@ -119,7 +119,7 @@ void	tokenize_strings(const char *input, size_t *pos,
 {
 	char		*return_string;
 
-	return_string = get_string_from_input(input, pos, tokens, flags);
+	return_string = get_string_from_input(input, pos, tokens);
 	if (!return_string)
 		return ;
 	if (flags->is_command)
