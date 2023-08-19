@@ -34,6 +34,7 @@ t_token_list	tokenizer(char *input, t_token_flags *flags)
 		else
 			tokenize_strings(input, &position, &tokens, flags);
 	}
+	add_token(&tokens, TOKEN_END, NULL);
 	return (tokens);
 }
 
