@@ -19,8 +19,8 @@ char	*get_string_from_input(const char *input, size_t *pos,
 	return_string = ft_strndup(start, input + *pos - start);
 	if (!return_string)
 	{
-		add_token(tokens, TOKEN_ERROR, "Error: Failed to allocate memory.");
-		return (NULL);
+		free_token_list(tokens);
+		return (return_mem_alloc_error());
 	}
 	return (return_string);
 }

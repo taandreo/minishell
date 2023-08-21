@@ -17,15 +17,12 @@ char	*handle_quotes(const char *input, size_t *position,
 	*position = advance_position(input, *position, quote_type);
 	if (input[*position] != quote_type)
 	{
-		add_token(tokens, TOKEN_ERROR, "Error: Unclosed quotes.");
+		tokens = add_token(tokens, TOKEN_ERROR, "Error: Unclosed quotes.");
 		return (NULL);
 	}
 	quoted_string = extract_quoted_string(input, start, *position);
 	if (!quoted_string)
-	{
-		add_token(tokens, TOKEN_ERROR, "Error: Unable to alloc memory");
-		return (NULL);
-	}
+		return (return_mem_alloc_error());
 	(*position)++;
 	return (quoted_string);
 }

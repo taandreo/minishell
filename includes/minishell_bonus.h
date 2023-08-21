@@ -39,6 +39,7 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_PIPE,
+	TOKEN_REDIRECTIONS,
 	TOKEN_REDIRECTION_INPUT,
 	TOKEN_REDIRECTION_OUTPUT,
 	TOKEN_REDIRECTION_APPEND,
@@ -68,7 +69,8 @@ typedef struct e_token
 	char			*value;
 }	t_token;
 
-typedef struct e_token_node {
+typedef struct e_token_node
+{
 	t_token				token;
 	struct e_token_node	*next;
 }	t_token_node;
@@ -77,6 +79,7 @@ typedef struct e_token_list
 {
 	t_token_node	*head;
 	t_token_node	*tail;
+	t_token_node	*current;
 	size_t			count;
 }	t_token_list;
 
@@ -94,7 +97,7 @@ typedef struct s_arguments
 
 typedef struct s_redirection
 {
-	t_token_type	type; // TOKEN_REDIRECTION_INPUT, TOKEN_REDIRECTION_OUTPUT, etc.
+	t_token_type	type;
 	char			*filename;
 }	t_redirection;
 
@@ -110,11 +113,13 @@ typedef struct s_builtin_command
 	t_arguments		*arguments;
 }	t_builtin_command;
 
-typedef struct s_command_part {
+typedef struct s_command_part
+{
 	t_token_type			type;
-	union {
-		t_builtin_command	*builtin_command;
-		char				*command_name;
+	union
+	{
+		t_builtin_command	*builtin_cmd;
+		char				*cmd_name;
 	} u_cmd;
 	t_arguments				*arguments;
 	t_redirections			*redirections;
@@ -122,24 +127,24 @@ typedef struct s_command_part {
 
 typedef struct s_pipeline
 {
-	t_command_part		*command_part;
-	struct s_pipeline	*next; // next command_part in the pipeline
+	t_command_part		*cmd_part;
+	struct s_pipeline	*next;
 }	t_pipeline;
 
-typedef struct s_conjunction
+typedef struct s_conjunctions
 {
-	t_token_type			type; // TOKEN_AND or TOKEN_OR
+	t_token_type			type;
 	t_pipeline				*pipeline;
-	struct s_conjunction	*next; // next conjunction
-}	t_conjunction;
+	struct s_conjunctions	*next;
+}	t_conjunctions;
 
 typedef struct s_command
 {
 	t_pipeline		*pipeline;
-	t_conjunction	*conjunctions;
+	t_conjunctions	*conjunctions;
 }	t_command;
 
-t_token_list	tokenizer(char *input, t_token_flags *flags);
+t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(const char *input, size_t *position,
 					t_token_list *tokens);
 t_bool			is_builtin(char *token);
@@ -148,14 +153,18 @@ t_bool			is_redirections(char *token);
 t_bool			is_pipe_or_bonus_operators(char *token);
 void			handle_not_command_error(char *token);
 void			syntax_error(char *token);
-t_token_list	create_token_list(void);
-void			add_token(t_token_list *token_list, t_token_type type,
+t_token_list	*create_token_list(void);
+t_token_list	*add_token(t_token_list *token_list, t_token_type type,
 					const char *value);
 void			free_token_list(t_token_list *token_list);
 t_bool			has_quotes(char c);
 char			peek_next(const char *input, size_t position, size_t input_len);
 t_bool			is_string_start(char c);
 t_token_flags	init_flags(size_t input_len);
+void			move_1_pos_and_add_token(size_t *pos, t_token_list *tokens,
+								 t_token_type type, const char *value);
+void			move_2_pos_and_add_token(size_t *pos, t_token_list *tokens,
+										 t_token_type type, const char *value);
 t_token_type	get_builtin_token(char *token);
 char			*get_string_from_input(const char *input, size_t *pos,
 					t_token_list *tokens);
@@ -163,5 +172,29 @@ void			add_builtin_or_command(char *return_string,
 					t_token_list *tokens, t_token_flags *flags);
 void			add_filename_or_string(char *return_string,
 					t_token_list *tokens, t_token_flags *flags);
+t_command		*parse(t_token_list *tokens);
+t_token			current_token(const t_token_list *tokens);
+t_token_type	current_token_type(t_token_list *tokens);
+void			advance_token(t_token_list *tokens);
+void			*free_and_return_null(void *ptr);
+t_command		*parse_command(t_token_list *tokens);
+void			free_command(t_command *cmd);
+void			free_conjunction(t_conjunctions *conj);
+void			free_pipeline(t_pipeline *pipe);
+void			free_command_part(t_command_part *cmd_part);
+void			free_builtin_command(t_builtin_command *cmd);
+void			free_redirections(t_redirections *redirs);
+void			free_redirection(t_redirection *redir);
+void			free_arguments(t_arguments *args);
+void			free_argument(t_argument *arg);
+void			init_command_part_fields(t_command_part *command_part);
+void			add_subsequent_redirections_to_initial(t_command_part *command_part,
+					t_redirections *initial_redirections);
+t_command_part	*handle_builtin_tokens(t_command_part *command_part,
+					t_token_list *tokens);
+t_command_part	*handle_command_name_tokens(t_command_part *command_part,
+					t_token_list *tokens);
+void			*return_mem_alloc_error(void);
+void			*return_syntax_error(const char *value);
 
 #endif

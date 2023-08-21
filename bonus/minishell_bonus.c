@@ -20,12 +20,15 @@ int	main(void)
 	char			*prompt;
 	t_token_list	tokens;
 	t_token_flags	flags;
+//	t_command		*parse_tree;
 
 	while (true)
 	{
 		prompt = readline("~> ");
 		flags = init_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
+//		tokens.current = tokens.head;
+////		parse_tree = parse(&tokens);
 		print_tokens(&tokens);
 		free(prompt);
 	}
