@@ -1,15 +1,23 @@
 #include "minishell_bonus.h"
 
-void	move_2_pos_and_add_token(size_t *pos, t_token_list *tokens,
-			t_token_type type, const char *value)
-{
-	*pos += 2;
-	add_token(tokens, type, value);
-}
-
-void	move_1_pos_and_add_token(size_t *pos, t_token_list *tokens,
-			t_token_type type, const char *value)
+int	add_token_1_pos(size_t *pos, t_token_list *tokens,
+					   t_token_type type, t_token_flags *flags)
 {
 	(*pos)++;
-	add_token(tokens, type, value);
+	flags->has_heredoc = false;
+	if (type == TOKEN_REDIRECTION_INPUT)
+		return (add_token(tokens, type, "<"));
+	return (add_token(tokens, type, ">"));
+}
+
+int	add_token_2_pos(size_t *pos, t_token_list *tokens,
+			t_token_type type, t_token_flags *flags)
+{
+	*pos += 2;
+	if (type == TOKEN_REDIRECTION_HEREDOC)
+	{
+		flags->has_heredoc = true;
+		return (add_token(tokens, type, "<<"));
+	}
+	return (add_token(tokens, type, ">>"));
 }

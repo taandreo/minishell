@@ -18,7 +18,7 @@ void	print_tokens(t_token_list *tokens);
 int	main(void)
 {
 	char			*prompt;
-	t_token_list	tokens;
+	t_token_list	*tokens;
 	t_token_flags	flags;
 //	t_command		*parse_tree;
 
@@ -32,7 +32,7 @@ int	main(void)
 		print_tokens(&tokens);
 		free(prompt);
 	}
-	return (0);
+	return (SUCCESS);
 }
 
 const char *token_names[] =

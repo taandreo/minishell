@@ -1,5 +1,9 @@
 #include "minishell_bonus.h"
 
+t_token_node	*init_new_node(t_token_list *token_list,
+					t_token_node *new_node, t_token_type type,
+					const char *value);
+
 t_token_list	*create_token_list(void)
 {
 	t_token_list	*token_list;
@@ -14,35 +18,24 @@ t_token_list	*create_token_list(void)
 	return (token_list);
 }
 
-t_token_list *add_token(t_token_list *token_list, t_token_type type,
+int	add_token(t_token_list *token_list, t_token_type type,
 			const char *value)
 {
 	t_token_node	*new_node;
 
 	if (!token_list)
-		return (NULL);
+		return (MISUSE);
 	new_node = (t_token_node *)malloc(sizeof(t_token_node));
+	new_node = init_new_node(token_list, new_node, type, value);
 	if (!new_node)
-	{
-		free_token_list(token_list);
-		return (return_mem_alloc_error());
-	}
-	new_node->token.type = type;
-	new_node->token.value = ft_strdup(value);
-	if (!new_node->token.value)
-	{
-		free_token_list(token_list);
-		free(new_node);
-		return (return_mem_alloc_error());
-	}
-	new_node->next = NULL;
+		return (MISUSE);
 	if (token_list->tail)
 		token_list->tail->next = new_node;
 	else
 		token_list->head = new_node;
 	token_list->tail = new_node;
 	token_list->count++;
-	return (token_list);
+	return (SUCCESS);
 }
 
 void	free_token_list(t_token_list *token_list)
@@ -58,4 +51,25 @@ void	free_token_list(t_token_list *token_list)
 		free(current);
 		current = next;
 	}
+}
+
+t_token_node	*init_new_node(t_token_list *token_list,
+					t_token_node *new_node, t_token_type type,
+					const char *value)
+{
+	if (!new_node)
+	{
+		free_token_list(token_list);
+		return (return_mem_alloc_error());
+	}
+	new_node->token.type = type;
+	new_node->token.value = ft_strdup(value);
+	if (!new_node->token.value)
+	{
+		free_token_list(token_list);
+		free(new_node);
+		return (return_mem_alloc_error());
+	}
+	new_node->next = NULL;
+	return (new_node);
 }
