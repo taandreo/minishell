@@ -29,7 +29,7 @@ t_pipeline	*parse_pipeline(t_token_list *tokens)
 	if (!pipeline->cmd_part)
 		return (free_and_return_null(pipeline));
 	pipeline->next = NULL;
-	if(current_token_type(tokens) == TOKEN_PIPE)
+	if (current_token_type(tokens) == TOKEN_PIPE)
 	{
 		advance_token(tokens);
 		pipeline->next = parse_pipeline(tokens);
@@ -64,29 +64,29 @@ t_conjunctions	*parse_conjuctions(t_token_list *tokens)
 t_command_part	*parse_command_part(t_token_list *tokens)
 {
 	t_command_part	*command_part;
-	t_redirections	*initial_redirections;
+//	t_redirections	*initial_redirections;
 
 	command_part = malloc(sizeof(t_command_part));
 	if (!command_part)
 		return (return_mem_alloc_error());
 	init_command_part_fields(command_part);
-	initial_redirections = parse_redirections(tokens);
+//	initial_redirections = parse_redirections(tokens);
 	if (current_token_type(tokens) >= TOKEN_ECHO
 		&& current_token_type(tokens) <= TOKEN_EXIT)
 		command_part = handle_builtin_tokens(command_part, tokens);
 	else if (current_token_type(tokens) == TOKEN_COMMAND_NAME)
 		command_part = handle_command_name_tokens(command_part, tokens);
-	else if (initial_redirections)
-	{
-		command_part->type = TOKEN_REDIRECTIONS;
-		command_part->redirections = initial_redirections;
-	}
-	else
-	{
-		free_command_part(command_part);
-		return (return_syntax_error(current_token(tokens).value));
-	}
-	add_subsequent_redirections_to_initial(command_part, initial_redirections);
+//	else if (initial_redirections)
+//	{
+//		command_part->type = TOKEN_REDIRECTIONS;
+//		command_part->redirections = initial_redirections;
+//	}
+//	else
+//	{
+//		free_command_part(command_part);
+//		return (return_syntax_error(current_token(tokens).value));
+//	}
+//	add_subsequent_redirections_to_initial(command_part, initial_redirections);
 	return (command_part);
 }
 

@@ -1,8 +1,8 @@
 #include "minishell_bonus.h"
 
-t_token current_token(const t_token_list *tokens)
+t_token	current_token(const t_token_list *tokens)
 {
-	t_token empty_token;
+	t_token	empty_token;
 
 	if (tokens->current)
 		return (tokens->current->token);

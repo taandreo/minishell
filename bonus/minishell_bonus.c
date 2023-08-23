@@ -27,9 +27,11 @@ int	main(void)
 		prompt = readline("~> ");
 		flags = init_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
-//		tokens.current = tokens.head;
-////		parse_tree = parse(&tokens);
-		print_tokens(&tokens);
+//		tokens->current = tokens->head;
+//		parse_tree = parse(&tokens);
+		// Test tokens
+		if (tokens)
+			print_tokens(tokens);
 		free(prompt);
 	}
 	return (SUCCESS);
@@ -47,6 +49,7 @@ const char *token_names[] =
 				"TOKEN_AND",
 				"TOKEN_OR",
 				"TOKEN_PIPE",
+				"TOKEN_REDIRECTIONS",
 				"TOKEN_REDIRECTION_INPUT",
 				"TOKEN_REDIRECTION_OUTPUT",
 				"TOKEN_REDIRECTION_APPEND",

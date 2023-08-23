@@ -1,6 +1,6 @@
 #include "minishell_bonus.h"
 
-t_token_node	*init_new_node(t_token_list *token_list,
+t_token_node	*init_new_node(t_token_list **tokens,
 					t_token_node *new_node, t_token_type type,
 					const char *value);
 
@@ -18,32 +18,34 @@ t_token_list	*create_token_list(void)
 	return (token_list);
 }
 
-int	add_token(t_token_list *token_list, t_token_type type,
+int	add_token(t_token_list **tokens, t_token_type type,
 			const char *value)
 {
 	t_token_node	*new_node;
 
-	if (!token_list)
+	if (!tokens || !*tokens)
 		return (MISUSE);
-	new_node = (t_token_node *)malloc(sizeof(t_token_node));
-	new_node = init_new_node(token_list, new_node, type, value);
+	new_node = NULL;
+	new_node = init_new_node(tokens, new_node, type, value);
 	if (!new_node)
 		return (MISUSE);
-	if (token_list->tail)
-		token_list->tail->next = new_node;
+	if ((*tokens)->tail)
+			(*tokens)->tail->next = new_node;
 	else
-		token_list->head = new_node;
-	token_list->tail = new_node;
-	token_list->count++;
+		(*tokens)->head = new_node;
+	(*tokens)->tail = new_node;
+	(*tokens)->count++;
 	return (SUCCESS);
 }
 
-void	free_token_list(t_token_list *token_list)
+void	free_token_list(t_token_list **token_list_ptr)
 {
 	t_token_node	*current;
 	t_token_node	*next;
 
-	current = token_list->head;
+	if (!token_list_ptr || ! *token_list_ptr)
+		return ;
+	current = (*token_list_ptr)->head;
 	while (current)
 	{
 		next = current->next;
@@ -51,23 +53,27 @@ void	free_token_list(t_token_list *token_list)
 		free(current);
 		current = next;
 	}
+	free(*token_list_ptr);
+	*token_list_ptr = NULL;
 }
 
-t_token_node	*init_new_node(t_token_list *token_list,
+t_token_node	*init_new_node(t_token_list **tokens,
 					t_token_node *new_node, t_token_type type,
 					const char *value)
 {
+	new_node = (t_token_node *)malloc(sizeof(t_token_node));
 	if (!new_node)
 	{
-		free_token_list(token_list);
+		free_token_list(tokens);
 		return (return_mem_alloc_error());
 	}
 	new_node->token.type = type;
 	new_node->token.value = ft_strdup(value);
 	if (!new_node->token.value)
 	{
-		free_token_list(token_list);
 		free(new_node);
+		new_node = NULL;
+		free_token_list(tokens);
 		return (return_mem_alloc_error());
 	}
 	new_node->next = NULL;

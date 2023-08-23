@@ -147,7 +147,9 @@ typedef struct s_command
 
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(const char *input, size_t *position,
-					t_token_list *tokens);
+					t_token_list **tokens);
+int				misuse_or_unclosed_quotes_error(t_token_list **tokens);
+int				unclosed_quotes_error(t_token_list **tokens);
 t_bool			is_builtin(char *token);
 t_bool			is_command(char *token);
 t_bool			is_redirections(char *token);
@@ -155,24 +157,24 @@ t_bool			is_pipe_or_bonus_operators(char *token);
 void			handle_not_command_error(char *token);
 void			syntax_error(char *token);
 t_token_list	*create_token_list(void);
-int				add_token(t_token_list *token_list, t_token_type type,
+int				add_token(t_token_list **tokens, t_token_type type,
 					const char *value);
-void			free_token_list(t_token_list *token_list);
+void			free_token_list(t_token_list **token_list_ptr);
 t_bool			has_quotes(char c);
 char			peek_next(const char *input, size_t position, size_t input_len);
 t_bool			is_string_start(char c);
 t_token_flags	init_flags(size_t input_len);
-int				add_token_1_pos(size_t *pos, t_token_list *tokens,
+int				add_token_1_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
-int 			add_token_2_pos(size_t *pos, t_token_list *tokens,
+int 			add_token_2_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
 t_token_type	get_builtin_token(char *token);
 char			*get_string_from_input(const char *input, size_t *pos,
-					t_token_list *tokens);
+					t_token_list **tokens);
 int				add_builtin_or_command(char *return_string,
-					t_token_list *tokens, t_token_flags *flags);
+					t_token_list **tokens, t_token_flags *flags);
 int				add_filename_or_string(char *return_string,
-					t_token_list *tokens, t_token_flags *flags);
+					t_token_list **tokens, t_token_flags *flags);
 t_command		*parse(t_token_list *tokens);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
