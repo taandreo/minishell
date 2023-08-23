@@ -34,10 +34,13 @@ redirection: '<' 'filename'
            | '<<' 'TAG'
 
 argument: quoted_string
+        | variable
         | 'string'
 
 quoted_string: '"' string_in_double_quotes '"'
              | "'" string_in_single_quotes "'"
+
+variable: '$' 'string'
 
 string_in_double_quotes: /* matches any sequence of characters, including escaped characters and variable expansion */
 string_in_single_quotes: /* matches any sequence of characters, excluding single quotes */
