@@ -24,10 +24,3 @@ void	advance_token(t_token_list *tokens)
 	if (tokens->current && tokens->current->next)
 		tokens->current = tokens->current->next;
 }
-
-void	*free_and_return_null(void *ptr)
-{
-	if (ptr)
-		free(ptr);
-	return (NULL);
-}

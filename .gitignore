@@ -1,5 +1,7 @@
 libft/
 minishell
+minishell.o
 *.o
 .vscode/
 .idea/
+ignore/

@@ -48,35 +48,36 @@ typedef enum e_token_type
 	TOKEN_COMMAND_NAME,
 	TOKEN_FILENAME,
 	TOKEN_STRING,
+	TOKEN_EXIT_CODE,
+	TOKEN_SPACE,
 	TOKEN_SPECIAL_ARG,
 	TOKEN_INVALID,
 	TOKEN_ERROR,
 	TOKEN_END
 }	t_token_type;
 
-typedef struct e_token_flags
+typedef struct s_token_flags
 {
 	t_bool	is_command;
 	t_bool	is_redirection;
 	t_bool	has_heredoc;
 	t_bool	has_command;
 	size_t	input_len;
-	char	chr;
 }	t_token_flags;
 
-typedef struct e_token
+typedef struct s_token
 {
 	t_token_type	type;
 	char			*value;
 }	t_token;
 
-typedef struct e_token_node
+typedef struct s_token_node
 {
 	t_token				token;
-	struct e_token_node	*next;
+	struct s_token_node	*next;
 }	t_token_node;
 
-typedef struct e_token_list
+typedef struct s_token_list
 {
 	t_token_node	*head;
 	t_token_node	*tail;
@@ -179,7 +180,6 @@ t_command		*parse(t_token_list *tokens);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
 void			advance_token(t_token_list *tokens);
-void			*free_and_return_null(void *ptr);
 t_command		*parse_command(t_token_list *tokens);
 void			free_command(t_command *cmd);
 void			free_conjunction(t_conjunctions *conj);
@@ -199,5 +199,12 @@ t_command_part	*handle_command_name_tokens(t_command_part *command_part,
 					t_token_list *tokens);
 void			*return_mem_alloc_error(void);
 void			*return_syntax_error(const char *value);
-
+void			*free_and_return_null(void *ptr);
+void			*free_2_and_return_null(void *ptr1, void *ptr2);
+char			*expand_variable_in_string(const char *input, size_t *pos);
+char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
+char			*substitute_variable(const char *input, size_t *pos,
+					t_token_list **tokens, char *buffer);
+char			*handle_variable_expansion(const char *input, size_t *pos,
+					char *current_str);
 #endif

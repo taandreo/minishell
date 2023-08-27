@@ -1,9 +1,7 @@
 #include "minishell_bonus.h"
 
-static size_t	advance_position(const char *input, size_t position,
-					char quote_type);
-static char		*extract_quoted_string(const char *input, size_t start,
-					size_t end);
+char			*advance_position(const char *input, size_t *pos,
+					t_token_list **tokens, char quote_type);
 
 char	*handle_quotes(const char *input, size_t *position,
 			t_token_list **tokens)
@@ -15,14 +13,14 @@ char	*handle_quotes(const char *input, size_t *position,
 
 	quote_type = input[*position];
 	start = *position + 1;
-	*position = advance_position(input, *position, quote_type);
+	quoted_string = advance_position(input, position, tokens, quote_type);
 	subsequent_string = NULL;
 	if (input[*position] != quote_type)
 	{
 		add_token(tokens, TOKEN_ERROR, "minishell: Unclosed quotes");
 		return (NULL);
 	}
-	quoted_string = extract_quoted_string(input, start, *position);
+//	quoted_string = extract_quoted_string(input, start, *position);
 	if (!quoted_string)
 		return (return_mem_alloc_error());
 	(*position)++;
@@ -37,33 +35,60 @@ char	*handle_quotes(const char *input, size_t *position,
 	return (quoted_string);
 }
 
-static size_t	advance_position(const char *input, size_t position,
-					char quote_type)
+char	*advance_position(const char *input, size_t *pos,
+			t_token_list **tokens, char quote_type)
 {
-	// TODO: maybe use start for variable expansion, keep for later.
-//	size_t	start;
-//
-//	start = position + 1;
-	position++;
-	while (input[position] && input[position] != quote_type)
+	char	*buffer;
+	char	*tmp;
+	size_t	start;
+
+	start = *pos + 1;
+	(*pos)++;
+	tmp = NULL;
+	buffer = ft_strdup("");
+	if (!buffer)
+		return (return_mem_alloc_error());
+	while (input[*pos] && input[*pos] != quote_type)
 	{
-//		if (quote_type == '\"' && input[position] == '$')
-//		{
-//			// TODO: Variable Expansion
-//			position++;
-//		}
-		position++;
+		if (quote_type == '\"' && input[*pos] == '$')
+			tmp = substitute_variable(input, pos, tokens, buffer);
+		else
+		{
+			tmp = ft_strndup(input + *pos, 1);
+			(*pos)++;
+		}
+		if (!tmp)
+		{
+			free(buffer);
+			return (return_mem_alloc_error());
+		}
+		if (ft_strlen(buffer) == 0 && ft_strlen(tmp) == 0)
+			break ;
+		buffer = join_and_cleanup(&buffer, &tmp);
 	}
-	return (position);
+	return (buffer);
 }
 
-static char	*extract_quoted_string(const char *input, size_t start,
-					size_t end)
+char	*substitute_variable(const char *input, size_t *pos,
+			t_token_list **tokens, char *buffer)
 {
-	size_t	length;
-
-	length = end - start;
-	return (ft_strndup(input + start, length));
+	if (input[*pos + 1] == '?')
+	{
+		if (buffer && ft_strlen(buffer) > 0)
+		{
+			if (add_token(tokens, TOKEN_STRING, buffer) != SUCCESS)
+				return (free_and_return_null(buffer));
+			free(buffer);
+			buffer = ft_strdup("");
+		}
+		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
+			return (free_and_return_null(buffer));
+		*pos += 2;
+	}
+	if (ft_strlen(input + *pos + 1) == 0)
+		return (ft_strdup(""));
+	buffer = handle_variable_expansion(input, pos, buffer);
+	return (buffer);
 }
 
 int	misuse_or_unclosed_quotes_error(t_token_list **tokens)

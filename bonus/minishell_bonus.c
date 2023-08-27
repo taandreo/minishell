@@ -57,6 +57,8 @@ const char *token_names[] =
 				"TOKEN_COMMAND_NAME",
 				"TOKEN_FILENAME",
 				"TOKEN_STRING",
+				"TOKEN_EXIT_CODE",
+				"TOKEN_SPACE",
 				"TOKEN_SPECIAL_ARG",
 				"TOKEN_INVALID",
 				"TOKEN_ERROR",

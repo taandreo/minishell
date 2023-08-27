@@ -1,7 +1,7 @@
 ```python
 command: pipeline conjunctions
 
-conjunctions: /* empty */
+conjunctions:/* empty */
             | '&&' pipeline conjunctions
             | '||' pipeline conjunctions
 
