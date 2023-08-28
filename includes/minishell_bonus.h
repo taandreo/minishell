@@ -62,7 +62,10 @@ typedef struct s_token_flags
 	t_bool	is_redirection;
 	t_bool	has_heredoc;
 	t_bool	has_command;
+	t_bool	inside_quotes;
 	size_t	input_len;
+	char	quote_type;
+	char	*string;
 }	t_token_flags;
 
 typedef struct s_token
@@ -148,7 +151,7 @@ typedef struct s_command
 
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(const char *input, size_t *position,
-					t_token_list **tokens);
+					t_token_list **tokens, t_token_flags *flags);
 int				misuse_or_unclosed_quotes_error(t_token_list **tokens);
 int				unclosed_quotes_error(t_token_list **tokens);
 t_bool			is_builtin(char *token);
@@ -171,7 +174,7 @@ int 			add_token_2_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
 t_token_type	get_builtin_token(char *token);
 char			*get_string_from_input(const char *input, size_t *pos,
-					t_token_list **tokens);
+					t_token_list **tokens, t_token_flags *flags);
 int				add_builtin_or_command(char *return_string,
 					t_token_list **tokens, t_token_flags *flags);
 int				add_filename_or_string(char *return_string,
@@ -201,10 +204,10 @@ void			*return_mem_alloc_error(void);
 void			*return_syntax_error(const char *value);
 void			*free_and_return_null(void *ptr);
 void			*free_2_and_return_null(void *ptr1, void *ptr2);
-char			*expand_variable_in_string(const char *input, size_t *pos);
+char			*expand_variable_string(const char *input, size_t *pos);
 char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
 char			*substitute_variable(const char *input, size_t *pos,
-					t_token_list **tokens, char *buffer);
+					t_token_list **tokens, t_token_flags *flags);
 char			*handle_variable_expansion(const char *input, size_t *pos,
-					char *current_str);
+					t_token_flags *flags);
 #endif

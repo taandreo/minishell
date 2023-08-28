@@ -2,42 +2,41 @@
 
 
 t_bool	handle_character(const char *input, size_t *pos, t_token_list **tokens,
-						   char **return_string);
+						   t_token_flags *flags);
 char	*process_quotes(const char *input, size_t *pos, t_token_list **tokens,
-						char *return_string);
+						t_token_flags *flags);
 
 char	*get_string_from_input(const char *input, size_t *pos,
-							   t_token_list **tokens)
+		t_token_list **tokens, t_token_flags *flags)
 {
-	char		*return_string;
 	char		*tmp;
 	const char	*start;
 
+	flags->string = ft_strdup("");
 	start = input + *pos;
-	return_string = ft_strdup("");
 	tmp = NULL;
-	if (!return_string)
+	if (!flags->string)
 		return (return_mem_alloc_error());
 	while (input[*pos] && is_string_start(input[*pos]))
 	{
-		if (handle_character(input, pos, tokens, &return_string))
+		if (handle_character(input, pos, tokens, flags))
 			start = input + *pos;
-		if (!return_string)
+		if (!flags->string)
 			return (NULL);
 	}
 	tmp = ft_strndup(start, input + *pos - start);
 	if (!tmp)
 	{
-		free(return_string);
+		free(flags->string);
 		return (NULL);
 	}
-	if (ft_strlen(tmp) == 0 && ft_strlen(return_string) == 0)
-		return (free_2_and_return_null(return_string, tmp));
-	return (join_and_cleanup(&return_string, &tmp));
+	if (ft_strlen(tmp) == 0 && ft_strlen(flags->string) == 0)
+		return (free_2_and_return_null(flags->string, tmp));
+	return (join_and_cleanup(&flags->string, &tmp));
 }
 
 char	*process_quotes(const char *input, size_t *pos, t_token_list **tokens,
-			char *return_string)
+			t_token_flags *flags)
 {
 	char		*tmp;
 	const char	*start;
@@ -46,31 +45,31 @@ char	*process_quotes(const char *input, size_t *pos, t_token_list **tokens,
 	tmp = ft_strndup(start, input + *pos - start);
 	if (!tmp)
 	{
-		free(return_string);
+		free(flags->string);
 		return (NULL);
 	}
-	return_string = join_and_cleanup(&return_string, &tmp);
-	if (!return_string)
+	flags->string = join_and_cleanup(&flags->string, &tmp);
+	if (!flags->string)
 		return (NULL);
-	tmp = handle_quotes(input, pos, tokens);
+	tmp = handle_quotes(input, pos, tokens, flags);
 	if (!tmp)
 	{
-		free(return_string);
+		free(flags->string);
 		return (NULL);
 	}
-	return (join_and_cleanup(&return_string, &tmp));
+	return (join_and_cleanup(&flags->string, &tmp));
 }
 
 t_bool	handle_character(const char *input, size_t *pos, t_token_list **tokens,
-			char **return_string)
+			t_token_flags *flags)
 {
 	char	*buffer;
 
 	buffer = NULL;
 	if (input[*pos] == '\'' || input[*pos] == '\"')
 	{
-		*return_string = process_quotes(input, pos, tokens, *return_string);
-		return (*return_string != NULL);
+		flags->string = process_quotes(input, pos, tokens, flags);
+		return (flags->string != NULL);
 	}
 	if (input[*pos] == '$')
 	{
@@ -80,33 +79,33 @@ t_bool	handle_character(const char *input, size_t *pos, t_token_list **tokens,
 				&& (*tokens)->tail->token.type == TOKEN_STRING)
 			{
 				if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
-					return (free_and_return_null(*return_string) != NULL);
+					return (free_and_return_null(flags->string) != NULL);
 			}
-			if (*return_string && ft_strlen(*return_string) > 0)
+			if (flags->string && ft_strlen(flags->string) > 0)
 			{
-				if (add_token(tokens, TOKEN_STRING, *return_string) != SUCCESS)
-					return (free_and_return_null(*return_string) != NULL);
-				free(*return_string);
-				*return_string = ft_strdup("");
+				if (add_token(tokens, TOKEN_STRING, flags->string) != SUCCESS)
+					return (free_and_return_null(flags->string) != NULL);
+				free(flags->string);
+				flags->string = ft_strdup("");
 			}
 			if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
-				return (free_and_return_null(*return_string) != NULL);
+				return (free_and_return_null(flags->string) != NULL);
 			*pos += 2;
 			if (input[*pos] == ' ')
 			{
 				if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
-					return (free_and_return_null(*return_string) != NULL);
+					return (free_and_return_null(flags->string) != NULL);
 				(*pos)++;
 			}
 			return (true);
 		}
-		*return_string = handle_variable_expansion(input, pos, *return_string);
-		return (*return_string != NULL);
+		flags->string = handle_variable_expansion(input, pos, flags);
+		return (flags->string != NULL);
 	}
 	buffer = ft_strndup(input + *pos, 1);
 	if (!buffer)
-		return (free_and_return_null(*return_string) != NULL);
-	*return_string = join_and_cleanup(return_string, &buffer);
+		return (free_and_return_null(flags->string) != NULL);
+	flags->string = join_and_cleanup(&flags->string, &buffer);
 	(*pos)++;
 	return (true);
 }
@@ -127,15 +126,16 @@ char	*join_and_cleanup(char **malloced_str1, char **malloced_str2)
 	return (new_str);
 }
 
-char	*handle_variable_expansion(const char *input, size_t *pos, char *current_str)
+char	*handle_variable_expansion(const char *input, size_t *pos,
+			t_token_flags *flags)
 {
 	char	*tmp;
 
-	tmp = expand_variable_in_string(input, pos);
+	tmp = expand_variable_string(input, pos);
 	if (!tmp)
 	{
-		free(current_str);
+		free(flags->string);
 		return (NULL);
 	}
-	return (join_and_cleanup(&current_str, &tmp));
+	return (tmp);
 }

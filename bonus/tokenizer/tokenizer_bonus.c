@@ -46,7 +46,8 @@ int	tokenize_quotes(const char *input, size_t *position,
 
 	if (!tokens || !*tokens)
 		return (MISUSE);
-	quoted_string = handle_quotes(input, position, tokens);
+
+	quoted_string = handle_quotes(input, position, tokens, flags);
 	if (!quoted_string)
 		return (misuse_or_unclosed_quotes_error(tokens));
 	if (flags->is_command)
@@ -100,7 +101,7 @@ int	tokenize_strings(const char *input, size_t *pos,
 
 	if (!tokens || !*tokens)
 		return (MISUSE);
-	return_string = get_string_from_input(input, pos, tokens);
+	return_string = get_string_from_input(input, pos, tokens, flags);
 	if (!return_string)
 		return (misuse_or_unclosed_quotes_error(tokens));
 	if (flags->is_command)

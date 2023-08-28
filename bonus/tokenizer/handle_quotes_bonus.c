@@ -1,32 +1,30 @@
 #include "minishell_bonus.h"
 
-char			*advance_position(const char *input, size_t *pos,
-					t_token_list **tokens, char quote_type);
+char			*extract_quoted_string(const char *input, size_t *pos,
+					t_token_list **tokens, t_token_flags *flags);
 
 char	*handle_quotes(const char *input, size_t *position,
-			t_token_list **tokens)
+			t_token_list **tokens, t_token_flags *flags)
 {
-	char	quote_type;
-	size_t	start;
 	char	*quoted_string;
 	char	*subsequent_string;
 
-	quote_type = input[*position];
-	start = *position + 1;
-	quoted_string = advance_position(input, position, tokens, quote_type);
+	flags->quote_type = input[*position];
+	if (!flags->string)
+		flags->string = ft_strdup("");
+	quoted_string = extract_quoted_string(input, position, tokens, flags);
 	subsequent_string = NULL;
-	if (input[*position] != quote_type)
+	if (input[*position] != flags->quote_type)
 	{
 		add_token(tokens, TOKEN_ERROR, "minishell: Unclosed quotes");
 		return (NULL);
 	}
-//	quoted_string = extract_quoted_string(input, start, *position);
 	if (!quoted_string)
 		return (return_mem_alloc_error());
 	(*position)++;
 	if (input[*position] && is_string_start(input[*position]))
 	{
-		subsequent_string = get_string_from_input(input, position, tokens);
+		subsequent_string = get_string_from_input(input, position, tokens, flags);
 		quoted_string = ft_strjoin(quoted_string, subsequent_string);
 		if (!quoted_string)
 			return (return_mem_alloc_error());
@@ -35,23 +33,17 @@ char	*handle_quotes(const char *input, size_t *position,
 	return (quoted_string);
 }
 
-char	*advance_position(const char *input, size_t *pos,
-			t_token_list **tokens, char quote_type)
+char	*extract_quoted_string(const char *input, size_t *pos,
+			t_token_list **tokens, t_token_flags *flags)
 {
-	char	*buffer;
 	char	*tmp;
-	size_t	start;
 
-	start = *pos + 1;
 	(*pos)++;
 	tmp = NULL;
-	buffer = ft_strdup("");
-	if (!buffer)
-		return (return_mem_alloc_error());
-	while (input[*pos] && input[*pos] != quote_type)
+	while (input[*pos] && input[*pos] != flags->quote_type)
 	{
-		if (quote_type == '\"' && input[*pos] == '$')
-			tmp = substitute_variable(input, pos, tokens, buffer);
+		if (flags->quote_type == '\"' && input[*pos] == '$')
+			tmp = substitute_variable(input, pos, tokens, flags);
 		else
 		{
 			tmp = ft_strndup(input + *pos, 1);
@@ -59,36 +51,38 @@ char	*advance_position(const char *input, size_t *pos,
 		}
 		if (!tmp)
 		{
-			free(buffer);
+			free(flags->string);
 			return (return_mem_alloc_error());
 		}
-		if (ft_strlen(buffer) == 0 && ft_strlen(tmp) == 0)
-			break ;
-		buffer = join_and_cleanup(&buffer, &tmp);
+		flags->string = join_and_cleanup(&flags->string, &tmp);
 	}
-	return (buffer);
+	return (flags->string);
 }
 
 char	*substitute_variable(const char *input, size_t *pos,
-			t_token_list **tokens, char *buffer)
+			t_token_list **tokens, t_token_flags *flags)
 {
+	char	*var;
+
+	var = ft_strdup("");
 	if (input[*pos + 1] == '?')
 	{
-		if (buffer && ft_strlen(buffer) > 0)
+		if (flags->string && ft_strlen(flags->string) > 0)
 		{
-			if (add_token(tokens, TOKEN_STRING, buffer) != SUCCESS)
-				return (free_and_return_null(buffer));
-			free(buffer);
-			buffer = ft_strdup("");
+			if (add_token(tokens, TOKEN_STRING, flags->string) != SUCCESS)
+				return (free_and_return_null(flags->string));
+			free(flags->string);
+			flags->string = NULL;
 		}
 		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
-			return (free_and_return_null(buffer));
+			return (free_and_return_null(flags->string));
 		*pos += 2;
 	}
-	if (ft_strlen(input + *pos + 1) == 0)
-		return (ft_strdup(""));
-	buffer = handle_variable_expansion(input, pos, buffer);
-	return (buffer);
+	else
+		var = handle_variable_expansion(input, pos, flags);
+//	if (ft_strlen(input + *pos + 1) == 0)
+//		return (ft_strdup(""));
+	return (var);
 }
 
 int	misuse_or_unclosed_quotes_error(t_token_list **tokens)

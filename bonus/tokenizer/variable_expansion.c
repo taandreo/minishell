@@ -2,8 +2,9 @@
 
 t_bool	is_valid_var_name(char c);
 char	*lookup_variable(char *var);
+char	*advance_position(const char *input, size_t *pos);
 
-char	*expand_variable_in_string(const char *input, size_t *pos)
+char	*expand_variable_string(const char *input, size_t *pos)
 {
 	size_t	start_pos;
 	size_t	len;
@@ -15,7 +16,7 @@ char	*expand_variable_in_string(const char *input, size_t *pos)
 	var = ft_strdup("");
 	str = NULL;
 	if (!ft_isalpha(input[start_pos]) && input[start_pos] != '_')
-		return (var);
+		return (advance_position(input, pos));
 	while(input[start_pos + len] && is_valid_var_name(input[start_pos + len]))
 		len++;
 	free(var);
@@ -46,4 +47,16 @@ char	*lookup_variable(char *var)
 	if (!new_str)
 		return (return_mem_alloc_error());
 	return (new_str);
+}
+
+char	*advance_position(const char *input, size_t *pos)
+{
+	char	*var;
+
+	while (is_string_start(input[*pos]))
+		(*pos)++;
+	var = ft_strdup("");
+	if (!var)
+		return (return_mem_alloc_error());
+	return (var);
 }
