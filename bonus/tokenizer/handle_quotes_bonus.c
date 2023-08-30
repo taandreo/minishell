@@ -25,10 +25,9 @@ char	*handle_quotes(const char *input, size_t *position,
 	if (input[*position] && is_string_start(input[*position]))
 	{
 		subsequent_string = get_string_from_input(input, position, tokens, flags);
-		quoted_string = ft_strjoin(quoted_string, subsequent_string);
+		quoted_string = join_and_cleanup(&quoted_string, &subsequent_string);
 		if (!quoted_string)
 			return (return_mem_alloc_error());
-		free(subsequent_string);
 	}
 	return (quoted_string);
 }
@@ -70,16 +69,16 @@ char	*substitute_variable(const char *input, size_t *pos,
 		if (flags->string && ft_strlen(flags->string) > 0)
 		{
 			if (add_token(tokens, TOKEN_STRING, flags->string) != SUCCESS)
-				return (free_and_return_null(flags->string));
+				return (free_2_and_return_null(flags->string, var));
 			free(flags->string);
 			flags->string = ft_strdup("");
 		}
 		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
-			return (free_and_return_null(flags->string));
+			return (free_2_and_return_null(flags->string, var));
 		*pos += 2;
 	}
 	else
-		var = handle_variable_expansion(input, pos, flags);
+		var = handle_variable_expansion(input, pos, flags, &var);
 //	if (ft_strlen(input + *pos + 1) == 0)
 //		return (ft_strdup(""));
 	return (var);

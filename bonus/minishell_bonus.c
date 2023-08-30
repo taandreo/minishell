@@ -24,6 +24,7 @@ int	main(void)
 
 	while (true)
 	{
+//		prompt = ft_strdup("echo a\"e$? $HOME/\"teste");
 		prompt = readline("~> ");
 		flags = init_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
@@ -32,7 +33,9 @@ int	main(void)
 		// Test tokens
 		if (tokens)
 			print_tokens(tokens);
+		free_token_list(&tokens);
 		free(prompt);
+		return 0;
 	}
 	return (SUCCESS);
 }

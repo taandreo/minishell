@@ -99,7 +99,7 @@ t_bool	handle_character(const char *input, size_t *pos, t_token_list **tokens,
 			}
 			return (true);
 		}
-		flags->string = handle_variable_expansion(input, pos, flags);
+		flags->string = handle_variable_expansion(input, pos, flags, &flags->string);
 		return (flags->string != NULL);
 	}
 	buffer = ft_strndup(input + *pos, 1);
@@ -127,14 +127,20 @@ char	*join_and_cleanup(char **malloced_str1, char **malloced_str2)
 }
 
 char	*handle_variable_expansion(const char *input, size_t *pos,
-			t_token_flags *flags)
+			t_token_flags *flags, char **var)
 {
-	char	*tmp;
+	char *tmp;
 
+	if (var && *var)
+	{
+		free(*var);
+		*var = NULL;
+	}
 	tmp = expand_variable_string(input, pos);
 	if (!tmp)
 	{
-		free(flags->string);
+		if (flags->string)
+			free(flags->string);
 		return (NULL);
 	}
 	return (tmp);

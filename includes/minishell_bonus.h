@@ -209,5 +209,5 @@ char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
 char			*substitute_variable(const char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 char			*handle_variable_expansion(const char *input, size_t *pos,
-					t_token_flags *flags);
+					t_token_flags *flags, char **var);
 #endif
