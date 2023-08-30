@@ -35,7 +35,6 @@ int	main(void)
 			print_tokens(tokens);
 		free_token_list(&tokens);
 		free(prompt);
-		return 0;
 	}
 	return (SUCCESS);
 }
