@@ -72,7 +72,7 @@ char	*substitute_variable(const char *input, size_t *pos,
 			if (add_token(tokens, TOKEN_STRING, flags->string) != SUCCESS)
 				return (free_and_return_null(flags->string));
 			free(flags->string);
-			flags->string = NULL;
+			flags->string = ft_strdup("");
 		}
 		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
 			return (free_and_return_null(flags->string));

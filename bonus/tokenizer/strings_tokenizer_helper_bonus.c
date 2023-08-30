@@ -57,7 +57,7 @@ char	*process_quotes(const char *input, size_t *pos, t_token_list **tokens,
 		free(flags->string);
 		return (NULL);
 	}
-	return (join_and_cleanup(&flags->string, &tmp));
+	return (tmp);
 }
 
 t_bool	handle_character(const char *input, size_t *pos, t_token_list **tokens,
