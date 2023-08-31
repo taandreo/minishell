@@ -2,7 +2,7 @@
 
 CC = clang
 NAME = minishell
-NAME_BONUS = minishell_bonus
+NAME_BONUS = .minishell_bonus.txt
 LIBFT = lib/libft.a
 LIBFT_DIR = libft
 MANDATORY_DIR := mandatory
@@ -53,16 +53,22 @@ OBJS_SUBDIR := $(subst $(MANDATORY_DIR), $(OBJS_DIR), $(SRC_SUBDIR))
 BONUS_OBJS_SUBDIR := $(subst $(BONUS_DIR), $(BONUS_OBJS_DIR), $(BONUS_SUBDIR))
 
 $(NAME): $(OBJS) | libft
-	@$(CC) $(CFLAGS) $(OBJS) -o minishell -L$(LIBFT_DIR) $(LIBS)
+	@if [ -d "$(BONUS_OBJS_DIR)" ]; then \
+      		rm -rf $(BONUS_OBJS_DIR); \
+      		rm -f $(NAME); \
+    fi
+	@$(CC) $(CFLAGS) $(OBJS) -o $@ -L$(LIBFT_DIR) $(LIBS)
 	@echo ________________________
 	@echo Minishell binary created
 	@echo ________________________
 
 $(NAME_BONUS): $(BONUS_OBJS) | libft
-	@if [ -f "$(NAME)" ]; then \
-  			rm -f $(NAME); \
-  	fi
+	@if [ -d "$(OBJS_DIR)" ]; then \
+      		rm -rf $(OBJS_DIR); \
+      		rm -f $(NAME); \
+    fi
 	@$(CC) $(CFLAGS) $(BONUS_OBJS) -o minishell -L$(LIBFT_DIR) $(LIBS)
+	@touch $@
 	@echo ______________________________
 	@echo Minishell bonus binary created
 	@echo ______________________________

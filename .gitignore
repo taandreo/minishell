@@ -1,6 +1,7 @@
 libft/
 minishell
 minishell.o
+.minishell_bonus.txt
 *.o
 .vscode/
 .idea/
