@@ -65,6 +65,7 @@ typedef struct s_token_flags
 	t_bool	inside_quotes;
 	size_t	input_len;
 	char	quote_type;
+	char	*var;
 	char	*string;
 }	t_token_flags;
 
@@ -209,5 +210,5 @@ char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
 char			*substitute_variable(const char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 char			*handle_variable_expansion(const char *input, size_t *pos,
-					t_token_flags *flags, char **var);
+					t_token_flags *flags);
 #endif

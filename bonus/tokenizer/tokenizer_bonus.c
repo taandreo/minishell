@@ -14,6 +14,7 @@ t_token_list	*tokenizer(char *input, t_token_flags *flags)
 	t_token_list	*tokens;
 	size_t			position;
 	char			c;
+	int				status;
 
 	position = 0;
 	tokens = create_token_list();
@@ -26,15 +27,18 @@ t_token_list	*tokenizer(char *input, t_token_flags *flags)
 			continue ;
 		}
 		if (has_quotes(c))
-			tokenize_quotes(input, &position, &tokens, flags);
+			status = tokenize_quotes(input, &position, &tokens, flags);
 		else if (c == '<' || c == '>')
-			tokenize_redirections(input, &position, &tokens, flags);
+			status = tokenize_redirections(input, &position, &tokens, flags);
 		else if (c == '&' || c == '|')
-			tokenize_operators(input, &position, &tokens, flags);
+			status = tokenize_operators(input, &position, &tokens, flags);
 		else
-			tokenize_strings(input, &position, &tokens, flags);
+			status = tokenize_strings(input, &position, &tokens, flags);
+		if (status != 0)
+			break ;
 	}
-	add_token(&tokens, TOKEN_END, "");
+	if (status == 0)
+		add_token(&tokens, TOKEN_END, "");
 	return (tokens);
 }
 

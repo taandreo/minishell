@@ -9,6 +9,7 @@ char	*handle_quotes(const char *input, size_t *position,
 	char	*quoted_string;
 	char	*subsequent_string;
 
+	flags->inside_quotes = true;
 	flags->quote_type = input[*position];
 	if (!flags->string)
 		flags->string = ft_strdup("");
@@ -78,9 +79,10 @@ char	*substitute_variable(const char *input, size_t *pos,
 		*pos += 2;
 	}
 	else
-		var = handle_variable_expansion(input, pos, flags, &var);
-//	if (ft_strlen(input + *pos + 1) == 0)
-//		return (ft_strdup(""));
+	{
+		free(var);
+		var = handle_variable_expansion(input, pos, flags);
+	}
 	return (var);
 }
 
