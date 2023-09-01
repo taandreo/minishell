@@ -34,10 +34,10 @@ t_token_list	*tokenizer(char *input, t_token_flags *flags)
 			status = tokenize_operators(input, &position, &tokens, flags);
 		else
 			status = tokenize_strings(input, &position, &tokens, flags);
-		if (status != 0)
+		if (status != SUCCESS)
 			break ;
 	}
-	if (status == 0)
+	if (status == SUCCESS)
 		add_token(&tokens, TOKEN_END, "");
 	return (tokens);
 }
@@ -50,7 +50,6 @@ int	tokenize_quotes(const char *input, size_t *position,
 
 	if (!tokens || !*tokens)
 		return (MISUSE);
-
 	quoted_string = handle_quotes(input, position, tokens, flags);
 	if (!quoted_string)
 		return (misuse_or_unclosed_quotes_error(tokens));
@@ -67,7 +66,7 @@ int	tokenize_redirections(const char *input, size_t *pos,
 {
 	flags->is_command = false;
 	flags->is_redirection = true;
-	if (!tokens)
+	if (!tokens || !*tokens)
 		return (MISUSE);
 	if (input[*pos] == '<' && peek_next(input, *pos, flags->input_len) == '<')
 		return (add_token_2_pos(pos, tokens, TOKEN_REDIRECTION_HEREDOC, flags));
@@ -85,7 +84,7 @@ int	tokenize_operators(const char *input, size_t *pos,
 	flags->is_command = true;
 	flags->is_redirection = false;
 	flags->has_command = false;
-	if (!tokens)
+	if (!tokens || !*tokens)
 		return (MISUSE);
 	if (input[*pos] == '|' && peek_next(input, *pos, flags->input_len) == '|')
 		return (add_token_2_pos(pos, tokens, TOKEN_OR, flags));

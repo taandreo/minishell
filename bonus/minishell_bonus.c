@@ -34,6 +34,8 @@ int	main(void)
 		if (tokens)
 			print_tokens(tokens);
 		free_token_list(&tokens);
+		if (flags.var)
+			free(flags.var);
 		free(prompt);
 	}
 	return (SUCCESS);

@@ -46,8 +46,8 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
 BONUS_OBJS = $(patsubst $(BONUS_DIR)%.c, $(BONUS_OBJS_DIR)%.o, $(BONUS))
 # All Src subdirectories
-SRC_SUBDIR := $(shell find $(MANDATORY_DIR) -type d)
-BONUS_SUBDIR := $(shell find $(BONUS_DIR) -type d)
+SRC_SUBDIR := $(dir $(OBJS))
+BONUS_SUBDIR := $(dir $(BONUS_OBJS))
 # Objects Subdirectories
 OBJS_SUBDIR := $(subst $(MANDATORY_DIR), $(OBJS_DIR), $(SRC_SUBDIR))
 BONUS_OBJS_SUBDIR := $(subst $(BONUS_DIR), $(BONUS_OBJS_DIR), $(BONUS_SUBDIR))
@@ -74,15 +74,11 @@ $(NAME_BONUS): $(BONUS_OBJS) | libft
 	@echo ______________________________
 
 $(OBJS_DIR)/%.o: $(MANDATORY_DIR)/%.c
-	@if [ ! -d "$(OBJS_DIR)" ]; then \
-    		mkdir -p $(OBJS_SUBDIR); \
-    fi
+	mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $? -o $@
 
 $(BONUS_OBJS_DIR)/%.o: $(BONUS_DIR)/%.c
-	@if [ ! -d "$(BONUS_OBJS_DIR)" ]; then \
-		mkdir -p $(BONUS_OBJS_SUBDIR); \
-	fi
+	mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $? -o $@
 
 all: $(NAME)
@@ -105,3 +101,5 @@ re: fclean all
 
 git_libft:
 	git clone https://github.com/taandreo/42-libft.git libft
+log:
+	@echo $(BONUS_OBJS)
