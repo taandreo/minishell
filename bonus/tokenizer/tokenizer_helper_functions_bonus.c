@@ -22,7 +22,6 @@ t_token_flags	init_flags(size_t input_len)
 {
 	t_token_flags	flags;
 
-
 	flags.input_len = input_len;
 	flags.is_redirection = false;
 	flags.is_command = true;
@@ -31,6 +30,7 @@ t_token_flags	init_flags(size_t input_len)
 	flags.inside_quotes = false;
 	flags.quote_type = '\0';
 	flags.string = NULL;
+	flags.var = NULL;
 	return (flags);
 }
 

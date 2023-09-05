@@ -20,6 +20,15 @@ endif
 
 ## Minishell Objects###################################################
 MINISHELL_BONUS = $(addprefix $(MINISHELL_BONUS_DIR)/, tokenizer/token_list_creation_bonus.c\
+						tokenizer/tokenizer_helper_functions_bonus.c\
+						tokenizer/tokenizer_bonus.c\
+						tokenizer/redirection_tokenizer_helper_bonus.c\
+						tokenizer/strings_tokenizer_helper_bonus.c\
+						tokenizer/command_validation_bonus.c\
+						tokenizer/command_not_found_bonus.c\
+						tokenizer/handle_quotes_bonus.c\
+						tokenizer/add_string_token_helper.c\
+						tokenizer/variable_expansion.c\
 						error/return_errors_helper_bonus.c\
 		)
 MINISHELL_OBJS = $(patsubst $(MINISHELL_MANDATORY_DIR)/%.c, $(MINISHELL_OBJS_DIR)/%.o, $(MINISHELL_SRCS))
@@ -28,7 +37,10 @@ MINISHELL_BONUS_OBJS = $(patsubst $(MINISHELL_BONUS_DIR)/%.c, $(MINISHELL_BONUS_
 
 # Tester Objects
 TEST_SRCS = $(addprefix $(TEST_DIR)/, main.c\
+				setup_malloc.c\
  				tokenizer/test_add_token.c\
+ 				tokenizer/test_tokenizer_operators.c\
+ 				tokenizer/test_tokenize_redirections.c\
  			)
 TEST_OBJS := $(patsubst $(TEST_DIR)/%.c, $(TEST_OBJS_DIR)/%.o, $(TEST_SRCS))
 TEST_OBJS_SUBDIR := $(dir $(TEST_OBJS))

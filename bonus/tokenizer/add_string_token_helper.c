@@ -1,12 +1,12 @@
 #include "minishell_bonus.h"
 
 int	add_builtin_or_command(char *string, t_token_list **tokens,
-							  t_token_flags *flags)
+		t_token_flags *flags)
 {
-	int exit_status;
+	int	exit_status;
 
 	if (is_builtin(string))
-		exit_status = add_token(tokens, get_builtin_token(string),string);
+		exit_status = add_token(tokens, get_builtin_token(string), string);
 	else
 		exit_status = add_token(tokens, TOKEN_COMMAND_NAME, string);
 	flags->is_command = false;
@@ -15,7 +15,7 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 }
 
 int	add_filename_or_string(char *string, t_token_list **tokens,
-							  t_token_flags *flags)
+		t_token_flags *flags)
 {
 	int	exit_status;
 
@@ -29,19 +29,41 @@ int	add_filename_or_string(char *string, t_token_list **tokens,
 			flags->inside_quotes = false;
 		}
 		else
-		{
-			if (ft_strchr(string, ' ') || ft_strlen(string) == 0)
-			{
-				ft_dprintf(STDERR_FILENO, "minishell: %s: ambiguos redirect\n", flags->var);
-				free_token_list(tokens);
-				return (GENERAL_ERROR);
-			}
-			else
-				exit_status = add_token(tokens, TOKEN_FILENAME, string);
-		}
+			exit_status = check_ambiguous_redirect(string, tokens, flags);
 	}
 	flags->is_redirection = false;
 	if (!flags->has_command)
 		flags->is_command = true;
 	return (exit_status);
+}
+
+int	check_ambiguous_redirect(char *string, t_token_list **tokens,
+		t_token_flags *flags)
+{
+	if (ft_strchr(string, ' ') || ft_strlen(string) == 0)
+	{
+		ft_dprintf(STDERR_FILENO,
+			"minishell: %s: ambiguous redirect\n", flags->var);
+		free_token_list(tokens);
+		return (GENERAL_ERROR);
+	}
+	else
+		return (add_token(tokens, TOKEN_FILENAME, string));
+}
+
+void	*add_unclosed_quotes_token(t_token_list **tokens, t_token_flags *flags,
+			char *quoted_string)
+{
+	add_token(tokens, TOKEN_ERROR, "minishell: Unclosed quotes");
+	if (flags->var)
+	{
+		free(flags->var);
+		flags->var = NULL;
+	}
+	if (quoted_string)
+	{
+		free(quoted_string);
+		flags->string = NULL;
+	}
+	return (NULL);
 }

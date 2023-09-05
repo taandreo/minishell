@@ -26,7 +26,10 @@ int	add_token_2_pos(size_t *pos, t_token_list **tokens,
 		return (add_token(tokens, type, "<<"));
 	}
 	if (type == TOKEN_REDIRECTION_APPEND)
+	{
+		flags->has_heredoc = false;
 		return (add_token(tokens, type, ">>"));
+	}
 	if (type == TOKEN_AND)
 		return (add_token(tokens, type, "&&"));
 	return (add_token(tokens, type, "||"));

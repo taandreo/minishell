@@ -64,6 +64,7 @@ typedef struct s_token_flags
 	t_bool	has_command;
 	t_bool	inside_quotes;
 	size_t	input_len;
+	int		status;
 	char	quote_type;
 	char	*var;
 	char	*string;
@@ -209,6 +210,29 @@ char			*expand_variable_string(const char *input, size_t *pos);
 char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
 char			*substitute_variable(const char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
-char			*handle_variable_expansion(const char *input, size_t *pos,
+char			*strings_handle_variable_expansion(const char *input, size_t *pos,
 					t_token_flags *flags);
+char			*quotes_handle_variable_expansion(const char *input, size_t *pos,
+					t_token_flags *flags);
+void			free_str_and_nullify(char **ptr);
+void			*initialize_var_string(const char *input, size_t pos,
+					t_token_flags *flags, const char  *start);
+void			*add_unclosed_quotes_token(t_token_list **tokens,
+					t_token_flags *flags, char *quoted_string);
+int				check_ambiguous_redirect(char *string, t_token_list **tokens,
+					t_token_flags *flags);
+t_bool			has_variable_expansion(const char *input, size_t *pos,
+					t_token_list **tokens, t_token_flags *flags);
+t_bool			handle_special_case_variable(const char *input, size_t *pos,
+					t_token_list **tokens, t_token_flags *flags);
+int				tokenize_by_category(const char *input, size_t *position,
+					t_token_list **tokens, t_token_flags *flags);
+int				tokenize_quotes(const char *input, size_t *position,
+					t_token_list **tokens, t_token_flags *flags);
+int				tokenize_redirections(const char *input, size_t *position,
+					t_token_list **tokens, t_token_flags *flags);
+int				tokenize_operators(const char *input, size_t *position,
+					t_token_list **tokens, t_token_flags *flags);
+int				tokenize_strings(const char *input, size_t *position,
+					t_token_list **tokens, t_token_flags *flags);
 #endif

@@ -12,7 +12,7 @@ t_command	*parse(t_token_list *tokens)
 			free_command(parse_tree);
 			return_syntax_error(current_token(tokens).value);
 		}
-		exit(2);
+		exit(MISUSE);
 	}
 	return (parse_tree);
 }

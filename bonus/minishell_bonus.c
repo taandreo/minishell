@@ -24,7 +24,7 @@ int	main(void)
 
 	while (true)
 	{
-//		prompt = ft_strdup("echo a\"e$? $HOME/\"teste");
+//		prompt = ft_strdup("echo bla>$FOO$VAR$BAR");
 		prompt = readline("~> ");
 		flags = init_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
@@ -34,9 +34,8 @@ int	main(void)
 		if (tokens)
 			print_tokens(tokens);
 		free_token_list(&tokens);
-		if (flags.var)
-			free(flags.var);
 		free(prompt);
+		exit (flags.status);
 	}
 	return (SUCCESS);
 }

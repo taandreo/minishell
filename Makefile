@@ -23,6 +23,9 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 		)
 
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
+			free_utils.c\
+			tokenizer/tokenize_by_category_bonus.c\
+			tokenizer/init_var_string_bonus.c\
 			tokenizer/command_validation_bonus.c\
 			tokenizer/tokenizer_bonus.c\
 			tokenizer/token_list_creation_bonus.c\
@@ -32,6 +35,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/strings_tokenizer_helper_bonus.c\
 			tokenizer/add_string_token_helper.c\
 			tokenizer/variable_expansion.c\
+			tokenizer/handle_variable_expansion_bonus.c\
 			tokenizer/redirection_tokenizer_helper_bonus.c\
 			parser/parser_bonus.c\
 			parser/parse_command_bonus.c\

@@ -1,33 +1,5 @@
 #include "tester.h"
 
-static size_t successful_mallocs = 0;
-static size_t failed_mallocs = 0;
-static size_t current_malloc_count = 0;
-
-void setup_malloc_behavior(size_t success_count, size_t fail_count)
-{
-	successful_mallocs = success_count;
-	failed_mallocs = fail_count;
-	current_malloc_count = 0;
-}
-
-extern void *__real_malloc(size_t size);
-
-void *__wrap_malloc(size_t size)
-{
-	if (current_malloc_count < successful_mallocs) {
-		current_malloc_count++;
-		return __real_malloc(size);
-	}
-
-	if (current_malloc_count < (successful_mallocs + failed_mallocs)) {
-		current_malloc_count++;
-		return NULL;
-	}
-
-	return __real_malloc(size);
-}
-
 void test_create_token_list_success(void **state)
 {
 	(void) state;
@@ -66,3 +38,149 @@ void test_add_token_second_malloc_fail(void **state)
 	assert_int_equal(result, 2);
 	assert_null(tokens);
 }
+
+void test_add_token_success(void **state)
+{
+	(void) state;
+	t_token_list *tokens = create_token_list();
+
+	int result = add_token(&tokens, TOKEN_ECHO, "echo");
+	assert_int_equal(result, 0);
+	t_token_node *current = tokens->head;
+	assert_int_equal(current->token.type, TOKEN_ECHO);
+	assert_string_equal(current->token.value, "echo");
+
+	result = add_token(&tokens, TOKEN_CD, "cd");
+	assert_int_equal(result, 0);
+	current = current->next;
+	assert_int_equal(current->token.type, TOKEN_CD);
+	assert_string_equal(current->token.value, "cd");
+
+	result = add_token(&tokens, TOKEN_PWD, "pwd");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_PWD);
+	assert_string_equal(current->token.value, "pwd");
+
+	result = add_token(&tokens, TOKEN_EXPORT, "export");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_EXPORT);
+	assert_string_equal(current->token.value, "export");
+
+	result = add_token(&tokens, TOKEN_UNSET, "unset");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_UNSET);
+	assert_string_equal(current->token.value, "unset");
+
+	result = add_token(&tokens, TOKEN_ENV, "env");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_ENV);
+	assert_string_equal(current->token.value, "env");
+
+	result = add_token(&tokens, TOKEN_EXIT, "exit");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_EXIT);
+	assert_string_equal(current->token.value, "exit");
+
+	result = add_token(&tokens, TOKEN_AND, "&&");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_AND);
+	assert_string_equal(current->token.value, "&&");
+
+	result = add_token(&tokens, TOKEN_OR, "||");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_OR);
+	assert_string_equal(current->token.value, "||");
+
+	result = add_token(&tokens, TOKEN_PIPE, "|");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_PIPE);
+	assert_string_equal(current->token.value, "|");
+
+	result = add_token(&tokens, TOKEN_REDIRECTION_INPUT, "<");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_REDIRECTION_INPUT);
+	assert_string_equal(current->token.value, "<");
+
+	result = add_token(&tokens, TOKEN_REDIRECTION_OUTPUT, ">");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_REDIRECTION_OUTPUT);
+	assert_string_equal(current->token.value, ">");
+
+	result = add_token(&tokens, TOKEN_REDIRECTION_APPEND, ">>");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_REDIRECTION_APPEND);
+	assert_string_equal(current->token.value, ">>");
+
+	result = add_token(&tokens, TOKEN_REDIRECTION_HEREDOC, "<<");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_REDIRECTION_HEREDOC);
+	assert_string_equal(current->token.value, "<<");
+
+	result = add_token(&tokens, TOKEN_COMMAND_NAME, "grep");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_COMMAND_NAME);
+	assert_string_equal(current->token.value, "grep");
+
+	result = add_token(&tokens, TOKEN_FILENAME, "input.txt");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_FILENAME);
+	assert_string_equal(current->token.value, "input.txt");
+
+	result = add_token(&tokens, TOKEN_STRING, "hello");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_STRING);
+	assert_string_equal(current->token.value, "hello");
+
+	result = add_token(&tokens, TOKEN_EXIT_CODE, "$?");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_EXIT_CODE);
+	assert_string_equal(current->token.value, "$?");
+
+	result = add_token(&tokens, TOKEN_SPACE, " ");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_SPACE);
+	assert_string_equal(current->token.value, " ");
+
+	result = add_token(&tokens, TOKEN_SPECIAL_ARG, "-n");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_SPECIAL_ARG);
+	assert_string_equal(current->token.value, "-n");
+
+	result = add_token(&tokens, TOKEN_INVALID, "&");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_INVALID);
+	assert_string_equal(current->token.value, "&");
+
+	result = add_token(&tokens, TOKEN_ERROR, "minishell: unclosed quotes.");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_ERROR);
+	assert_string_equal(current->token.value, "minishell: unclosed quotes.");
+
+	result = add_token(&tokens, TOKEN_END, "");
+	current = current->next;
+	assert_int_equal(result, 0);
+	assert_int_equal(current->token.type, TOKEN_END);
+	assert_string_equal(current->token.value, "");
+}
+
+

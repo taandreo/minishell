@@ -17,7 +17,7 @@ char	*expand_variable_string(const char *input, size_t *pos)
 	str = NULL;
 	if (!ft_isalpha(input[start_pos]) && input[start_pos] != '_')
 		return (advance_position(input, pos));
-	while(input[start_pos + len] && is_valid_var_name(input[start_pos + len]))
+	while (input[start_pos + len] && is_valid_var_name(input[start_pos + len]))
 		len++;
 	free(var);
 	var = ft_strndup(input + start_pos, len);
@@ -29,7 +29,7 @@ char	*expand_variable_string(const char *input, size_t *pos)
 	return (str);
 }
 
-t_bool is_valid_var_name(char c)
+t_bool	is_valid_var_name(char c)
 {
 	return (ft_isalnum(c) || c == '_');
 }
@@ -59,4 +59,21 @@ char	*advance_position(const char *input, size_t *pos)
 	if (!var)
 		return (return_mem_alloc_error());
 	return (var);
+}
+
+char	*quotes_handle_variable_expansion(const char *input, size_t *pos,
+		t_token_flags *flags)
+{
+	char	*tmp;
+
+	if (flags->is_redirection)
+		flags->inside_quotes = true;
+	tmp = expand_variable_string(input, pos);
+	if (!tmp)
+	{
+		if (flags->string)
+			free(flags->string);
+		return (NULL);
+	}
+	return (tmp);
 }

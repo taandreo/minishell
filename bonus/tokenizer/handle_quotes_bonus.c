@@ -9,23 +9,22 @@ char	*handle_quotes(const char *input, size_t *position,
 	char	*quoted_string;
 	char	*subsequent_string;
 
-	flags->inside_quotes = true;
 	flags->quote_type = input[*position];
 	if (!flags->string)
 		flags->string = ft_strdup("");
 	quoted_string = extract_quoted_string(input, position, tokens, flags);
 	subsequent_string = NULL;
 	if (input[*position] != flags->quote_type)
-	{
-		add_token(tokens, TOKEN_ERROR, "minishell: Unclosed quotes");
-		return (NULL);
-	}
+		return (add_unclosed_quotes_token(tokens, flags, quoted_string));
 	if (!quoted_string)
 		return (return_mem_alloc_error());
 	(*position)++;
 	if (input[*position] && is_string_start(input[*position]))
 	{
-		subsequent_string = get_string_from_input(input, position, tokens, flags);
+		subsequent_string = get_string_from_input(input, position, tokens,
+				flags);
+		if (!subsequent_string)
+			return (free_and_return_null(quoted_string));
 		quoted_string = join_and_cleanup(&quoted_string, &subsequent_string);
 		if (!quoted_string)
 			return (return_mem_alloc_error());
@@ -36,8 +35,12 @@ char	*handle_quotes(const char *input, size_t *position,
 char	*extract_quoted_string(const char *input, size_t *pos,
 			t_token_list **tokens, t_token_flags *flags)
 {
-	char	*tmp;
+	char		*tmp;
+	const char	*start;
 
+	start = input + *pos;
+	if (!flags->var)
+		flags->var = initialize_var_string(input, *pos, flags, start);
 	(*pos)++;
 	tmp = NULL;
 	while (input[*pos] && input[*pos] != flags->quote_type)
@@ -81,7 +84,7 @@ char	*substitute_variable(const char *input, size_t *pos,
 	else
 	{
 		free(var);
-		var = handle_variable_expansion(input, pos, flags);
+		var = quotes_handle_variable_expansion(input, pos, flags);
 	}
 	return (var);
 }

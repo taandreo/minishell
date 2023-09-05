@@ -30,7 +30,7 @@ int	add_token(t_token_list **tokens, t_token_type type,
 	if (!new_node)
 		return (MISUSE);
 	if ((*tokens)->tail)
-			(*tokens)->tail->next = new_node;
+		(*tokens)->tail->next = new_node;
 	else
 		(*tokens)->head = new_node;
 	(*tokens)->tail = new_node;
