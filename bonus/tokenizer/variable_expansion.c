@@ -66,8 +66,7 @@ char	*quotes_handle_variable_expansion(const char *input, size_t *pos,
 {
 	char	*tmp;
 
-	if (flags->is_redirection)
-		flags->inside_quotes = true;
+	flags->inside_quotes = true;
 	tmp = expand_variable_string(input, pos);
 	if (!tmp)
 	{

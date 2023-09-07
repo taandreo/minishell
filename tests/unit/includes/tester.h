@@ -23,5 +23,6 @@ void test_is_string_start(void **state);
 void test_has_quotes(void **state);
 void test_tokenize_operators_success(void **state);
 void test_tokenize_redirections(void **state);
+void test_initialize_var_string(void **state);
 
 #endif

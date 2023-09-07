@@ -62,6 +62,7 @@ typedef struct s_token_flags
 	t_bool	is_redirection;
 	t_bool	has_heredoc;
 	t_bool	has_command;
+	t_bool	handle_quotes;
 	t_bool	inside_quotes;
 	size_t	input_len;
 	int		status;

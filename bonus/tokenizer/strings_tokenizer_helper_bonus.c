@@ -2,7 +2,6 @@
 
 t_bool	handle_character(const char *input, size_t *pos, t_token_list **tokens,
 			t_token_flags *flags);
-
 char	*process_quotes(const char *input, size_t *pos, t_token_list **tokens,
 			t_token_flags *flags);
 
@@ -93,8 +92,7 @@ char	*strings_handle_variable_expansion(const char *input, size_t *pos,
 {
 	char	*tmp;
 
-	if (flags->is_redirection)
-		flags->inside_quotes = false;
+	flags->inside_quotes = false;
 	tmp = expand_variable_string(input, pos);
 	if (!tmp)
 	{

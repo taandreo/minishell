@@ -3,14 +3,27 @@
 int	add_builtin_or_command(char *string, t_token_list **tokens,
 		t_token_flags *flags)
 {
-	int	exit_status;
+	int		exit_status;
+	char	*command;
+	char	*first_space;
 
-	if (is_builtin(string))
-		exit_status = add_token(tokens, get_builtin_token(string), string);
+	first_space = NULL;
+	if (!flags->inside_quotes)
+	{
+		first_space = ft_strchr(string, ' ');
+		command = ft_strndup(string, first_space - string);
+	}
 	else
-		exit_status = add_token(tokens, TOKEN_COMMAND_NAME, string);
+		command = ft_strdup(string);
+	if (is_builtin(command))
+		exit_status = add_token(tokens, get_builtin_token(command), command);
+	else
+		exit_status = add_token(tokens, TOKEN_COMMAND_NAME, command);
+	if (first_space)
+		exit_status = add_token(tokens, TOKEN_STRING, first_space);
 	flags->is_command = false;
 	flags->has_command = true;
+	free(command);
 	return (exit_status);
 }
 

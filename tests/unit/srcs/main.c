@@ -16,6 +16,7 @@ int main(void)
 			cmocka_unit_test(test_peek_next),
 			cmocka_unit_test(test_is_string_start),
 			cmocka_unit_test(test_has_quotes),
+			cmocka_unit_test(test_initialize_var_string),
 	};
 
 	const struct CMUnitTest test_tokenizer_functions[] = {
