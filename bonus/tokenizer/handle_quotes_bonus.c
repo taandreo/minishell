@@ -12,7 +12,7 @@ char	*handle_quotes(const char *input, size_t *position,
 	flags->quote_type = input[*position];
 	if (!flags->string)
 		flags->string = ft_strdup("");
-	flags->handle_quotes = true;
+	flags->inside_quotes = true;
 	quoted_string = extract_quoted_string(input, position, tokens, flags);
 	subsequent_string = NULL;
 	if (input[*position] != flags->quote_type)

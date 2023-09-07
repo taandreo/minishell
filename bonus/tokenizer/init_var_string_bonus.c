@@ -5,10 +5,9 @@ void	*initialize_var_string(const char *input, size_t pos,
 {
 	char	*tmp;
 
-	if (flags->handle_quotes)
+	if (flags->inside_quotes)
 	{
 		pos++;
-		flags->inside_quotes = true;
 		while (input[pos] && input[pos] != flags->quote_type)
 			pos++;
 		while (input[pos] && is_string_start(input[pos]))
@@ -16,7 +15,6 @@ void	*initialize_var_string(const char *input, size_t pos,
 	}
 	else
 	{
-		flags->inside_quotes = false;
 		while (input[pos] && is_string_start(input[pos]))
 			pos++;
 	}

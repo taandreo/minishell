@@ -16,6 +16,7 @@ char	*get_string_from_input(const char *input, size_t *pos,
 	tmp = NULL;
 	if (!flags->string)
 		return (return_mem_alloc_error());
+	flags->inside_quotes = false;
 	if (!flags->var)
 		flags->var = initialize_var_string(input, *pos, flags, start);
 	while (input[*pos] && is_string_start(input[*pos]))
