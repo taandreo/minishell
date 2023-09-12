@@ -24,5 +24,11 @@ void test_has_quotes(void **state);
 void test_tokenize_operators_success(void **state);
 void test_tokenize_redirections(void **state);
 void test_initialize_var_string(void **state);
+void test_extract_quoted_string(void **state);
+void test_handle_quotes_success(void **state);
+void test_handle_quotes_fail(void **state);
+void test_tokenize_quotes_fail(void **state);
+void test_tokenize_quotes_unclosed(void **state);
+void test_tokenize_quotes_success(void **state);
 
 #endif

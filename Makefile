@@ -36,7 +36,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/add_string_token_helper.c\
 			tokenizer/variable_expansion.c\
 			tokenizer/handle_variable_expansion_bonus.c\
-			tokenizer/redirection_tokenizer_helper_bonus.c\
+			tokenizer/add_token_helper_bonus.c\
 			parser/parser_bonus.c\
 			parser/parse_command_bonus.c\
 			parser/parser_helper_functions_bonus.c\
@@ -79,11 +79,11 @@ $(NAME_BONUS): $(BONUS_OBJS) | libft
 
 $(OBJS_DIR)/%.o: $(MANDATORY_DIR)/%.c
 	mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $? -o $@
+	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
 
 $(BONUS_OBJS_DIR)/%.o: $(BONUS_DIR)/%.c
 	mkdir -p $(@D)
-	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $? -o $@
+	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
 
 all: $(NAME)
 

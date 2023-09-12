@@ -2,9 +2,10 @@
 
 t_bool	is_valid_var_name(char c);
 char	*lookup_variable(char *var);
-char	*advance_position(const char *input, size_t *pos);
+char	*advance_position(char *input, size_t *pos,
+			t_token_flags *flags);
 
-char	*expand_variable_string(const char *input, size_t *pos)
+char	*expand_variable_string(char *input, size_t *pos, t_token_flags *flags)
 {
 	size_t	start_pos;
 	size_t	len;
@@ -13,13 +14,11 @@ char	*expand_variable_string(const char *input, size_t *pos)
 
 	len = 0;
 	start_pos = *pos + 1;
-	var = ft_strdup("");
-	str = NULL;
 	if (!ft_isalpha(input[start_pos]) && input[start_pos] != '_')
-		return (advance_position(input, pos));
+		return (advance_position(input, pos, flags));
+	str = NULL;
 	while (input[start_pos + len] && is_valid_var_name(input[start_pos + len]))
 		len++;
-	free(var);
 	var = ft_strndup(input + start_pos, len);
 	if (!var)
 		return (return_mem_alloc_error());
@@ -49,25 +48,29 @@ char	*lookup_variable(char *var)
 	return (new_str);
 }
 
-char	*advance_position(const char *input, size_t *pos)
+char	*advance_position(char *input, size_t *pos, t_token_flags *flags)
 {
 	char	*var;
+	size_t	dollar;
 
-	while (is_string_start(input[*pos]))
+	dollar = *pos;
+	flags->init_var = true;
+	while (is_string_start(input[*pos], flags))
 		(*pos)++;
-	var = ft_strdup("");
+	var = ft_strndup(input + dollar, *pos - dollar);
+	flags->init_var = false;
 	if (!var)
 		return (return_mem_alloc_error());
 	return (var);
 }
 
-char	*quotes_handle_variable_expansion(const char *input, size_t *pos,
-		t_token_flags *flags)
+char	*quotes_handle_variable_expansion(char **input, size_t *pos,
+			t_token_flags *flags)
 {
 	char	*tmp;
 
 	flags->inside_quotes = true;
-	tmp = expand_variable_string(input, pos);
+	tmp = expand_variable_string(*input, pos, flags);
 	if (!tmp)
 	{
 		if (flags->string)

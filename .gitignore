@@ -6,3 +6,4 @@ minishell.o
 .vscode/
 .idea/
 ignore/
+tests/unit/tests

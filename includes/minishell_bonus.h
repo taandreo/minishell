@@ -63,7 +63,9 @@ typedef struct s_token_flags
 	t_bool	has_heredoc;
 	t_bool	has_command;
 	t_bool	inside_quotes;
+	t_bool	init_var;
 	size_t	input_len;
+	int		var_len;
 	int		status;
 	char	quote_type;
 	char	*var;
@@ -152,7 +154,7 @@ typedef struct s_command
 }	t_command;
 
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
-char			*handle_quotes(const char *input, size_t *position,
+char			*handle_quotes(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
 int				misuse_or_unclosed_quotes_error(t_token_list **tokens);
 int				unclosed_quotes_error(t_token_list **tokens);
@@ -168,14 +170,14 @@ int				add_token(t_token_list **tokens, t_token_type type,
 void			free_token_list(t_token_list **token_list_ptr);
 t_bool			has_quotes(char c);
 char			peek_next(const char *input, size_t position, size_t input_len);
-t_bool			is_string_start(char c);
+t_bool			is_string_start(char c, t_token_flags *flags);
 t_token_flags	init_flags(size_t input_len);
 int				add_token_1_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
 int 			add_token_2_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
 t_token_type	get_builtin_token(char *token);
-char			*get_string_from_input(const char *input, size_t *pos,
+char			*get_string_from_input(char **input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				add_builtin_or_command(char *return_string,
 					t_token_list **tokens, t_token_flags *flags);
@@ -206,33 +208,39 @@ void			*return_mem_alloc_error(void);
 void			*return_syntax_error(const char *value);
 void			*free_and_return_null(void *ptr);
 void			*free_2_and_return_null(void *ptr1, void *ptr2);
-char			*expand_variable_string(const char *input, size_t *pos);
-char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
-char			*substitute_variable(const char *input, size_t *pos,
-					t_token_list **tokens, t_token_flags *flags);
-char			*strings_handle_variable_expansion(const char *input, size_t *pos,
+char			*expand_variable_string(char *input, size_t *pos,
 					t_token_flags *flags);
-char			*quotes_handle_variable_expansion(const char *input, size_t *pos,
+char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
+char			*substitute_variable(char *input, size_t *pos,
+					t_token_list **tokens, t_token_flags *flags);
+int				strings_handle_variable_expansion(char **input, size_t *pos,
+					t_token_flags *flags);
+char			*quotes_handle_variable_expansion(char **input, size_t *pos,
 					t_token_flags *flags);
 void			free_str_and_nullify(char **ptr);
-void			*initialize_var_string(const char *input, size_t pos,
+void			*initialize_var_string(char *input, size_t pos,
 					t_token_flags *flags, const char  *start);
 void			*add_unclosed_quotes_token(t_token_list **tokens,
 					t_token_flags *flags, char *quoted_string);
 int				check_ambiguous_redirect(char *string, t_token_list **tokens,
 					t_token_flags *flags);
-t_bool			has_variable_expansion(const char *input, size_t *pos,
+t_bool			has_variable_expansion(char **input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
-t_bool			handle_special_case_variable(const char *input, size_t *pos,
+t_bool			handle_special_case_variable(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_by_category(const char *input, size_t *position,
+int				tokenize_by_category(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_quotes(const char *input, size_t *position,
+int				tokenize_quotes(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_redirections(const char *input, size_t *position,
+int				tokenize_redirections(char *input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_operators(const char *input, size_t *position,
+int				tokenize_operators(char *input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_strings(const char *input, size_t *position,
+int				tokenize_strings(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
+void			*free_nullify_and_return_null(char **ptr);
+char			*concatenate_var_with_space(char *tmp, char *first_space,
+					t_token_flags *flags);
+int				free_and_exit_misuse(t_token_flags *flags,
+					t_token_list **tokens);
 #endif

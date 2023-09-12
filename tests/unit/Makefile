@@ -32,7 +32,7 @@ MINISHELL_BONUS = $(addprefix $(MINISHELL_BONUS_DIR)/, free_utils.c\
                         tokenizer/add_string_token_helper.c\
                         tokenizer/variable_expansion.c\
                         tokenizer/handle_variable_expansion_bonus.c\
-                        tokenizer/redirection_tokenizer_helper_bonus.c\
+                        tokenizer/add_token_helper_bonus.c\
 						error/return_errors_helper_bonus.c\
 		)
 MINISHELL_OBJS = $(patsubst $(MINISHELL_MANDATORY_DIR)/%.c, $(MINISHELL_OBJS_DIR)/%.o, $(MINISHELL_SRCS))

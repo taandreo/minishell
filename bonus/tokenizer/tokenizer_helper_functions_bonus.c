@@ -8,8 +8,16 @@ char	peek_next(const char *input, size_t position, size_t input_len)
 		return ('\0');
 }
 
-t_bool	is_string_start(char c)
+t_bool	is_string_start(char c, t_token_flags *flags)
 {
+	if (!flags->init_var)
+	{
+		if (flags->var_len > -1)
+		{
+			flags->var_len--;
+			return (!ft_is_space(c));
+		}
+	}
 	return (!ft_is_space(c) && !ft_strchr("><|&", c));
 }
 
@@ -23,11 +31,13 @@ t_token_flags	init_flags(size_t input_len)
 	t_token_flags	flags;
 
 	flags.input_len = input_len;
+	flags.var_len = -1;
 	flags.is_redirection = false;
 	flags.is_command = true;
 	flags.has_command = false;
 	flags.has_heredoc = false;
 	flags.inside_quotes = false;
+	flags.init_var = false;
 	flags.quote_type = '\0';
 	flags.string = NULL;
 	flags.var = NULL;

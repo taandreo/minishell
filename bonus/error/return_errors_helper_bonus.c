@@ -13,21 +13,21 @@ void	*return_syntax_error(const char *value)
 	return (NULL);
 }
 
-void	*free_and_return_null(void *ptr)
+int	misuse_or_unclosed_quotes_error(t_token_list **tokens)
 {
-	if (ptr)
-		free(ptr);
-	ptr = NULL;
-	return (NULL);
+	if (*tokens && (*tokens)->tail)
+	{
+		if ((*tokens)->tail->token.type == TOKEN_ERROR)
+			return (unclosed_quotes_error(tokens));
+	}
+	if (*tokens)
+		free_token_list(tokens);
+	return (MISUSE);
 }
 
-void	*free_2_and_return_null(void *ptr1, void *ptr2)
+int	unclosed_quotes_error(t_token_list **tokens)
 {
-	if (ptr1)
-		free(ptr1);
-	if (ptr2)
-		free(ptr2);
-	ptr1 = NULL;
-	ptr2 = NULL;
-	return (NULL);
+	ft_dprintf(STDERR_FILENO, "%s\n", (*tokens)->tail->token.value);
+	free_token_list(tokens);
+	return (GENERAL_ERROR);
 }

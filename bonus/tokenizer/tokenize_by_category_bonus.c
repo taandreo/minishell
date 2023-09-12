@@ -1,44 +1,48 @@
 #include "minishell_bonus.h"
 
-int	tokenize_by_category(const char *input, size_t *position,
+int	tokenize_by_category(char **input, size_t *position,
 		t_token_list **tokens, t_token_flags *flags)
 {
 	char	c;
 
-	c = input[*position];
+	c = (*input)[*position];
 	if (has_quotes(c))
 		return (tokenize_quotes(input, position, tokens, flags));
 	else if (c == '<' || c == '>')
-		return (tokenize_redirections(input, position, tokens, flags));
+		return (tokenize_redirections(*input, position, tokens, flags));
 	else if (c == '&' || c == '|')
-		return (tokenize_operators(input, position, tokens, flags));
+		return (tokenize_operators(*input, position, tokens, flags));
 	return (tokenize_strings(input, position, tokens, flags));
 }
 
-int	tokenize_quotes(const char *input, size_t *position,
+int	tokenize_quotes(char **input, size_t *position,
 		t_token_list **tokens, t_token_flags *flags)
 {
-	char			*quoted_string;
 	int				exit_status;
 
 	if (!tokens || !*tokens)
 		return (MISUSE);
-	quoted_string = handle_quotes(input, position, tokens, flags);
-	if (!quoted_string)
+	flags->string = handle_quotes(input, position, tokens, flags);
+	if (!flags->string)
+	{
+		if (flags->var)
+			free_str_and_nullify(&flags->var);
 		return (misuse_or_unclosed_quotes_error(tokens));
+	}
 	if (flags->is_command)
-		exit_status = add_builtin_or_command(quoted_string, tokens, flags);
+		exit_status = add_builtin_or_command(flags->string, tokens, flags);
 	else if (flags->is_redirection)
-		exit_status = add_filename_or_string(quoted_string, tokens, flags);
+		exit_status = add_filename_or_string(flags->string, tokens, flags);
 	else
-		exit_status = add_token(tokens, TOKEN_STRING, quoted_string);
+		exit_status = add_token(tokens, TOKEN_STRING, flags->string);
 	if (flags->var)
 		free_str_and_nullify(&flags->var);
-	free(quoted_string);
+	if (flags->string)
+		free_str_and_nullify(&flags->string);
 	return (exit_status);
 }
 
-int	tokenize_redirections(const char *input, size_t *pos,
+int	tokenize_redirections(char *input, size_t *pos,
 		t_token_list **tokens, t_token_flags *flags)
 {
 	flags->is_command = false;
@@ -54,7 +58,7 @@ int	tokenize_redirections(const char *input, size_t *pos,
 	return (add_token_1_pos(pos, tokens, TOKEN_REDIRECTION_OUTPUT, flags));
 }
 
-int	tokenize_operators(const char *input, size_t *pos,
+int	tokenize_operators(char *input, size_t *pos,
 		t_token_list **tokens, t_token_flags *flags)
 {
 	flags->is_command = true;
@@ -71,7 +75,7 @@ int	tokenize_operators(const char *input, size_t *pos,
 	return (add_token_1_pos(pos, tokens, TOKEN_INVALID, flags));
 }
 
-int	tokenize_strings(const char *input, size_t *pos,
+int	tokenize_strings(char **input, size_t *pos,
 		t_token_list **tokens, t_token_flags *flags)
 {
 	char		*return_string;
@@ -96,6 +100,6 @@ int	tokenize_strings(const char *input, size_t *pos,
 	}
 	if (flags->var)
 		free_str_and_nullify(&flags->var);
-	free(return_string);
+	free_str_and_nullify(&flags->string);
 	return (exit_status);
 }

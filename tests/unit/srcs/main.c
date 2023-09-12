@@ -17,11 +17,17 @@ int main(void)
 			cmocka_unit_test(test_is_string_start),
 			cmocka_unit_test(test_has_quotes),
 			cmocka_unit_test(test_initialize_var_string),
+			cmocka_unit_test(test_extract_quoted_string),
+			cmocka_unit_test(test_handle_quotes_success),
+			cmocka_unit_test(test_handle_quotes_fail),
 	};
 
 	const struct CMUnitTest test_tokenizer_functions[] = {
 			cmocka_unit_test(test_tokenize_operators_success),
 			cmocka_unit_test(test_tokenize_redirections),
+			cmocka_unit_test(test_tokenize_quotes_fail),
+			cmocka_unit_test(test_tokenize_quotes_unclosed),
+			cmocka_unit_test(test_tokenize_quotes_success),
 	};
 
 	total_failures += cmocka_run_group_tests(test_add_token, NULL, NULL);
