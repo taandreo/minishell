@@ -31,3 +31,10 @@ int	unclosed_quotes_error(t_token_list **tokens)
 	free_token_list(tokens);
 	return (GENERAL_ERROR);
 }
+
+int	unclosed_paren_error(t_token_list **tokens)
+{
+	ft_dprintf(STDERR_FILENO, "minishell: Unclosed parenthesis\n");
+	free_token_list(tokens);
+	return (GENERAL_ERROR);
+}

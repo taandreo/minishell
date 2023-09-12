@@ -13,6 +13,10 @@ int	add_token_1_pos(size_t *pos, t_token_list **tokens,
 	}
 	if (type == TOKEN_PIPE)
 		return (add_token(tokens, type, "|"));
+	if (type == TOKEN_LEFT_PARENTHESIS)
+		return (add_token(tokens, type, "("));
+	if (type == TOKEN_RIGHT_PARENTHESIS)
+		return (add_token(tokens, type, ")"));
 	return (add_token(tokens, type, "&"));
 }
 

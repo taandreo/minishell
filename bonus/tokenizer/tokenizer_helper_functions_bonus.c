@@ -15,7 +15,7 @@ t_bool	is_string_start(char c, t_token_flags *flags)
 		if (flags->var_len > -1)
 			return (!ft_is_space(c));
 	}
-	return (!ft_is_space(c) && !ft_strchr("><|&", c));
+	return (!ft_is_space(c) && !ft_strchr("><|&()", c));
 }
 
 t_bool	has_quotes(char c)
@@ -29,6 +29,7 @@ t_token_flags	init_flags(size_t input_len)
 
 	flags.input_len = input_len;
 	flags.var_len = -1;
+	flags.paren_count = 0;
 	flags.is_redirection = false;
 	flags.is_command = true;
 	flags.has_command = false;

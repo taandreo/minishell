@@ -22,6 +22,8 @@ t_token_list	*tokenizer(char *input, t_token_flags *flags)
 		if (flags->status != SUCCESS)
 			break ;
 	}
+	if (flags->paren_count)
+		flags->status = unclosed_paren_error(&tokens);
 	if (flags->status == SUCCESS)
 		add_token(&tokens, TOKEN_END, "");
 	return (tokens);

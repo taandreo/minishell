@@ -40,6 +40,8 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_PIPE,
+	TOKEN_LEFT_PARENTHESIS,
+	TOKEN_RIGHT_PARENTHESIS,
 	TOKEN_REDIRECTIONS,
 	TOKEN_REDIRECTION_INPUT,
 	TOKEN_REDIRECTION_OUTPUT,
@@ -65,6 +67,7 @@ typedef struct s_token_flags
 	t_bool	inside_quotes;
 	t_bool	init_var;
 	size_t	input_len;
+	size_t	paren_count;
 	int		var_len;
 	int		status;
 	char	quote_type;
@@ -238,9 +241,12 @@ int				tokenize_operators(char *input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_strings(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
+int				tokenize_parenthesis(char *input, size_t *pos, t_token_list **tokens,
+					t_token_flags *flags);
 void			*free_nullify_and_return_null(char **ptr);
 char			*concatenate_var_with_space(char *tmp, char *first_space,
 					t_token_flags *flags);
 int				free_and_exit_misuse(t_token_flags *flags,
 					t_token_list **tokens);
+int				unclosed_paren_error(t_token_list **tokens);
 #endif
