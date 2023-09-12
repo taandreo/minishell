@@ -1,5 +1,8 @@
 ```python
-command: pipeline conjunctions
+command: pipeline conjunctions grouping
+
+grouping: /* empty */
+        | '(' command ')' conjunctions grouping
 
 conjunctions:/* empty */
             | '&&' pipeline conjunctions
