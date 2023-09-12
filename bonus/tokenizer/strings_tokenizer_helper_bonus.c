@@ -5,6 +5,13 @@ t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 char	*process_quotes(char **input, size_t *pos, t_token_list **tokens,
 			t_token_flags *flags);
 
+t_bool	decrease_len(t_token_flags *flags)
+{
+	if (flags->var_len > -1)
+		flags->var_len--;
+	return (true);
+}
+
 char	*get_string_from_input(char **input, size_t *pos,
 			t_token_list **tokens, t_token_flags *flags)
 {
@@ -17,7 +24,8 @@ char	*get_string_from_input(char **input, size_t *pos,
 		return (return_mem_alloc_error());
 	if (!flags->var)
 		flags->var = initialize_var_string((*input), *pos, flags, start);
-	while ((*input)[*pos] && is_string_start((*input)[*pos], flags))
+	while (decrease_len(flags) && (*input)[*pos]
+			&& is_string_start((*input)[*pos], flags))
 	{
 		if (!handle_character(input, pos, tokens, flags))
 			return (NULL);

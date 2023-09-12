@@ -13,10 +13,7 @@ t_bool	is_string_start(char c, t_token_flags *flags)
 	if (!flags->init_var)
 	{
 		if (flags->var_len > -1)
-		{
-			flags->var_len--;
 			return (!ft_is_space(c));
-		}
 	}
 	return (!ft_is_space(c) && !ft_strchr("><|&", c));
 }

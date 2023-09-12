@@ -40,10 +40,10 @@ int	add_filename_or_string(char *string, t_token_list **tokens,
 int	check_ambiguous_redirect(char *string, t_token_list **tokens,
 		t_token_flags *flags)
 {
-	if (ft_strchr(string, ' ') || ft_strlen(string) == 0)
+	if (flags->var_len > -1 || ft_strlen(string) == 0)
 	{
 		ft_dprintf(STDERR_FILENO,
-			"minishell: %s: ambiguous redirect\n", flags->var);
+				"minishell: %s: ambiguous redirect\n", flags->var);
 		free_token_list(tokens);
 		return (GENERAL_ERROR);
 	}
