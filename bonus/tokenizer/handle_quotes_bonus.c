@@ -73,8 +73,8 @@ char	*substitute_variable(char *input, size_t *pos,
 	{
 		if (flags->string && ft_strlen(flags->string) > 0)
 		{
-			if (add_token(tokens, TOKEN_STRING, flags->string) != SUCCESS)
-				return (free_2_and_return_null(flags->string, var));
+			if (!add_command_or_string(tokens, flags))
+				return (free_and_return_null(var));
 			free(flags->string);
 			flags->string = ft_strdup("");
 		}

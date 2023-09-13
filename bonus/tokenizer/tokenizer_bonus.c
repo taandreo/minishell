@@ -38,7 +38,8 @@ void	advance_space(char *input, size_t *pos, t_token_list **tokens,
 {
 	if (peek_next(input, *pos, input_len) == '*')
 		add_token(tokens, TOKEN_SPACE, " ");
-	if ((*tokens)->tail->token.type == TOKEN_EXIT_CODE)
+	if ((*tokens)->tail->token.type == TOKEN_EXIT_CODE && peek_next(input,
+			*pos, ft_strlen(input)))
 		add_token(tokens, TOKEN_SPACE, " ");
 	(*pos)++;
 }

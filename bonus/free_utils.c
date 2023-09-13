@@ -37,3 +37,12 @@ void	*free_nullify_and_return_null(char **ptr)
 	}
 	return (NULL);
 }
+
+int	free_vars_and_return_misuse(char *string, char *tmp)
+{
+	if (string)
+		free(string);
+	if (tmp)
+		free(tmp);
+	return (MISUSE);
+}

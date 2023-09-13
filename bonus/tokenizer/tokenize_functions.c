@@ -22,12 +22,11 @@ int	tokenize_quotes(char **input, size_t *position,
 	else
 	{
 		if (flags->string)
-			add_string_and_maybe_space(flags->string, tokens);
+			exit_status = add_string_and_maybe_space(flags->string, tokens,
+					*input, *position);
 	}
-	if (flags->var)
-		free_str_and_nullify(&flags->var);
-	if (flags->string)
-		free_str_and_nullify(&flags->string);
+	free_str_and_nullify(&flags->var);
+	free_str_and_nullify(&flags->string);
 	return (exit_status);
 }
 
@@ -83,12 +82,11 @@ int	tokenize_strings(char **input, size_t *pos,
 	else
 	{
 		if (return_string)
-			exit_status = add_special_or_string(return_string, tokens);
+			exit_status = add_special_or_string(return_string, tokens, *input,
+					*pos);
 	}
-	if (flags->var)
-		free_str_and_nullify(&flags->var);
-	if (flags->string)
-		free_str_and_nullify(&flags->string);
+	free_str_and_nullify(&flags->var);
+	free_str_and_nullify(&flags->string);
 	return (exit_status);
 }
 

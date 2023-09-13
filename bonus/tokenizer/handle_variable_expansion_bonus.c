@@ -2,7 +2,6 @@
 
 t_bool	add_space_if_success(size_t *pos, t_token_list **tokens,
 			t_token_flags *flags);
-t_bool	add_command_or_string(t_token_list **tokens, t_token_flags *flags);
 
 t_bool	has_variable_expansion(char **input, size_t *pos,
 		t_token_list **tokens, t_token_flags *flags)
@@ -33,7 +32,7 @@ t_bool	handle_special_case_variable(char *input, size_t *pos,
 	free_str_and_nullify(&flags->string);
 	*pos += 2;
 	flags->has_exit_code = true;
-	if (input[*pos] == ' ')
+	if (input[*pos] == ' ' && input[*pos + 1])
 		return (add_space_if_success(pos, tokens, flags));
 	return (true);
 }

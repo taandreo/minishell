@@ -5,13 +5,6 @@ t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 char	*process_quotes(char **input, size_t *pos, t_token_list **tokens,
 			t_token_flags *flags);
 
-t_bool	decrease_len(t_token_flags *flags)
-{
-	if (flags->var_len > -1)
-		flags->var_len--;
-	return (true);
-}
-
 char	*get_string_from_input(char **input, size_t *pos,
 			t_token_list **tokens, t_token_flags *flags)
 {
@@ -105,21 +98,12 @@ int	strings_handle_variable_expansion(char **input, size_t *pos,
 	flags->inside_quotes = false;
 	tmp = expand_variable_string(*input, pos, flags);
 	if (!tmp)
-	{
-		if (flags->string)
-			free(flags->string);
-		return (MISUSE);
-	}
+		return (free_vars_and_return_misuse(flags->string, tmp));
 	flags->var_len = ft_strlen(tmp);
 	start = *input + *pos;
 	to_be_tokenized = ft_strjoin(tmp, start);
 	if (!to_be_tokenized)
-	{
-		if (flags->string)
-			free(flags->string);
-		free(tmp);
-		return (MISUSE);
-	}
+		return (free_vars_and_return_misuse(flags->string, tmp));
 	free(*input);
 	free(tmp);
 	*input = to_be_tokenized;
