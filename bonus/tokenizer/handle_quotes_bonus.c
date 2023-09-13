@@ -78,6 +78,15 @@ char	*substitute_variable(char *input, size_t *pos,
 			free(flags->string);
 			flags->string = ft_strdup("");
 		}
+		else if (flags->string && ft_strlen(flags->string) == 0)
+		{
+			if (*pos - 2 > 0 && input[*pos - 2] == ' ')
+			{
+				if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
+					return (free_2_and_return_null(flags->string, var));
+			}
+
+		}
 		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
 			return (free_2_and_return_null(flags->string, var));
 		*pos += 2;

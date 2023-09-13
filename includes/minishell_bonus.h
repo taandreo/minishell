@@ -189,6 +189,7 @@ int				add_builtin_or_command(char *return_string,
 int				add_filename_or_string(char *return_string,
 					t_token_list **tokens, t_token_flags *flags);
 int				add_special_or_string(char *string, t_token_list **tokens);
+int				add_string_and_maybe_space(char *string, t_token_list **tokens);
 t_command		*parse(t_token_list *tokens);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);

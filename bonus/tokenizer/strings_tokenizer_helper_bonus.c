@@ -121,6 +121,7 @@ int	strings_handle_variable_expansion(char **input, size_t *pos,
 		return (MISUSE);
 	}
 	free(*input);
+	free(tmp);
 	*input = to_be_tokenized;
 	*pos = 0;
 	return (SUCCESS);

@@ -22,7 +22,7 @@ int	tokenize_quotes(char **input, size_t *position,
 	else
 	{
 		if (flags->string)
-			exit_status = add_token(tokens, TOKEN_STRING, flags->string);
+			add_string_and_maybe_space(flags->string, tokens);
 	}
 	if (flags->var)
 		free_str_and_nullify(&flags->var);

@@ -24,7 +24,7 @@ int	main(void)
 
 	while (true)
 	{
-//		prompt = ft_strdup("echo bla>$FOO$VAR$BAR");
+//		prompt = ft_strdup("$VAR2 echo bla$?\"$VAR2\"$VAR2>$?\"$?\" foo*baz\"baz*\" && \"bar \"<<$? | exit \"$?\" abc");
 		prompt = readline("~> ");
 		flags = init_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);

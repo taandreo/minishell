@@ -39,7 +39,10 @@ int	add_filename_or_string(char *string, t_token_list **tokens,
 				flags->inside_quotes = false;
 			}
 			else
+			{
 				exit_status = check_ambiguous_redirect(string, tokens, flags);
+			}
+
 		}
 	}
 	flags->is_redirection = false;
@@ -85,5 +88,5 @@ int	add_special_or_string(char *string, t_token_list **tokens)
 			&& ft_strcmp(string, "-n") == 0)
 		return (add_token(tokens, TOKEN_SPECIAL_ARG, string));
 	else
-		return (add_token(tokens, TOKEN_STRING, string));
+		return (add_string_and_maybe_space(string, tokens));
 }
