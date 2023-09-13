@@ -5,12 +5,19 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 {
 	int		exit_status;
 
-	if (is_builtin(string))
-		exit_status = add_token(tokens, get_builtin_token(string), string);
-	else
-		exit_status = add_token(tokens, TOKEN_COMMAND_NAME, string);
-	flags->is_command = false;
-	flags->has_command = true;
+	exit_status = SUCCESS;
+	if (string)
+	{
+		if (is_builtin(string))
+			exit_status = add_token(tokens, get_builtin_token(string), string);
+		else
+			exit_status = add_token(tokens, TOKEN_COMMAND_NAME, string);
+	}
+	if (!flags->has_exit_code)
+	{
+		flags->is_command = false;
+		flags->has_command = true;
+	}
 	return (exit_status);
 }
 
@@ -19,17 +26,21 @@ int	add_filename_or_string(char *string, t_token_list **tokens,
 {
 	int	exit_status;
 
-	if (flags->has_heredoc)
-		exit_status = add_token(tokens, TOKEN_STRING, string);
-	else
+	exit_status = SUCCESS;
+	if (string)
 	{
-		if (flags->inside_quotes)
-		{
-			exit_status = add_token(tokens, TOKEN_FILENAME, string);
-			flags->inside_quotes = false;
-		}
+		if (flags->has_heredoc)
+			exit_status = add_token(tokens, TOKEN_STRING, string);
 		else
-			exit_status = check_ambiguous_redirect(string, tokens, flags);
+		{
+			if (flags->inside_quotes)
+			{
+				exit_status = add_token(tokens, TOKEN_FILENAME, string);
+				flags->inside_quotes = false;
+			}
+			else
+				exit_status = check_ambiguous_redirect(string, tokens, flags);
+		}
 	}
 	flags->is_redirection = false;
 	if (!flags->has_command)
@@ -74,9 +85,5 @@ int	add_special_or_string(char *string, t_token_list **tokens)
 			&& ft_strcmp(string, "-n") == 0)
 		return (add_token(tokens, TOKEN_SPECIAL_ARG, string));
 	else
-	{
-		if (ft_strlen(string) > 0)
-			return (add_token(tokens, TOKEN_STRING, string));
-	}
-	return (SUCCESS);
+		return (add_token(tokens, TOKEN_STRING, string));
 }

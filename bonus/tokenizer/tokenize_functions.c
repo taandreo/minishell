@@ -9,7 +9,7 @@ int	tokenize_quotes(char **input, size_t *position,
 	if (!tokens || !*tokens)
 		return (MISUSE);
 	flags->string = handle_quotes(input, position, tokens, flags);
-	if (!flags->string)
+	if (!flags->string && !flags->has_exit_code)
 	{
 		if (flags->var)
 			free_str_and_nullify(&flags->var);
@@ -21,10 +21,9 @@ int	tokenize_quotes(char **input, size_t *position,
 		exit_status = add_filename_or_string(flags->string, tokens, flags);
 	else
 	{
-		if (ft_strlen(flags->string) > 0)
+		if (flags->string)
 			exit_status = add_token(tokens, TOKEN_STRING, flags->string);
 	}
-
 	if (flags->var)
 		free_str_and_nullify(&flags->var);
 	if (flags->string)
@@ -71,20 +70,25 @@ int	tokenize_strings(char **input, size_t *pos,
 	char		*return_string;
 	int			exit_status;
 
+	exit_status = SUCCESS;
 	if (!tokens || !*tokens)
 		return (MISUSE);
 	return_string = get_string_from_input(input, pos, tokens, flags);
-	if (!return_string)
+	if (!return_string && !flags->has_exit_code)
 		return (misuse_or_unclosed_quotes_error(tokens));
 	if (flags->is_command)
 		exit_status = add_builtin_or_command(return_string, tokens, flags);
 	else if (flags->is_redirection)
 		exit_status = add_filename_or_string(return_string, tokens, flags);
 	else
-		exit_status = add_special_or_string(return_string, tokens);
+	{
+		if (return_string)
+			exit_status = add_special_or_string(return_string, tokens);
+	}
 	if (flags->var)
 		free_str_and_nullify(&flags->var);
-	free_str_and_nullify(&flags->string);
+	if (flags->string)
+		free_str_and_nullify(&flags->string);
 	return (exit_status);
 }
 

@@ -6,6 +6,7 @@ int	tokenize_by_category(char **input, size_t *position,
 	char	c;
 
 	c = (*input)[*position];
+	flags->has_exit_code = false;
 	if (has_quotes(c))
 		return (tokenize_quotes(input, position, tokens, flags));
 	else if (c == '<' || c == '>')

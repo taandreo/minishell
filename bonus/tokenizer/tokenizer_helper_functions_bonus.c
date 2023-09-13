@@ -36,6 +36,7 @@ t_token_flags	init_flags(size_t input_len)
 	flags.has_heredoc = false;
 	flags.inside_quotes = false;
 	flags.init_var = false;
+	flags.has_exit_code = false;
 	flags.quote_type = '\0';
 	flags.string = NULL;
 	flags.var = NULL;

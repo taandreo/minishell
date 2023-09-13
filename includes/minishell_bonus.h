@@ -67,6 +67,7 @@ typedef struct s_token_flags
 	t_bool	has_command;
 	t_bool	inside_quotes;
 	t_bool	init_var;
+	t_bool	has_exit_code;
 	size_t	input_len;
 	size_t	paren_count;
 	int		var_len;

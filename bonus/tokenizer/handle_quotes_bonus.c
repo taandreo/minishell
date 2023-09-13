@@ -14,7 +14,7 @@ char	*handle_quotes(char **input, size_t *position,
 			return (return_mem_alloc_error());
 	}
 	flags->string = extract_quoted_string(input, position, tokens, flags);
-	if (!flags->string)
+	if (!flags->string && !flags->has_exit_code)
 		return (return_mem_alloc_error());
 	if ((*input)[*position] != flags->quote_type)
 		return (add_unclosed_quotes_token(tokens, flags, flags->string));
@@ -58,6 +58,8 @@ char	*extract_quoted_string(char **input, size_t *pos,
 		}
 		flags->string = join_and_cleanup(&flags->string, &tmp);
 	}
+	if (flags->has_exit_code && flags->string && ft_strlen(flags->string) == 0)
+		free_str_and_nullify(&flags->string);
 	return (flags->string);
 }
 
@@ -79,6 +81,7 @@ char	*substitute_variable(char *input, size_t *pos,
 		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
 			return (free_2_and_return_null(flags->string, var));
 		*pos += 2;
+		flags->has_exit_code = true;
 	}
 	else
 	{
