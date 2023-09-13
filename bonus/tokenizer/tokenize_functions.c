@@ -5,6 +5,7 @@ int	tokenize_quotes(char **input, size_t *position,
 {
 	int				exit_status;
 
+	exit_status = SUCCESS;
 	if (!tokens || !*tokens)
 		return (MISUSE);
 	flags->string = handle_quotes(input, position, tokens, flags);
@@ -19,7 +20,11 @@ int	tokenize_quotes(char **input, size_t *position,
 	else if (flags->is_redirection)
 		exit_status = add_filename_or_string(flags->string, tokens, flags);
 	else
-		exit_status = add_token(tokens, TOKEN_STRING, flags->string);
+	{
+		if (ft_strlen(flags->string) > 0)
+			exit_status = add_token(tokens, TOKEN_STRING, flags->string);
+	}
+
 	if (flags->var)
 		free_str_and_nullify(&flags->var);
 	if (flags->string)
@@ -76,13 +81,7 @@ int	tokenize_strings(char **input, size_t *pos,
 	else if (flags->is_redirection)
 		exit_status = add_filename_or_string(return_string, tokens, flags);
 	else
-	{
-		if ((*tokens)->tail->token.type == TOKEN_ECHO
-				&& ft_strcmp(return_string, "-n") == 0)
-			exit_status = add_token(tokens, TOKEN_SPECIAL_ARG, return_string);
-		else
-			exit_status = add_token(tokens, TOKEN_STRING, return_string);
-	}
+		exit_status = add_special_or_string(return_string, tokens);
 	if (flags->var)
 		free_str_and_nullify(&flags->var);
 	free_str_and_nullify(&flags->string);

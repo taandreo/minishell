@@ -1,5 +1,8 @@
 #include "minishell_bonus.h"
 
+void	advance_space(char *input, size_t *pos, t_token_list **tokens,
+			size_t input_len);
+
 t_token_list	*tokenizer(char *input, t_token_flags *flags)
 {
 	t_token_list	*tokens;
@@ -15,7 +18,7 @@ t_token_list	*tokenizer(char *input, t_token_flags *flags)
 		c = input_dup[position];
 		if (ft_is_space(c))
 		{
-			position++;
+			advance_space(input_dup, &position, &tokens, ft_strlen(input_dup));
 			continue ;
 		}
 		flags->status = tokenize_by_category(&input_dup, &position, &tokens, flags);
@@ -27,4 +30,12 @@ t_token_list	*tokenizer(char *input, t_token_flags *flags)
 	if (flags->status == SUCCESS)
 		add_token(&tokens, TOKEN_END, "");
 	return (tokens);
+}
+
+void	advance_space(char *input, size_t *pos, t_token_list **tokens,
+			size_t input_len)
+{
+	if (peek_next(input, *pos, input_len) == '*')
+		add_token(tokens, TOKEN_SPACE, " ");
+	(*pos)++;
 }

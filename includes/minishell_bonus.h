@@ -48,6 +48,7 @@ typedef enum e_token_type
 	TOKEN_REDIRECTION_APPEND,
 	TOKEN_REDIRECTION_HEREDOC,
 	TOKEN_COMMAND_NAME,
+	TOKEN_WILDCARD,
 	TOKEN_FILENAME,
 	TOKEN_STRING,
 	TOKEN_EXIT_CODE,
@@ -186,6 +187,7 @@ int				add_builtin_or_command(char *return_string,
 					t_token_list **tokens, t_token_flags *flags);
 int				add_filename_or_string(char *return_string,
 					t_token_list **tokens, t_token_flags *flags);
+int				add_special_or_string(char *string, t_token_list **tokens);
 t_command		*parse(t_token_list *tokens);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
@@ -243,10 +245,7 @@ int				tokenize_strings(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_parenthesis(char *input, size_t *pos, t_token_list **tokens,
 					t_token_flags *flags);
+int				tokenize_wildcard(char *input, size_t *pos, t_token_list **tokens);
 void			*free_nullify_and_return_null(char **ptr);
-char			*concatenate_var_with_space(char *tmp, char *first_space,
-					t_token_flags *flags);
-int				free_and_exit_misuse(t_token_flags *flags,
-					t_token_list **tokens);
 int				unclosed_paren_error(t_token_list **tokens);
 #endif
