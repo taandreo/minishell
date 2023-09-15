@@ -15,6 +15,8 @@
 char	*extract_quoted_string(char **input, size_t *pos,
 			t_token_list **tokens, t_token_flags *flags);
 char	*add_char_and_advance_pos(char *input, size_t *pos);
+char	*handle_question_mark(char *input, size_t *pos, t_token_list **tokens,
+			t_token_flags *flags);
 
 char	*handle_quotes(char **input, size_t *position,
 			t_token_list **tokens, t_token_flags *flags)
@@ -84,33 +86,39 @@ char	*substitute_variable(char *input, size_t *pos,
 {
 	char	*var;
 
-	var = ft_strdup("");
 	if (input[*pos + 1] == '?')
-	{
-		if (flags->string && ft_strlen(flags->string) > 0)
-		{
-			if (!add_command_or_string(tokens, flags))
-				return (free_and_return_null(var));
-			 free(flags->string);
-			flags->string = ft_strdup("");
-		}
-		else if (flags->string && ft_strlen(flags->string) == 0)
-		{
-			if (*pos - 2 > 0 && input[*pos - 2] == ' ')
-			{
-				if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
-					return (free_2_and_return_null(flags->string, var));
-			}
-		}
-		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
-			return (free_2_and_return_null(flags->string, var));
-		*pos += 2;
-		flags->has_exit_code = true;
-	}
+		var = handle_question_mark(input, pos, tokens, flags);
 	else
-	{
-		free(var);
 		var = quotes_handle_variable_expansion(&input, pos, flags);
+	return (var);
+}
+
+char	*handle_question_mark(char *input, size_t *pos, t_token_list **tokens,
+		t_token_flags *flags)
+{
+	char	*var;
+
+	var = ft_strdup("");
+	if (!var)
+		return (return_mem_alloc_error());
+	if (flags->string && ft_strlen(flags->string) > 0)
+	{
+		if (!add_command_or_string(tokens, flags))
+			return (free_and_return_null(var));
+		free(flags->string);
+		flags->string = ft_strdup("");
 	}
+	else if (flags->string && ft_strlen(flags->string) == 0)
+	{
+		if (*pos - 2 > 0 && input[*pos - 2] == ' ')
+		{
+			if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
+				return (free_2_and_return_null(flags->string, var));
+		}
+	}
+	if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
+		return (free_2_and_return_null(flags->string, var));
+	*pos += 2;
+	flags->has_exit_code = true;
 	return (var);
 }
