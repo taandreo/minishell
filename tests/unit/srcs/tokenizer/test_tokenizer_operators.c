@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   test_tokenizer_operators.c                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 15:29:41 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:31:32 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "tester.h"
 
 int	tokenize_operators(const char *input, size_t *position,

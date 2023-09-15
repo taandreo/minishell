@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   return_errors_helper_bonus.c                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 15:33:04 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:33:05 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 void	*return_mem_alloc_error(void)
@@ -32,9 +44,11 @@ int	unclosed_quotes_error(t_token_list **tokens)
 	return (GENERAL_ERROR);
 }
 
-int	unclosed_paren_error(t_token_list **tokens)
+int	unclosed_paren_error(t_token_list **tokens, char **prompt)
 {
 	ft_dprintf(STDERR_FILENO, "minishell: Unclosed parenthesis\n");
 	free_token_list(tokens);
+	if (prompt && *prompt)
+		free(*prompt);
 	return (GENERAL_ERROR);
 }

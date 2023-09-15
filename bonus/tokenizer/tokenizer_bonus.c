@@ -1,36 +1,63 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_bonus.c                                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 15:32:11 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:32:12 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 void	advance_space(char *input, size_t *pos, t_token_list **tokens,
 			size_t input_len);
+void	add_token_end(t_token_list **tokens, t_token_flags *flags,
+			char **prompt);
+t_bool	create_flags_prompt(t_token_flags *flags, t_token_list **tokens,
+			char *input);
 
 t_token_list	*tokenizer(char *input, t_token_flags *flags)
 {
 	t_token_list	*tokens;
-	char			*input_dup;
-	size_t			position;
+	size_t			pos;
 	char			c;
 
-	position = 0;
+	pos = 0;
 	tokens = create_token_list();
-	input_dup = ft_strdup(input);
-	while (position < ft_strlen(input_dup))
+	if (!create_flags_prompt(flags, &tokens, input))
+		return (return_mem_alloc_error());
+	while (pos < ft_strlen(flags->input))
 	{
-		c = input_dup[position];
+		c = flags->input[pos];
 		if (ft_is_space(c))
 		{
-			advance_space(input_dup, &position, &tokens, ft_strlen(input_dup));
+			advance_space(flags->input, &pos, &tokens, ft_strlen(flags->input));
 			continue ;
 		}
-		flags->status = tokenize_by_category(&input_dup, &position, &tokens, flags);
+		flags->status = tokenize_by_category(&flags->input, &pos, &tokens,
+				flags);
 		if (flags->status != SUCCESS)
 			break ;
 	}
 	if (flags->paren_count)
-		flags->status = unclosed_paren_error(&tokens);
-	if (flags->status == SUCCESS)
-		add_token(&tokens, TOKEN_END, "");
-	free(input_dup);
+		flags->status = unclosed_paren_error(&tokens, &flags->input);
+	add_token_end(&tokens, flags, &flags->input);
 	return (tokens);
+}
+
+t_bool	create_flags_prompt(t_token_flags *flags, t_token_list **tokens,
+			char *input)
+{
+	flags->input = ft_strdup(input);
+	if (!flags->input)
+	{
+		free_token_list(tokens);
+		return (false);
+	}
+	return (true);
 }
 
 void	advance_space(char *input, size_t *pos, t_token_list **tokens,
@@ -42,4 +69,13 @@ void	advance_space(char *input, size_t *pos, t_token_list **tokens,
 			*pos, ft_strlen(input)))
 		add_token(tokens, TOKEN_SPACE, " ");
 	(*pos)++;
+}
+
+void	add_token_end(t_token_list **tokens, t_token_flags *flags,
+			char **prompt)
+{
+	if (flags->status == SUCCESS)
+		add_token(tokens, TOKEN_END, "");
+	if (prompt && *prompt)
+		free(*prompt);
 }

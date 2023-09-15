@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add_string_token_helper.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 15:30:49 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:31:25 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 int	add_builtin_or_command(char *string, t_token_list **tokens,
@@ -39,10 +51,7 @@ int	add_filename_or_string(char *string, t_token_list **tokens,
 				flags->inside_quotes = false;
 			}
 			else
-			{
 				exit_status = check_ambiguous_redirect(string, tokens, flags);
-			}
-
 		}
 	}
 	flags->is_redirection = false;
@@ -57,7 +66,7 @@ int	check_ambiguous_redirect(char *string, t_token_list **tokens,
 	if (flags->var_len > -1 || ft_strlen(string) == 0)
 	{
 		ft_dprintf(STDERR_FILENO,
-				"minishell: %s: ambiguous redirect\n", flags->var);
+			"minishell: %s: ambiguous redirect\n", flags->var);
 		free_token_list(tokens);
 		return (GENERAL_ERROR);
 	}
@@ -86,7 +95,7 @@ int	add_special_or_string(char *string, t_token_list **tokens, char *input,
 		size_t pos)
 {
 	if ((*tokens)->tail->token.type == TOKEN_ECHO
-			&& ft_strcmp(string, "-n") == 0)
+		&& ft_strcmp(string, "-n") == 0)
 		return (add_token(tokens, TOKEN_SPECIAL_ARG, string));
 	else
 		return (add_string_and_maybe_space(string, tokens, input, pos));

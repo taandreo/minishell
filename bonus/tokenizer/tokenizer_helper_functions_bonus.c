@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   tokenizer_helper_functions_bonus.c                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 15:32:17 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:32:18 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 char	peek_next(const char *input, size_t position, size_t input_len)
@@ -39,6 +51,7 @@ t_token_flags	init_flags(size_t input_len)
 	flags.has_exit_code = false;
 	flags.quote_type = '\0';
 	flags.string = NULL;
+	flags.input = NULL;
 	flags.var = NULL;
 	return (flags);
 }

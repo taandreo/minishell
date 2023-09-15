@@ -1,7 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_quotes_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 15:30:54 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:31:21 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 char	*extract_quoted_string(char **input, size_t *pos,
 			t_token_list **tokens, t_token_flags *flags);
+char	*add_char_and_advance_pos(char *input, size_t *pos);
 
 char	*handle_quotes(char **input, size_t *position,
 			t_token_list **tokens, t_token_flags *flags)
@@ -31,8 +44,8 @@ char	*handle_quotes(char **input, size_t *position,
 char	*extract_quoted_string(char **input, size_t *pos,
 			t_token_list **tokens, t_token_flags *flags)
 {
-	char *tmp;
-	const char *start;
+	char		*tmp;
+	const char	*start;
 
 	start = *input + *pos;
 	if (!flags->var)
@@ -47,20 +60,23 @@ char	*extract_quoted_string(char **input, size_t *pos,
 		if (flags->quote_type == '\"' && (*input)[*pos] == '$')
 			tmp = substitute_variable(*input, pos, tokens, flags);
 		else
-		{
-			tmp = ft_strndup(*input + *pos, 1);
-			(*pos)++;
-		}
+			tmp = add_char_and_advance_pos(*input, pos);
 		if (!tmp)
-		{
-			free_str_and_nullify(&flags->string);
-			return (return_mem_alloc_error());
-		}
+			return (free_str_nullify_and_malloc_error(&flags->string));
 		flags->string = join_and_cleanup(&flags->string, &tmp);
 	}
 	if (flags->has_exit_code && flags->string && ft_strlen(flags->string) == 0)
 		free_str_and_nullify(&flags->string);
 	return (flags->string);
+}
+
+char	*add_char_and_advance_pos(char *input, size_t *pos)
+{
+	char	*tmp;
+
+	tmp = ft_strndup(input + *pos, 1);
+	(*pos)++;
+	return (tmp);
 }
 
 char	*substitute_variable(char *input, size_t *pos,
@@ -75,7 +91,7 @@ char	*substitute_variable(char *input, size_t *pos,
 		{
 			if (!add_command_or_string(tokens, flags))
 				return (free_and_return_null(var));
-			free(flags->string);
+			 free(flags->string);
 			flags->string = ft_strdup("");
 		}
 		else if (flags->string && ft_strlen(flags->string) == 0)
@@ -85,7 +101,6 @@ char	*substitute_variable(char *input, size_t *pos,
 				if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
 					return (free_2_and_return_null(flags->string, var));
 			}
-
 		}
 		if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
 			return (free_2_and_return_null(flags->string, var));

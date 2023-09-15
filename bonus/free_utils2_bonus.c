@@ -1,22 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_structures_bonus.c                            :+:      :+:    :+:   */
+/*   free_utils2_bonus.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 15:32:59 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/09/15 15:33:00 by ebezerra         ###   ########.fr       */
+/*   Created: 2023/09/15 15:30:44 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:32:30 by ebezerra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	init_command_part_fields(t_command_part *command_part)
+void	free_2_str_and_nullify(char **str1, char **str2)
 {
-	command_part->type = TOKEN_INVALID;
-	command_part->u_cmd.builtin_cmd = NULL;
-	command_part->u_cmd.cmd_name = NULL;
-	command_part->arguments = NULL;
-	command_part->redirections = NULL;
+	if (str1 && *str1)
+		free_str_and_nullify(str1);
+	if (str2 && *str2)
+		free_str_and_nullify(str2);
+}
+
+void	*free_str_nullify_and_malloc_error(char **str)
+{
+	free_str_and_nullify(str);
+	return (return_mem_alloc_error());
 }

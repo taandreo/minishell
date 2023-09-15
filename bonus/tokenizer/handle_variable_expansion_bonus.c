@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   handle_variable_expansion_bonus.c                  :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/09/15 15:30:56 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:31:20 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 t_bool	add_space_if_success(size_t *pos, t_token_list **tokens,
@@ -18,8 +30,8 @@ t_bool	handle_special_case_variable(char *input, size_t *pos,
 {
 	if (*pos > 0 && ft_is_space(input[*pos - 1])
 		&& ((*tokens)->tail->token.type == TOKEN_STRING
-		|| (*tokens)->tail->token.type == TOKEN_COMMAND_NAME
-		|| is_builtin((*tokens)->tail->token.value)))
+			|| (*tokens)->tail->token.type == TOKEN_COMMAND_NAME
+			|| is_builtin((*tokens)->tail->token.value)))
 	{
 		if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
 			return (free_nullify_and_return_null(&flags->string) != NULL);

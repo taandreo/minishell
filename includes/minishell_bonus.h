@@ -75,6 +75,7 @@ typedef struct s_token_flags
 	char	quote_type;
 	char	*var;
 	char	*string;
+	char	*input;
 }	t_token_flags;
 
 typedef struct s_token
@@ -252,7 +253,8 @@ int				tokenize_parenthesis(char *input, size_t *pos, t_token_list **tokens,
 					t_token_flags *flags);
 int				tokenize_wildcard(char *input, size_t *pos, t_token_list **tokens);
 void			*free_nullify_and_return_null(char **ptr);
-int				unclosed_paren_error(t_token_list **tokens);
+int				unclosed_paren_error(t_token_list **tokens, char **prompt);
 t_bool			decrease_len(t_token_flags *flags);
 int				free_vars_and_return_misuse(char *string, char *tmp);
+void			*free_str_nullify_and_malloc_error(char **str);
 #endif

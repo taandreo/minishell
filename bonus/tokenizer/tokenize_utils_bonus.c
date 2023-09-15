@@ -1,22 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init_structures_bonus.c                            :+:      :+:    :+:   */
+/*   tokenize_utils_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 15:32:59 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/09/15 15:33:00 by ebezerra         ###   ########.fr       */
+/*   Created: 2023/09/15 15:31:58 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/09/15 15:31:59 by ebezerra         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	init_command_part_fields(t_command_part *command_part)
+t_bool	is_builtin(char *token)
 {
-	command_part->type = TOKEN_INVALID;
-	command_part->u_cmd.builtin_cmd = NULL;
-	command_part->u_cmd.cmd_name = NULL;
-	command_part->arguments = NULL;
-	command_part->redirections = NULL;
+	if (ft_strcmp(token, "echo") == 0
+		|| ft_strcmp(token, "cd") == 0
+		|| ft_strcmp(token, "pwd") == 0
+		|| ft_strcmp(token, "export") == 0
+		|| ft_strcmp(token, "unset") == 0
+		|| ft_strcmp(token, "env") == 0
+		|| ft_strcmp(token, "exit") == 0)
+		return (true);
+	return (false);
+}
+
+t_bool	decrease_len(t_token_flags *flags)
+{
+	if (flags->var_len > -1)
+		flags->var_len--;
+	return (true);
 }
