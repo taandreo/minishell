@@ -186,7 +186,7 @@ t_token_type	get_builtin_token(char *token);
 char			*get_string_from_input(char **input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				add_builtin_or_command(char *return_string,
-					t_token_list **tokens, t_token_flags *flags);
+					t_token_list **tokens, t_token_flags *flags, char next);
 int				add_filename_or_string(char *return_string,
 					t_token_list **tokens, t_token_flags *flags);
 int				add_special_or_string(char *string, t_token_list **tokens,
@@ -241,7 +241,7 @@ t_bool			handle_special_case_variable(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_by_category(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_quotes(char **input, size_t *position,
+int				tokenize_quotes(char **input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_redirections(char *input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
@@ -257,4 +257,5 @@ int				unclosed_paren_error(t_token_list **tokens, char **prompt);
 t_bool			decrease_len(t_token_flags *flags);
 int				free_vars_and_return_misuse(char *string, char *tmp);
 void			*free_str_nullify_and_malloc_error(char **str);
+void			free_2_str_and_nullify(char **str1, char **str2);
 #endif
