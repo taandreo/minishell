@@ -14,9 +14,9 @@ CFLAGS = -Wall -Wextra -Werror -g3
 UNAME := $(shell uname)
 LIBS := -lft -lreadline
 
-# ifeq ($(UNAME), Darwin)
-# 	CFLAGS += -arch x86_64
-# endif
+ifeq ($(UNAME), Darwin)
+ 	CFLAGS += -arch x86_64
+endif
 
 SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 			tokenizer/tokenizer.c\
