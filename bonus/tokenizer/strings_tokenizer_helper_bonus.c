@@ -84,22 +84,6 @@ t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 	return (true);
 }
 
-char	*join_and_cleanup(char **malloced_str1, char **malloced_str2)
-{
-	char	*new_str;
-
-	if (!malloced_str1 || !malloced_str2 || !*malloced_str1 || !*malloced_str2)
-		return (NULL);
-	new_str = ft_strjoin(*malloced_str1, *malloced_str2);
-	free(*malloced_str1);
-	*malloced_str1 = NULL;
-	free(*malloced_str2);
-	*malloced_str2 = NULL;
-	if (!new_str)
-		return (return_mem_alloc_error());
-	return (new_str);
-}
-
 int	strings_handle_variable_expansion(char **input, size_t *pos,
 			t_token_flags *flags)
 {
