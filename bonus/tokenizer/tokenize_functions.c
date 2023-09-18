@@ -35,7 +35,7 @@ int	tokenize_quotes(char **input, size_t *pos,
 	else
 	{
 		if (flags->string)
-			exit_status = add_string_and_maybe_space(flags->string, tokens,
+			exit_status = add_special_or_string(flags->string, tokens,
 					*input, *pos);
 	}
 	free_2_str_and_nullify(&flags->var, &flags->string);

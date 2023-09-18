@@ -90,13 +90,3 @@ void	*add_unclosed_quotes_token(t_token_list **tokens, t_token_flags *flags,
 	}
 	return (NULL);
 }
-
-int	add_special_or_string(char *string, t_token_list **tokens, char *input,
-		size_t pos)
-{
-	if ((*tokens)->tail->token.type == TOKEN_ECHO
-		&& ft_strcmp(string, "-n") == 0)
-		return (add_token(tokens, TOKEN_SPECIAL_ARG, string));
-	else
-		return (add_string_and_maybe_space(string, tokens, input, pos));
-}
