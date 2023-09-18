@@ -125,6 +125,7 @@ typedef struct s_redirections
 typedef struct s_builtin_command
 {
 	t_token_type	type;
+	char			*value;
 	t_arguments		*arguments;
 }	t_builtin_command;
 
@@ -153,11 +154,20 @@ typedef struct s_conjunctions
 	struct s_conjunctions	*next;
 }	t_conjunctions;
 
+typedef struct s_grouping	t_grouping;
+
 typedef struct s_command
 {
 	t_pipeline		*pipeline;
 	t_conjunctions	*conjunctions;
+	t_grouping		*grouping;
 }	t_command;
+
+typedef struct s_grouping
+{
+	t_command		*enclosed_cmd;
+	t_grouping		*next_grouping;
+}	t_grouping;
 
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(char **input, size_t *position,
@@ -180,7 +190,7 @@ t_bool			is_string_start(char c, t_token_flags *flags);
 t_token_flags	init_flags(size_t input_len);
 int				add_token_1_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
-int 			add_token_2_pos(size_t *pos, t_token_list **tokens,
+int				add_token_2_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
 t_token_type	get_builtin_token(char *token);
 char			*get_string_from_input(char **input, size_t *pos,
@@ -193,7 +203,8 @@ int				add_special_or_string(char *string, t_token_list **tokens,
 					char *input, size_t pos);
 int				add_string_and_maybe_space(char *string, t_token_list **tokens,
 					char *input, size_t pos);
-t_bool			add_command_or_string(t_token_list **tokens, t_token_flags *flags);
+t_bool			add_command_or_string(t_token_list **tokens,
+					t_token_flags *flags);
 t_command		*parse(t_token_list *tokens);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
@@ -209,7 +220,8 @@ void			free_redirection(t_redirection *redir);
 void			free_arguments(t_arguments *args);
 void			free_argument(t_argument *arg);
 void			init_command_part_fields(t_command_part *command_part);
-void			add_subsequent_redirections_to_initial(t_command_part *command_part,
+void			add_subsequent_redirections_to_initial(
+					t_command_part *command_part,
 					t_redirections *initial_redirections);
 t_command_part	*handle_builtin_tokens(t_command_part *command_part,
 					t_token_list *tokens);
@@ -222,6 +234,7 @@ void			*free_2_and_return_null(void *ptr1, void *ptr2);
 char			*expand_variable_string(char *input, size_t *pos,
 					t_token_flags *flags);
 char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
+char			*join_and_cleanup_1st(char **malloced_str1, char *str2);
 char			*substitute_variable(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				strings_handle_variable_expansion(char **input, size_t *pos,
@@ -230,7 +243,7 @@ char			*quotes_handle_variable_expansion(char **input, size_t *pos,
 					t_token_flags *flags);
 void			free_str_and_nullify(char **ptr);
 void			*initialize_var_string(char *input, size_t pos,
-					t_token_flags *flags, const char  *start);
+					t_token_flags *flags, const char *start);
 void			*add_unclosed_quotes_token(t_token_list **tokens,
 					t_token_flags *flags, char *quoted_string);
 int				check_ambiguous_redirect(char *string, t_token_list **tokens,
@@ -249,9 +262,10 @@ int				tokenize_operators(char *input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_strings(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_parenthesis(char *input, size_t *pos, t_token_list **tokens,
-					t_token_flags *flags);
-int				tokenize_wildcard(char *input, size_t *pos, t_token_list **tokens);
+int				tokenize_parenthesis(char *input, size_t *pos,
+					t_token_list **tokens, t_token_flags *flags);
+int				tokenize_wildcard(char *input, size_t *pos,
+					t_token_list **tokens);
 void			*free_nullify_and_return_null(char **ptr);
 int				unclosed_paren_error(t_token_list **tokens, char **prompt);
 t_bool			decrease_len(t_token_flags *flags);
