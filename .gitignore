@@ -1,5 +1,6 @@
 libft/
 minishell
+bultin_test
 minishell.o
 .minishell_bonus.txt
 *.o

@@ -25,15 +25,19 @@ void teardown() {
     }
 }
 
-static void echo_1n()
+static void echo_simple()
 {
-	setup();
-	teardown();
+	char *input[] = {"simple", "test"};
+	// setup();
+	bultin_echo(input);
+	// teardown();
+	FILE* temp_file = fopen(temp_filename, "r");
+	assert_non_null(temp_file);
 }
 
 int main(void){
     const struct CMUnitTest echo_tests[] = {
-		cmocka_unit_test(echo_1n),
+		cmocka_unit_test(echo_simple),
 	};
     return cmocka_run_group_tests(echo_tests, NULL, NULL);
 }

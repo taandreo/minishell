@@ -48,6 +48,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/free/free_parse_tree1_bonus.c\
 			parser/free/free_parse_tree2_bonus.c\
 			parser/init/init_structures_bonus.c\
+			bultin/echo.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
@@ -88,19 +89,6 @@ $(BONUS_OBJS_DIR)/%.o: $(BONUS_DIR)/%.c
 	mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
 
-BULTIN_TEST_BIN  = bultin_test
-BULTIN_TEST_DIR  = tests/bultin
-BULTIN_TEST_SRCS = $(wildcard $(BULTIN_TEST_DIR)/*.c) $(subst $(BONUS_DIR)/minishell_bonus.c,,$(BONUS))
-BULTIN_TEST_OBJS = $(subst $(BONUS_DIR)/, $(BONUS_OBJS_DIR)/, $(patsubst %.c, %.o, $(BULTIN_TEST_SRCS)))
-BULTIN_TEST_LIBS = -lcmocka
-
-$(BULTIN_TEST_DIR)/%.o: $(BULTIN_TEST_DIR)/%.c
-	$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
-
-$(BULTIN_TEST_BIN): $(BULTIN_TEST_OBJS) | libft
-	$(CC) $(CFLAGS) $(BULTIN_TEST_OBJS) -o bultin_test -L$(LIBFT_DIR) $(LIBS) $(BULTIN_TEST_LIBS)
-	#-I$(INC_DIR) -I$(LIBFT_DIR)/include 
-
 all: $(NAME)
 
 bonus: $(NAME_BONUS)
@@ -122,5 +110,17 @@ re: fclean all
 git_libft:
 	git clone https://github.com/taandreo/42-libft.git libft
 log:
-	@echo $(BULTIN_TEST_OBJS0)
-	@echo $(BULTIN_TEST_OBJS1)
+	@echo $(BULTIN_TEST_OBJS)
+
+# BULTIN TESTER
+BULTIN_TEST_BIN  = bultin_test
+BULTIN_TEST_DIR  = tests/bultin
+BULTIN_TEST_SRCS = $(wildcard $(BULTIN_TEST_DIR)/*.c) $(subst $(BONUS_DIR)/minishell_bonus.c,,$(BONUS))
+BULTIN_TEST_OBJS = $(subst $(BONUS_DIR)/, $(BONUS_OBJS_DIR)/, $(patsubst %.c, %.o, $(BULTIN_TEST_SRCS)))
+BULTIN_TEST_LIBS = -lcmocka
+
+$(BULTIN_TEST_DIR)/%.o: $(BULTIN_TEST_DIR)/%.c
+	$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
+
+$(BULTIN_TEST_BIN): $(BULTIN_TEST_OBJS) | libft
+	$(CC) $(CFLAGS) $(BULTIN_TEST_OBJS) -o bultin_test -L$(LIBFT_DIR) $(LIBS) $(BULTIN_TEST_LIBS)
