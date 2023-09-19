@@ -13,7 +13,7 @@
 #include "minishell_bonus.h"
 
 void	add_subsequent_redirections_to_initial(t_command_part *command_part,
-			t_redirections *initial_redirections)
+			t_redirections *initial_redirections, t_token_list *tokens)
 {
 	t_redirections	*subsequent_redirections;
 	t_redirections	*last_initial_redirection;

@@ -205,10 +205,11 @@ int				add_string_and_maybe_space(char *string, t_token_list **tokens,
 t_bool			add_command_or_string(t_token_list **tokens,
 					t_token_flags *flags);
 t_command		*parse(t_token_list *tokens);
+t_command		*parse_command(t_token_list *tokens);
+t_redirections	*parse_redirections(t_token_list *tokens);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
 void			advance_token(t_token_list *tokens);
-t_command		*parse_command(t_token_list *tokens);
 void			free_command(t_command *cmd);
 void			free_grouping(t_grouping *grouping);
 void			free_conjunction(t_conjunctions *conj);
@@ -222,7 +223,7 @@ void			free_argument(t_argument *arg);
 void			init_command_part_fields(t_command_part *command_part);
 void			add_subsequent_redirections_to_initial(
 					t_command_part *command_part,
-					t_redirections *initial_redirections);
+					t_redirections *initial_redirections, t_token_list *tokens);
 t_command_part	*handle_builtin_tokens(t_command_part *command_part,
 					t_token_list *tokens);
 t_command_part	*handle_command_name_tokens(t_command_part *command_part,
