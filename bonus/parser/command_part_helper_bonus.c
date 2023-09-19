@@ -43,7 +43,7 @@ t_command_part	*handle_builtin_tokens(t_command_part *command_part,
 	}
 	command_part->u_cmd.builtin_cmd->type = command_part->type;
 	advance_token(tokens);
-	command_part->u_cmd.builtin_cmd->arguments = parse_arguments(tokens);
+//	command_part->u_cmd.builtin_cmd->arguments = parse_arguments(tokens);
 	return (command_part);
 }
 
@@ -58,6 +58,6 @@ t_command_part	*handle_command_name_tokens(t_command_part *command_part,
 		return (return_mem_alloc_error());
 	}
 	advance_token(tokens);
-	command_part->arguments = parse_arguments(tokens);
+//	command_part->arguments = parse_arguments(tokens);
 	return (command_part);
 }

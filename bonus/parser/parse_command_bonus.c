@@ -140,6 +140,6 @@ t_command_part	*parse_command_part(t_token_list *tokens)
 		free_command_part(command_part);
 		return (return_syntax_error(current_token(tokens).value));
 	}
-	add_subsequent_redirections_to_initial(command_part, initial_redirections);
+	add_subsequent_redirections_to_initial(command_part, initial_redirections, tokens);
 	return (command_part);
 }
