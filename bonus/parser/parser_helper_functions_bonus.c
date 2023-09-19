@@ -36,3 +36,14 @@ void	advance_token(t_token_list *tokens)
 	if (tokens->current && tokens->current->next)
 		tokens->current = tokens->current->next;
 }
+
+t_token	peek_token(t_token_list *tokens)
+{
+	t_token	empty_token;
+
+	if (tokens->current && tokens->current->next)
+		return (tokens->current->next->token);
+	empty_token.type = TOKEN_END;
+	empty_token.value = NULL;
+	return (empty_token);
+}

@@ -110,10 +110,17 @@ typedef struct s_arguments
 	struct s_arguments	*next;
 }	t_arguments;
 
+typedef struct s_filename
+{
+	t_token_type		type;
+	char				*value;
+	struct s_filename	*next;
+}	t_filename;
+
 typedef struct s_redirection
 {
 	t_token_type	type;
-	char			*filename;
+	t_filename		*filename;
 }	t_redirection;
 
 typedef struct s_redirections
@@ -210,6 +217,7 @@ t_redirections	*parse_redirections(t_token_list *tokens);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
 void			advance_token(t_token_list *tokens);
+t_token			peek_token(t_token_list *tokens);
 void			free_command(t_command *cmd);
 void			free_grouping(t_grouping *grouping);
 void			free_conjunction(t_conjunctions *conj);
