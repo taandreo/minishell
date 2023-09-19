@@ -125,7 +125,6 @@ typedef struct s_redirections
 typedef struct s_builtin_command
 {
 	t_token_type	type;
-	char			*value;
 	t_arguments		*arguments;
 }	t_builtin_command;
 
@@ -166,6 +165,7 @@ typedef struct s_command
 typedef struct s_grouping
 {
 	t_command		*enclosed_cmd;
+	t_conjunctions	*conjunctions;
 	t_grouping		*next_grouping;
 }	t_grouping;
 
@@ -179,7 +179,6 @@ t_bool			is_command(char *token);
 t_bool			is_redirections(char *token);
 t_bool			is_pipe_or_bonus_operators(char *token);
 void			handle_not_command_error(char *token);
-void			syntax_error(char *token);
 t_token_list	*create_token_list(void);
 int				add_token(t_token_list **tokens, t_token_type type,
 					const char *value);
@@ -211,6 +210,7 @@ t_token_type	current_token_type(t_token_list *tokens);
 void			advance_token(t_token_list *tokens);
 t_command		*parse_command(t_token_list *tokens);
 void			free_command(t_command *cmd);
+void			free_grouping(t_grouping *grouping);
 void			free_conjunction(t_conjunctions *conj);
 void			free_pipeline(t_pipeline *pipe);
 void			free_command_part(t_command_part *cmd_part);

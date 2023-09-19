@@ -31,7 +31,9 @@ void	free_pipeline(t_pipeline *pipe)
 	if (pipe)
 	{
 		free_command_part(pipe->cmd_part);
+		pipe->cmd_part = NULL;
 		free_pipeline(pipe->next);
+		pipe->next= NULL;
 		free(pipe);
 	}
 }
@@ -41,7 +43,9 @@ void	free_conjunction(t_conjunctions *conj)
 	if (conj)
 	{
 		free_pipeline(conj->pipeline);
+		conj->pipeline = NULL;
 		free_conjunction(conj->next);
+		conj->next= NULL;
 		free(conj);
 	}
 }
@@ -53,5 +57,19 @@ void	free_command(t_command *cmd)
 		free_pipeline(cmd->pipeline);
 		free_conjunction(cmd->conjunctions);
 		free(cmd);
+	}
+}
+
+void	free_grouping(t_grouping *grouping)
+{
+	if (grouping)
+	{
+		free_command(grouping->enclosed_cmd);
+		grouping->enclosed_cmd = NULL;
+		free_conjunction(grouping->conjunctions);
+		grouping->conjunctions = NULL;
+		free_grouping(grouping->next_grouping);
+		grouping->next_grouping = NULL;
+		free(grouping);
 	}
 }
