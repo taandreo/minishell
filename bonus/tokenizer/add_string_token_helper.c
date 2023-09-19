@@ -13,7 +13,7 @@
 #include "minishell_bonus.h"
 
 int	add_builtin_or_command(char *string, t_token_list **tokens,
-		t_token_flags *flags)
+		t_token_flags *flags, char next)
 {
 	int		exit_status;
 
@@ -25,7 +25,7 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 		else
 			exit_status = add_token(tokens, TOKEN_COMMAND_NAME, string);
 	}
-	if (!flags->has_exit_code)
+	if (!flags->has_exit_code || next == ' ')
 	{
 		flags->is_command = false;
 		flags->has_command = true;
@@ -89,14 +89,4 @@ void	*add_unclosed_quotes_token(t_token_list **tokens, t_token_flags *flags,
 		flags->string = NULL;
 	}
 	return (NULL);
-}
-
-int	add_special_or_string(char *string, t_token_list **tokens, char *input,
-		size_t pos)
-{
-	if ((*tokens)->tail->token.type == TOKEN_ECHO
-		&& ft_strcmp(string, "-n") == 0)
-		return (add_token(tokens, TOKEN_SPECIAL_ARG, string));
-	else
-		return (add_string_and_maybe_space(string, tokens, input, pos));
 }

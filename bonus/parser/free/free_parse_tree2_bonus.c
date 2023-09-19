@@ -26,7 +26,9 @@ void	free_arguments(t_arguments *args)
 	if (args)
 	{
 		free_argument(args->argument);
+		args->argument = NULL;
 		free_arguments(args->next);
+		args->next = NULL;
 		free(args);
 	}
 }
@@ -45,7 +47,9 @@ void	free_redirections(t_redirections *redirs)
 	if (redirs)
 	{
 		free_redirection(redirs->redirection);
+		redirs->redirection = NULL;
 		free_redirections(redirs->next);
+		redirs->next = NULL;
 		free(redirs);
 	}
 }

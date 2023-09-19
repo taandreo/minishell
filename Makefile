@@ -14,9 +14,9 @@ CFLAGS = -Wall -Wextra -Werror -g3
 UNAME := $(shell uname)
 LIBS := -lft -lreadline
 
-# ifeq ($(UNAME), Darwin)
-# 	CFLAGS += -arch x86_64
-# endif
+ifeq ($(UNAME), Darwin)
+ 	CFLAGS += -arch x86_64
+endif
 
 SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 			tokenizer/tokenizer.c\
@@ -25,6 +25,7 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			free_utils_bonus.c\
 			free_utils2_bonus.c\
+			string_utils_bonus.c\
 			tokenizer/tokenize_by_category_bonus.c\
 			tokenizer/tokenize_functions.c\
 			tokenizer/tokenize_wildcard.c\
@@ -42,6 +43,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/add_token_helper_bonus.c\
 			parser/parser_bonus.c\
 			parser/parse_command_bonus.c\
+			parser/parse_redirections_bonus.c\
 			parser/parser_helper_functions_bonus.c\
 			parser/command_part_helper_bonus.c\
 			error/return_errors_helper_bonus.c\

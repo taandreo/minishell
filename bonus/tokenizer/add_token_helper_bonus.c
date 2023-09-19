@@ -50,3 +50,31 @@ int	add_token_2_pos(size_t *pos, t_token_list **tokens,
 		return (add_token(tokens, type, "&&"));
 	return (add_token(tokens, type, "||"));
 }
+
+int	add_special_or_string(char *string, t_token_list **tokens, char *input,
+		size_t pos)
+{
+	if ((*tokens)->tail->token.type == TOKEN_ECHO
+		&& ft_strcmp(string, "-n") == 0)
+		return (add_token(tokens, TOKEN_SPECIAL_ARG, string));
+	else
+		return (add_string_and_maybe_space(string, tokens, input, pos));
+}
+
+int	add_string_and_maybe_space(char *string, t_token_list **tokens,
+		char *input, size_t pos)
+{
+	int	exit_status;
+
+	if ((*tokens)->tail->token.type == TOKEN_EXIT_CODE)
+	{
+		exit_status = add_token(tokens, TOKEN_STRING, string);
+		if (exit_status != SUCCESS)
+			return (exit_status);
+		if (input[pos] && input[pos] == ' ' && input[pos + 1])
+			exit_status = add_token(tokens, TOKEN_SPACE, " ");
+	}
+	else
+		exit_status = add_token(tokens, TOKEN_STRING, string);
+	return (exit_status);
+}

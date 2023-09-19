@@ -12,7 +12,7 @@
 
 #include "minishell_bonus.h"
 
-int	tokenize_quotes(char **input, size_t *position,
+int	tokenize_quotes(char **input, size_t *pos,
 		t_token_list **tokens, t_token_flags *flags)
 {
 	int				exit_status;
@@ -20,7 +20,7 @@ int	tokenize_quotes(char **input, size_t *position,
 	exit_status = SUCCESS;
 	if (!tokens || !*tokens)
 		return (MISUSE);
-	flags->string = handle_quotes(input, position, tokens, flags);
+	flags->string = handle_quotes(input, pos, tokens, flags);
 	if (!flags->string && !flags->has_exit_code)
 	{
 		if (flags->var)
@@ -28,17 +28,17 @@ int	tokenize_quotes(char **input, size_t *position,
 		return (misuse_or_unclosed_quotes_error(tokens));
 	}
 	if (flags->is_command)
-		exit_status = add_builtin_or_command(flags->string, tokens, flags);
+		exit_status = add_builtin_or_command(flags->string, tokens, flags,
+				(*input)[*pos]);
 	else if (flags->is_redirection)
 		exit_status = add_filename_or_string(flags->string, tokens, flags);
 	else
 	{
 		if (flags->string)
-			exit_status = add_string_and_maybe_space(flags->string, tokens,
-					*input, *position);
+			exit_status = add_special_or_string(flags->string, tokens,
+					*input, *pos);
 	}
-	free_str_and_nullify(&flags->var);
-	free_str_and_nullify(&flags->string);
+	free_2_str_and_nullify(&flags->var, &flags->string);
 	return (exit_status);
 }
 
@@ -88,7 +88,8 @@ int	tokenize_strings(char **input, size_t *pos,
 	if (!return_string && !flags->has_exit_code)
 		return (misuse_or_unclosed_quotes_error(tokens));
 	if (flags->is_command)
-		exit_status = add_builtin_or_command(return_string, tokens, flags);
+		exit_status = add_builtin_or_command(return_string, tokens, flags,
+				(*input)[*pos]);
 	else if (flags->is_redirection)
 		exit_status = add_filename_or_string(return_string, tokens, flags);
 	else
