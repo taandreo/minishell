@@ -12,7 +12,8 @@
 
 #include "minishell_bonus.h"
 
-int	tokenize_wildcard(char *input, size_t *pos, t_token_list **tokens)
+int	tokenize_wildcard(char *input, size_t *pos, t_token_list **tokens,
+		t_token_flags *flags)
 {
 	int	exit_status;
 
@@ -20,7 +21,22 @@ int	tokenize_wildcard(char *input, size_t *pos, t_token_list **tokens)
 	if (exit_status != SUCCESS)
 		return (exit_status);
 	(*pos)++;
-	if (input[*pos] && ft_is_space(input[*pos]))
-		exit_status = add_token(tokens, TOKEN_SPACE, " ");
+	if (flags->is_command)
+	{
+		if (!input[*pos] || input[*pos] == ' ')
+		{
+			flags->is_command = false;
+			flags->has_command = true;
+		}
+	}
+	else if (flags->is_redirection)
+	{
+		if (!input[*pos] || input[*pos] == ' ')
+		{
+			flags->is_redirection = false;
+			if (!flags->has_command)
+				flags->is_command = true;
+		}
+	}
 	return (exit_status);
 }

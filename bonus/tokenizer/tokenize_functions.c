@@ -23,15 +23,15 @@ int	tokenize_quotes(char **input, size_t *pos,
 	flags->string = handle_quotes(input, pos, tokens, flags);
 	if (!flags->string && !flags->has_exit_code)
 	{
-		if (flags->var)
-			free_str_and_nullify(&flags->var);
+		free_str_and_nullify(&flags->var);
 		return (misuse_or_unclosed_quotes_error(tokens));
 	}
 	if (flags->is_command)
 		exit_status = add_builtin_or_command(flags->string, tokens, flags,
 				(*input)[*pos]);
 	else if (flags->is_redirection)
-		exit_status = add_filename_or_string(flags->string, tokens, flags);
+		exit_status = add_filename_or_string(flags->string, tokens, flags,
+				(*input)[*pos]);
 	else
 	{
 		if (flags->string)
@@ -91,15 +91,15 @@ int	tokenize_strings(char **input, size_t *pos,
 		exit_status = add_builtin_or_command(return_string, tokens, flags,
 				(*input)[*pos]);
 	else if (flags->is_redirection)
-		exit_status = add_filename_or_string(return_string, tokens, flags);
+		exit_status = add_filename_or_string(return_string, tokens, flags,
+				(*input)[*pos]);
 	else
 	{
 		if (return_string)
 			exit_status = add_special_or_string(return_string, tokens, *input,
 					*pos);
 	}
-	free_str_and_nullify(&flags->var);
-	free_str_and_nullify(&flags->string);
+	free_2_str_and_nullify(&flags->var, &flags->string);
 	return (exit_status);
 }
 

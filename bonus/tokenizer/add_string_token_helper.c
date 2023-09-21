@@ -25,7 +25,7 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 		else
 			exit_status = add_token(tokens, TOKEN_COMMAND_NAME, string);
 	}
-	if (!flags->has_exit_code || next == ' ')
+	if (!next || next == ' ')
 	{
 		flags->is_command = false;
 		flags->has_command = true;
@@ -34,7 +34,7 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 }
 
 int	add_filename_or_string(char *string, t_token_list **tokens,
-		t_token_flags *flags)
+		t_token_flags *flags, char next)
 {
 	int	exit_status;
 
@@ -54,9 +54,12 @@ int	add_filename_or_string(char *string, t_token_list **tokens,
 				exit_status = check_ambiguous_redirect(string, tokens, flags);
 		}
 	}
-	flags->is_redirection = false;
-	if (!flags->has_command)
-		flags->is_command = true;
+	if (!next || next == ' ')
+	{
+		flags->is_redirection = false;
+		if (!flags->has_command)
+			flags->is_command = true;
+	}
 	return (exit_status);
 }
 

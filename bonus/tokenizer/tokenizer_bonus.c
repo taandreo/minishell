@@ -63,10 +63,9 @@ t_bool	create_flags_prompt(t_token_flags *flags, t_token_list **tokens,
 void	advance_space(char *input, size_t *pos, t_token_list **tokens,
 			size_t input_len)
 {
-	if (peek_next(input, *pos, input_len) == '*')
-		add_token(tokens, TOKEN_SPACE, " ");
-	if ((*tokens)->tail->token.type == TOKEN_EXIT_CODE && peek_next(input,
-			*pos, ft_strlen(input)))
+	if (!ft_strchr("><|&() ", peek_next(input, *pos, input_len))
+		&& !((*tokens)->tail->token.type >= TOKEN_AND
+			&& (*tokens)->tail->token.type <= TOKEN_REDIRECTION_HEREDOC))
 		add_token(tokens, TOKEN_SPACE, " ");
 	(*pos)++;
 }

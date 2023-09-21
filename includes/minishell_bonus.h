@@ -204,13 +204,13 @@ char			*get_string_from_input(char **input, size_t *pos,
 int				add_builtin_or_command(char *return_string,
 					t_token_list **tokens, t_token_flags *flags, char next);
 int				add_filename_or_string(char *return_string,
-					t_token_list **tokens, t_token_flags *flags);
+					t_token_list **tokens, t_token_flags *flags, char next);
 int				add_special_or_string(char *string, t_token_list **tokens,
 					char *input, size_t pos);
 int				add_string_and_maybe_space(char *string, t_token_list **tokens,
 					char *input, size_t pos);
 t_bool			add_command_or_string(t_token_list **tokens,
-					t_token_flags *flags);
+					t_token_flags *flags, char *input, size_t *pos);
 t_command		*parse(t_token_list *tokens);
 t_command		*parse_command(t_token_list *tokens);
 t_redirections	*parse_redirections(t_token_list *tokens);
@@ -274,7 +274,7 @@ int				tokenize_strings(char **input, size_t *position,
 int				tokenize_parenthesis(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_wildcard(char *input, size_t *pos,
-					t_token_list **tokens);
+					t_token_list **tokens, t_token_flags *flags);
 void			*free_nullify_and_return_null(char **ptr);
 int				unclosed_paren_error(t_token_list **tokens, char **prompt);
 t_bool			decrease_len(t_token_flags *flags);

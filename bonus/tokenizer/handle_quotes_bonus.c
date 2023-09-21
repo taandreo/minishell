@@ -103,18 +103,10 @@ char	*handle_question_mark(char *input, size_t *pos, t_token_list **tokens,
 		return (return_mem_alloc_error());
 	if (flags->string && ft_strlen(flags->string) > 0)
 	{
-		if (!add_command_or_string(tokens, flags))
+		if (!add_command_or_string(tokens, flags, input, pos))
 			return (free_and_return_null(var));
 		free(flags->string);
 		flags->string = ft_strdup("");
-	}
-	else if (flags->string && ft_strlen(flags->string) == 0)
-	{
-		if (*pos - 2 > 0 && input[*pos - 2] == ' ')
-		{
-			if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
-				return (free_2_and_return_null(flags->string, var));
-		}
 	}
 	if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
 		return (free_2_and_return_null(flags->string, var));
