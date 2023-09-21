@@ -129,19 +129,26 @@ typedef struct s_redirections
 	struct s_redirections	*next;
 }	t_redirections;
 
-typedef struct s_builtin_command
+typedef struct s_builtin_cmd
 {
 	t_token_type	type;
 	t_arguments		*arguments;
-}	t_builtin_command;
+}	t_builtin_cmd;
+
+typedef struct s_cmd_name
+{
+	t_token_type		type;
+	char				*value;
+	struct s_cmd_name	*next_name;
+}	t_cmd_name;
 
 typedef struct s_command_part
 {
 	t_token_type			type;
 	union
 	{
-		t_builtin_command	*builtin_cmd;
-		char				*cmd_name;
+		t_builtin_cmd	*builtin_cmd;
+		t_cmd_name			*cmd_name;
 	} u_cmd;
 	t_arguments				*arguments;
 	t_redirections			*redirections;
@@ -223,7 +230,7 @@ void			free_grouping(t_grouping *grouping);
 void			free_conjunction(t_conjunctions *conj);
 void			free_pipeline(t_pipeline *pipe);
 void			free_command_part(t_command_part *cmd_part);
-void			free_builtin_command(t_builtin_command *cmd);
+void			free_builtin_command(t_builtin_cmd *cmd);
 void			free_redirections(t_redirections *redirs);
 void			free_redirection(t_redirection *redir);
 void			free_arguments(t_arguments *args);
@@ -232,9 +239,9 @@ void			init_command_part_fields(t_command_part *command_part);
 void			add_subsequent_redirections_to_initial(
 					t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens);
-t_command_part	*handle_builtin_tokens(t_command_part *command_part,
+t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
 					t_token_list *tokens);
-t_command_part	*handle_command_name_tokens(t_command_part *command_part,
+t_cmd_name		*handle_command_name_tokens(t_command_part *command_part,
 					t_token_list *tokens);
 void			*return_mem_alloc_error(void);
 void			*return_syntax_error(const char *value);

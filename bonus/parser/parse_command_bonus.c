@@ -127,9 +127,9 @@ t_command_part	*parse_command_part(t_token_list *tokens)
 	initial_redirections = parse_redirections(tokens);
 	if (current_token_type(tokens) >= TOKEN_ECHO
 		&& current_token_type(tokens) <= TOKEN_EXIT)
-		command_part = handle_builtin_tokens(command_part, tokens);
+		command_part->u_cmd.builtin_cmd = handle_builtin_tokens(command_part, tokens);
 	else if (current_token_type(tokens) == TOKEN_COMMAND_NAME)
-		command_part = handle_command_name_tokens(command_part, tokens);
+		command_part->u_cmd.cmd_name = handle_command_name_tokens(command_part, tokens);
 	else if (initial_redirections)
 	{
 		command_part->type = TOKEN_REDIRECTIONS;

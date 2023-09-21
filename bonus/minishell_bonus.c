@@ -20,7 +20,7 @@ int	main(void)
 	char			*prompt;
 	t_token_list	*tokens;
 	t_token_flags	flags;
-//	t_command		*parse_tree;
+	t_command		*parse_tree;
 
 	while (true)
 	{
@@ -28,11 +28,11 @@ int	main(void)
 		prompt = readline("~> ");
 		flags = init_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
-//		tokens->current = tokens->head;
-//		parse_tree = parse(&tokens);
 		// Test tokens
 		if (tokens)
 			print_tokens(tokens);
+		tokens->current = tokens->head;
+		parse_tree = parse(tokens);
 		free_token_list(&tokens);
 		free(prompt);
 		exit (flags.status);

@@ -54,7 +54,7 @@ void	free_redirections(t_redirections *redirs)
 	}
 }
 
-void	free_builtin_command(t_builtin_command *cmd)
+void	free_builtin_command(t_builtin_cmd *cmd)
 {
 	if (cmd)
 	{
