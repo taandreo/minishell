@@ -14,9 +14,9 @@ CFLAGS = -Wall -Wextra -Werror -g3
 UNAME := $(shell uname)
 LIBS := -lft -lreadline
 
-ifeq ($(UNAME), Darwin)
- 	CFLAGS += -arch x86_64
-endif
+# ifeq ($(UNAME), Darwin)
+#  	CFLAGS += -arch x86_64
+# endif
 
 SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 			tokenizer/tokenizer.c\
@@ -51,6 +51,8 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/free/free_parse_tree2_bonus.c\
 			parser/init/init_structures_bonus.c\
 			bultin/echo.c\
+			bultin/pwd.c\
+			env/env.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
@@ -101,6 +103,7 @@ libft:
 clean:
 	rm -rf $(OBJS_DIR)
 	rm -rf $(BONUS_OBJS_DIR)
+	rm -f  $(BULTIN_TEST_OBJS)
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean
@@ -122,7 +125,8 @@ BULTIN_TEST_OBJS = $(subst $(BONUS_DIR)/, $(BONUS_OBJS_DIR)/, $(patsubst %.c, %.
 BULTIN_TEST_LIBS = -lcmocka
 
 $(BULTIN_TEST_DIR)/%.o: $(BULTIN_TEST_DIR)/%.c
-	$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
+	$(CC) -I$(LIBFT_DIR)/include -I$(INC_DIR) -I$(BULTIN_TEST_DIR) -c $< -o $@
 
 $(BULTIN_TEST_BIN): $(BULTIN_TEST_OBJS) | libft
-	$(CC) $(CFLAGS) $(BULTIN_TEST_OBJS) -o bultin_test -L$(LIBFT_DIR) $(LIBS) $(BULTIN_TEST_LIBS)
+	$(CC) $(BULTIN_TEST_OBJS) -o bultin_test -L$(LIBFT_DIR) $(LIBS) $(BULTIN_TEST_LIBS)
+	./bultin_test

@@ -1,42 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 20:20:04 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/19 18:38:24 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/19 18:53:19 by tairribe          #+#    #+#             */
+/*   Updated: 2023/09/19 20:38:47 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-int	bultin_echo(char **params)
+int	bultin_pwd(char **params)
 {
-	int		i;
-	char	*str;
-	int		newline;
-
-	i = 0;
-	if (params[0] && ft_strncmp(params[0], "-n", 2) == 0)
-	{
-		i = 1;
-		str = &params[0][2];
-		while(*str)
-		{
-			if (*str++ != 'n')
-				i = 0;
-		}
-	}
-	newline = i;
-	while(params[i])
-	{
-		printf("%s", params[i++]);
-		if (params[i] != NULL)
-			printf(" ");
-	}
-	if (newline == 0)
-		printf("\n");
-	return(0);
+	char *pwd;
+	if (params == NULL)
+		return (1);
+	pwd = getcwd(NULL, 0);
+	if (pwd != NULL)
+		printf("%s\n", pwd);
+	else 
+		return (1);
+	return (0);
 }

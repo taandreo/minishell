@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/19 16:10:32 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/21 17:42:23 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # define GENERAL_ERROR 1
 # define MISUSE 2
 # define EXIT_OFFSET 128
+# define PATH_MAX	4096
 
 typedef enum e_token_type
 {
@@ -176,6 +177,12 @@ typedef struct s_grouping
 	t_grouping		*next_grouping;
 }	t_grouping;
 
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+}			t_env;
+
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
@@ -281,5 +288,15 @@ t_bool			decrease_len(t_token_flags *flags);
 int				free_vars_and_return_misuse(char *string, char *tmp);
 void			*free_str_nullify_and_malloc_error(char **str);
 void			free_2_str_and_nullify(char **str1, char **str2);
+// BULTIN
 int				bultin_echo(char **params);
+int				bultin_pwd(char **params);
+int				bultin_cd(char **params);
+// ENV
+void            add_env(char *key, char *value);
+void	        init_env(char **envp);
+void	        print_env();
+// ERROR
+
+
 #endif

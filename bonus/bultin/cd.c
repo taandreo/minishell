@@ -1,42 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   echo.c                                             :+:      :+:    :+:   */
+/*   cd.c                                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/15 20:20:04 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/19 18:38:24 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
+/*   Updated: 2023/09/21 17:43:34 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-int	bultin_echo(char **params)
+int	bultin_cd(char **param)
 {
-	int		i;
-	char	*str;
-	int		newline;
+	char	*dir;
 
-	i = 0;
-	if (params[0] && ft_strncmp(params[0], "-n", 2) == 0)
+	if (ft_lenmt((void **) param) == 0 || ft_strcmp(param[0], "~") == 0)
+		dir = lookup_variable("HOME");
+	else 
+		dir = param[0];
+	if (chdir(dir) != 0)
 	{
-		i = 1;
-		str = &params[0][2];
-		while(*str)
-		{
-			if (*str++ != 'n')
-				i = 0;
-		}
+		print_perror("cd", dir);
+		free(dir);
+		return (1);
 	}
-	newline = i;
-	while(params[i])
-	{
-		printf("%s", params[i++]);
-		if (params[i] != NULL)
-			printf(" ");
-	}
-	if (newline == 0)
-		printf("\n");
-	return(0);
 }
