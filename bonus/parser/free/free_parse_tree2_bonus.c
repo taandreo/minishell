@@ -12,12 +12,15 @@
 
 #include "minishell_bonus.h"
 
-void	free_argument(t_argument *arg)
+void	free_string(t_string *str)
 {
-	if (arg)
+	if (str)
 	{
-		free(arg->value);
-		free(arg);
+		free(str->value);
+		str->value = NULL;
+		free_string(str->next);
+		str->next = NULL;
+		free(str);
 	}
 }
 
@@ -25,8 +28,8 @@ void	free_arguments(t_arguments *args)
 {
 	if (args)
 	{
-		free_argument(args->argument);
-		args->argument = NULL;
+		free_string(args->string);
+		args->string = NULL;
 		free_arguments(args->next);
 		args->next = NULL;
 		free(args);

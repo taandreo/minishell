@@ -47,11 +47,11 @@ t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
 	return (command_part->u_cmd.builtin_cmd);
 }
 
-t_cmd_name	*handle_command_name_tokens(t_command_part *command_part,
+t_string	*handle_command_name_tokens(t_command_part *command_part,
 					t_token_list *tokens)
 {
 	command_part->type = TOKEN_COMMAND_NAME;
-	command_part->u_cmd.cmd_name = malloc(sizeof(t_cmd_name));
+	command_part->u_cmd.cmd_name = malloc(sizeof(t_string));
 	if (!command_part->u_cmd.cmd_name)
 	{
 		free_command_part(command_part);
@@ -66,8 +66,10 @@ t_cmd_name	*handle_command_name_tokens(t_command_part *command_part,
 	}
 	advance_token(tokens);
 	if (current_token_type(tokens) != TOKEN_SPACE && current_token_type(tokens) != TOKEN_END)
-		command_part->u_cmd.cmd_name->next_name = handle_command_name_tokens(command_part, tokens);
+		command_part->u_cmd.cmd_name->next = handle_command_name_tokens(command_part, tokens);
 	else
 		command_part->arguments = parse_arguments(tokens);
 	return (command_part->u_cmd.cmd_name);
 }
+
+

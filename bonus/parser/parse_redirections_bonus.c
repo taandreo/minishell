@@ -1,6 +1,6 @@
 #include "minishell_bonus.h"
 
-t_filename	*add_filename_list(t_token_list *tokens);
+t_string	*add_filename_list(t_token_list *tokens);
 
 t_redirections	*parse_redirections(t_token_list *tokens)
 {
@@ -17,9 +17,9 @@ t_redirections	*parse_redirections(t_token_list *tokens)
 	return (redir);
 }
 
-t_filename	*add_filename_list(t_token_list *tokens)
+t_string	*add_filename_list(t_token_list *tokens)
 {
-	t_filename *filename;
+	t_string *filename;
 
 	filename = NULL;
 	if (current_token_type(tokens) == TOKEN_FILENAME
