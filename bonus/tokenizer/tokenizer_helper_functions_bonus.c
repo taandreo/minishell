@@ -27,6 +27,8 @@ t_bool	is_string_start(char c, t_token_flags *flags)
 		if (flags->var_len > -1)
 			return (!ft_is_space(c));
 	}
+	if (flags->has_heredoc)
+		return (!ft_is_space(c) && !ft_strchr("><|&()", c));
 	return (!ft_is_space(c) && !ft_strchr("><|&()*", c));
 }
 

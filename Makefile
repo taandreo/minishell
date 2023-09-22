@@ -44,6 +44,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/parser_bonus.c\
 			parser/parse_command_bonus.c\
 			parser/parse_redirections_bonus.c\
+			parser/parse_arguments_bonus.c\
 			parser/parser_helper_functions_bonus.c\
 			parser/command_part_helper_bonus.c\
 			error/return_errors_helper_bonus.c\

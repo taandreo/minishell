@@ -20,7 +20,7 @@ int	main(void)
 	char			*prompt;
 	t_token_list	*tokens;
 	t_token_flags	flags;
-	t_command		*parse_tree;
+//	t_command		*parse_tree;
 
 	while (true)
 	{
@@ -28,14 +28,16 @@ int	main(void)
 		prompt = readline("~> ");
 		flags = init_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
+		if (flags.status != SUCCESS)
+			exit (flags.status);
 		// Test tokens
 		if (tokens)
 			print_tokens(tokens);
-		tokens->current = tokens->head;
-		parse_tree = parse(tokens);
+//		tokens->current = tokens->head;
+//		parse_tree = parse(tokens);
 		free_token_list(&tokens);
 		free(prompt);
-		exit (flags.status);
+
 	}
 	return (SUCCESS);
 }
@@ -52,6 +54,7 @@ const char *token_names[] =
 				"TOKEN_AND",
 				"TOKEN_OR",
 				"TOKEN_PIPE",
+				"TOKEN_INVALID",
 				"TOKEN_LEFT_PARENTHESIS",
 				"TOKEN_RIGHT_PARENTHESIS",
 				"TOKEN_REDIRECTIONS",
@@ -59,15 +62,13 @@ const char *token_names[] =
 				"TOKEN_REDIRECTION_OUTPUT",
 				"TOKEN_REDIRECTION_APPEND",
 				"TOKEN_REDIRECTION_HEREDOC",
+				"TOKEN_ERROR",
 				"TOKEN_COMMAND_NAME",
-				"TOKEN_WILDCARD",
 				"TOKEN_FILENAME",
+				"TOKEN_WILDCARD",
 				"TOKEN_STRING",
 				"TOKEN_EXIT_CODE",
 				"TOKEN_SPACE",
-				"TOKEN_SPECIAL_ARG",
-				"TOKEN_INVALID",
-				"TOKEN_ERROR",
 				"TOKEN_END"
 		};
 
