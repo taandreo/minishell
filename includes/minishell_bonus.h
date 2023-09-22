@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/21 17:42:23 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/21 22:17:16 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -296,6 +296,7 @@ int				bultin_cd(char **params);
 void            add_env(char *key, char *value);
 void	        init_env(char **envp);
 void	        print_env();
+void			remove_env(char *key);
 // ERROR
 
 

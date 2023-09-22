@@ -13,5 +13,8 @@
 // }
 
 int main(int argc, char *argv[], char *envp[]){
-	init_env()
+	init_env(envp);
+	add_env("BANANA", "Banana");
+	remove_env("TERM_PROGRAM");
+	print_env();
 }
