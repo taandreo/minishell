@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "ft_printf.h"
+# include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <readline/readline.h>
@@ -55,6 +56,8 @@ typedef enum e_token_type
 	TOKEN_STRING,
 	TOKEN_EXIT_CODE,
 	TOKEN_SPACE,
+	TOKEN_GROUP,
+	TOKEN_NONE,
 	TOKEN_END
 }	t_token_type;
 
@@ -97,6 +100,13 @@ typedef struct s_token_list
 	size_t			count;
 }	t_token_list;
 
+typedef struct s_parser_state
+{
+	int		paren_count;
+	size_t	status;
+	t_bool	error;
+}	t_parser_state;
+
 typedef struct s_string
 {
 	t_token_type	type;
@@ -126,8 +136,15 @@ typedef struct s_redirections
 typedef struct s_builtin_cmd
 {
 	t_token_type	type;
-	t_arguments		*arguments;
+	char			*value;
 }	t_builtin_cmd;
+
+typedef struct s_command	t_command;
+
+typedef struct s_grouping
+{
+	t_command		*enclosed_cmd;
+}	t_grouping;
 
 typedef struct s_command_part
 {
@@ -136,6 +153,7 @@ typedef struct s_command_part
 	{
 		t_builtin_cmd	*builtin_cmd;
 		t_string		*cmd_name;
+		t_grouping		*grouping;
 	} u_cmd;
 	t_arguments				*arguments;
 	t_redirections			*redirections;
@@ -143,6 +161,7 @@ typedef struct s_command_part
 
 typedef struct s_pipeline
 {
+	t_token_type		type;
 	t_command_part		*cmd_part;
 	struct s_pipeline	*next;
 }	t_pipeline;
@@ -154,21 +173,11 @@ typedef struct s_conjunctions
 	struct s_conjunctions	*next;
 }	t_conjunctions;
 
-typedef struct s_grouping	t_grouping;
-
 typedef struct s_command
 {
 	t_pipeline		*pipeline;
 	t_conjunctions	*conjunctions;
-	t_grouping		*grouping;
 }	t_command;
-
-typedef struct s_grouping
-{
-	t_command		*enclosed_cmd;
-	t_conjunctions	*conjunctions;
-	t_grouping		*next_grouping;
-}	t_grouping;
 
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(char **input, size_t *position,
@@ -187,7 +196,7 @@ void			free_token_list(t_token_list **token_list_ptr);
 t_bool			has_quotes(char c);
 char			peek_next(const char *input, size_t position, size_t input_len);
 t_bool			is_string_start(char c, t_token_flags *flags);
-t_token_flags	init_flags(size_t input_len);
+t_token_flags	init_token_flags(size_t input_len);
 int				add_token_1_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
 int				add_token_2_pos(size_t *pos, t_token_list **tokens,
@@ -201,11 +210,13 @@ int				add_filename_or_string(char *return_string,
 					t_token_list **tokens, t_token_flags *flags, char next);
 t_bool			add_command_or_string(t_token_list **tokens,
 					t_token_flags *flags, char *input, size_t *pos);
-t_command		*parse(t_token_list *tokens);
-t_command		*parse_command(t_token_list *tokens);
-t_redirections	*parse_redirections(t_token_list *tokens);
+t_command		*parse(t_token_list *tokens, t_parser_state *state);
+t_command		*parse_command(t_token_list *tokens, t_parser_state *state);
+t_redirections	*parse_redirections(t_token_list *tokens,
+					t_parser_state *state);
 t_arguments		*parse_arguments(t_token_list *tokens);
 t_string		*parse_string(t_token_list *tokens);
+t_bool			is_operator_or_end(t_token_type type);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
 void			advance_token(t_token_list *tokens);
@@ -221,9 +232,9 @@ void			free_redirection(t_redirection *redir);
 void			free_arguments(t_arguments *args);
 void			free_string(t_string *str);
 void			init_command_part_fields(t_command_part *command_part);
-void			add_subsequent_redirections_to_initial(
-					t_command_part *command_part,
-					t_redirections *initial_redirections, t_token_list *tokens);
+void			subsequent_redirections(t_command_part *command_part,
+					t_redirections *initial_redirections, t_token_list *tokens,
+					t_parser_state *state);
 t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
 					t_token_list *tokens);
 t_string		*handle_command_name_tokens(t_command_part *command_part,
@@ -263,7 +274,7 @@ int				tokenize_operators(char *input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_strings(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_parenthesis(char *input, size_t *pos,
+int				tokenize_parenthesis(const char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_wildcard(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
@@ -274,4 +285,5 @@ int				free_vars_and_return_misuse(char *string, char *tmp);
 void			*free_str_nullify_and_malloc_error(char **str);
 void			free_2_str_and_nullify(char **str1, char **str2);
 int				bultin_echo(char **params);
+int				success_or_mem_error(int exit_status);
 #endif

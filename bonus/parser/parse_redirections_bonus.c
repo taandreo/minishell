@@ -1,8 +1,6 @@
 #include "minishell_bonus.h"
 
-t_string	*add_filename_list(t_token_list *tokens);
-
-t_redirections	*parse_redirections(t_token_list *tokens)
+t_redirections	*parse_redirections(t_token_list *tokens, t_parser_state *state)
 {
 	t_redirections	*redir;
 
@@ -10,34 +8,28 @@ t_redirections	*parse_redirections(t_token_list *tokens)
 		current_token_type(tokens) <= TOKEN_REDIRECTION_HEREDOC))
 		return (NULL);
 	redir = malloc(sizeof(t_redirections));
+	if (!redir)
+	{
+		state->error = true;
+		return (return_mem_alloc_error());
+	}
+	redir->redirection = malloc(sizeof(t_redirection));
+	redir->next = NULL;
+	if (!redir->redirection)
+	{
+		free_redirections(redir);
+		state->error = true;
+		return (return_mem_alloc_error());
+	}
 	redir->redirection->type = current_token_type(tokens);
 	advance_token(tokens);
-	redir->redirection->filename = add_filename_list(tokens);
-
+	redir->redirection->filename = parse_string(tokens);
+	if (!redir->redirection->filename)
+	{
+		free_redirections(redir);
+		state->error = true;
+		return (return_syntax_error(current_token(tokens).value));
+	}
+	redir->next = parse_redirections(tokens, state);
 	return (redir);
-}
-
-t_string	*add_filename_list(t_token_list *tokens)
-{
-	t_string *filename;
-
-	filename = NULL;
-	if (current_token_type(tokens) == TOKEN_FILENAME
-			|| current_token_type(tokens) == TOKEN_STRING)
-	{
-		filename->type = current_token_type(tokens);
-		filename->value = ft_strdup(current_token(tokens).value);
-	}
-	else if (current_token_type(tokens) == TOKEN_EXIT_CODE
-			|| current_token_type(tokens) == TOKEN_WILDCARD)
-	{
-		filename->type = current_token_type(tokens);
-		filename->value = ft_strdup(current_token(tokens).value);
-		if (peek_token(tokens).type != TOKEN_SPACE)
-		{
-			advance_token(tokens);
-			filename->next = add_filename_list(tokens);
-		}
-	}
-	return (filename);
 }

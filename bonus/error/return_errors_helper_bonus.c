@@ -49,6 +49,9 @@ int	unclosed_paren_error(t_token_list **tokens, char **prompt)
 	ft_dprintf(STDERR_FILENO, "minishell: Unclosed parenthesis\n");
 	free_token_list(tokens);
 	if (prompt && *prompt)
+	{
 		free(*prompt);
+		*prompt = NULL;
+	}
 	return (GENERAL_ERROR);
 }

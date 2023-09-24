@@ -37,7 +37,7 @@ t_bool	has_quotes(char c)
 	return (c == '\'' || c == '\"');
 }
 
-t_token_flags	init_flags(size_t input_len)
+t_token_flags	init_token_flags(size_t input_len)
 {
 	t_token_flags	flags;
 

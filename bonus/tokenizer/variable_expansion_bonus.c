@@ -33,7 +33,7 @@ char	*expand_variable_string(char *input, size_t *pos, t_token_flags *flags)
 		len++;
 	var = ft_strndup(input + start_pos, len);
 	if (!var)
-		return (return_mem_alloc_error());
+		return (NULL);
 	str = lookup_variable(var);
 	free(var);
 	*pos = start_pos + len;
@@ -56,7 +56,7 @@ char	*lookup_variable(char *var)
 		return (ft_strdup(""));
 	new_str = ft_strdup(value);
 	if (!new_str)
-		return (return_mem_alloc_error());
+		return (NULL);
 	return (new_str);
 }
 
@@ -72,7 +72,7 @@ char	*advance_position(char *input, size_t *pos, t_token_flags *flags)
 	var = ft_strndup(input + dollar, *pos - dollar);
 	flags->init_var = false;
 	if (!var)
-		return (return_mem_alloc_error());
+		return (NULL);
 	return (var);
 }
 
@@ -86,7 +86,10 @@ char	*quotes_handle_variable_expansion(char **input, size_t *pos,
 	if (!tmp)
 	{
 		if (flags->string)
+		{
 			free(flags->string);
+			flags->string = NULL;
+		}
 		return (NULL);
 	}
 	return (tmp);

@@ -19,7 +19,10 @@ int	tokenize_wildcard(char *input, size_t *pos, t_token_list **tokens,
 
 	exit_status = add_token(tokens, TOKEN_WILDCARD, "*");
 	if (exit_status != SUCCESS)
+	{
+		ft_dprintf(STDERR_FILENO, "Error: Memory allocation failed\n");
 		return (exit_status);
+	}
 	(*pos)++;
 	if (flags->is_command)
 	{

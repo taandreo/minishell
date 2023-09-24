@@ -1,8 +1,5 @@
-```python
-command: pipeline conjunctions grouping
-
-grouping: /* empty */
-        | '(' command ')' conjunctions grouping
+```txt
+command: pipeline conjunctions
 
 conjunctions:/* empty */
             | '&&' pipeline conjunctions
@@ -13,9 +10,16 @@ pipeline: command_part pipelines
 pipelines: /* empty */
          | '|' command_part pipelines
 
-command_part: built_in_command redirections
-            | redirections? 'command_name' arguments redirections
+command_part: built_in_command redirections?
+            | redirections? 'command_name' arguments redirections?
             | redirections
+            | grouping operators?
+            
+grouping: '(' command ')'
+            
+operators: pipelines
+         | conjunctions
+         | redirections
 
 built_in_command: 'echo' ('-n')? arguments
                 | 'cd' 'path'
@@ -25,11 +29,17 @@ built_in_command: 'echo' ('-n')? arguments
                 | 'env'
                 | 'exit'
 
-arguments: /* empty */
-         | arguments argument
+arguments: argument arguments' 
+         | /* empty */
 
-redirections: /* empty */
-            | redirections redirection
+arguments': argument arguments'
+          | ε
+
+redirections: redirection redirections' 
+            | /* empty */
+            
+redirections': redirection redirections'
+             | ε
 
 redirection: '<' 'filename'
            | '>' 'filename'

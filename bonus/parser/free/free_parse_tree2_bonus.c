@@ -40,7 +40,7 @@ void	free_redirection(t_redirection *redir)
 {
 	if (redir)
 	{
-		free(redir->filename);
+		free_string(redir->filename);
 		free(redir);
 	}
 }
@@ -61,7 +61,7 @@ void	free_builtin_command(t_builtin_cmd *cmd)
 {
 	if (cmd)
 	{
-		free_arguments(cmd->arguments);
+		free(cmd->value);
 		free(cmd);
 	}
 }

@@ -26,16 +26,25 @@ char	*get_string_from_input(char **input, size_t *pos,
 		flags->string = ft_strdup("");
 	start = (*input) + *pos;
 	if (!flags->string)
+	{
+		flags->has_exit_code = false;
 		return (return_mem_alloc_error());
+	}
 	if (!flags->var)
 		flags->var = initialize_var_string((*input), *pos, flags, start);
+	if (!flags->var)
+	{
+		flags->has_exit_code = false;
+		return (return_mem_alloc_error());
+	}
 	while (decrease_len(flags) && (*input)[*pos]
 			&& is_string_start((*input)[*pos], flags))
 	{
 		if (!handle_character(input, pos, tokens, flags))
+		{
+			flags->has_exit_code = false;
 			return (NULL);
-		if (!flags->string)
-			return (NULL);
+		}
 	}
 	return (flags->string);
 }
@@ -49,8 +58,10 @@ char	*process_quotes(char **input, size_t *pos, t_token_list **tokens,
 	start = *input + *pos;
 	tmp = ft_strndup(start, *input + *pos - start);
 	if (!tmp)
-		return (free_and_return_null(flags->string));
+		return (free_str_nullify_and_malloc_error(&flags->string));
 	flags->string = join_and_cleanup(&flags->string, &tmp);
+	if (!flags->string)
+		return (free_str_nullify_and_malloc_error(&tmp));
 	tmp = handle_quotes(input, pos, tokens, flags);
 	if (!tmp)
 		return (free_and_return_null(flags->string));
@@ -77,9 +88,11 @@ t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 	if (!buffer)
 	{
 		free_str_and_nullify(&flags->string);
-		return (flags->string != NULL);
+		return (return_mem_alloc_error() != NULL);
 	}
 	flags->string = join_and_cleanup(&flags->string, &buffer);
+	if (!flags->string)
+		return (return_mem_alloc_error() != NULL);
 	(*pos)++;
 	return (true);
 }
@@ -94,12 +107,19 @@ int	strings_handle_variable_expansion(char **input, size_t *pos,
 	flags->inside_quotes = false;
 	tmp = expand_variable_string(*input, pos, flags);
 	if (!tmp)
-		return (free_vars_and_return_misuse(flags->string, tmp));
+	{
+		free_str_nullify_and_malloc_error(&flags->string);
+		return (MISUSE);
+	}
 	flags->var_len = ft_strlen(tmp);
 	start = *input + *pos;
 	to_be_tokenized = ft_strjoin(tmp, start);
 	if (!to_be_tokenized)
-		return (free_vars_and_return_misuse(flags->string, tmp));
+	{
+		free_2_str_and_nullify(&flags->string, &tmp);
+		ft_dprintf(STDERR_FILENO, "Error: Memory allocation failed\n");
+		return (MISUSE);
+	}
 	free(*input);
 	free(tmp);
 	*input = to_be_tokenized;

@@ -30,9 +30,12 @@ t_bool	handle_special_case_variable(char *input, size_t *pos,
 {
 	if (flags->string && ft_strlen(flags->string) > 0)
 		if (!add_command_or_string(tokens, flags, input, pos))
-			return (false);
+			return (return_mem_alloc_error() != NULL);
 	if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
+	{
+		ft_dprintf(STDERR_FILENO, "Error: Memory allocation failed\n");
 		return (free_nullify_and_return_null(&flags->string) != NULL);
+	}
 	free_str_and_nullify(&flags->string);
 	*pos += 2;
 	flags->has_exit_code = true;

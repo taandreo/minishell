@@ -17,7 +17,9 @@ void	free_command_part(t_command_part *cmd_part)
 	if (cmd_part)
 	{
 		if (cmd_part->type == TOKEN_COMMAND_NAME)
-			free(cmd_part->u_cmd.cmd_name);
+			free_string(cmd_part->u_cmd.cmd_name);
+		else if (cmd_part->type == TOKEN_GROUP)
+			free_grouping(cmd_part->u_cmd.grouping);
 		else if (cmd_part->type >= TOKEN_ECHO && cmd_part->type <= TOKEN_EXIT)
 			free_builtin_command(cmd_part->u_cmd.builtin_cmd);
 		free_arguments(cmd_part->arguments);
@@ -66,10 +68,6 @@ void	free_grouping(t_grouping *grouping)
 	{
 		free_command(grouping->enclosed_cmd);
 		grouping->enclosed_cmd = NULL;
-		free_conjunction(grouping->conjunctions);
-		grouping->conjunctions = NULL;
-		free_grouping(grouping->next_grouping);
-		grouping->next_grouping = NULL;
 		free(grouping);
 	}
 }
