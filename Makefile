@@ -1,4 +1,4 @@
-.PHONY: all clean fclean re log bonus libft
+.PHONY: all clean fclean re log bonus libft bultin_test
 
 CC = clang
 NAME = minishell
@@ -52,7 +52,9 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/init/init_structures_bonus.c\
 			bultin/echo.c\
 			bultin/pwd.c\
-			env/env.c\
+			bultin/export.c\
+			bultin/env.c\
+			env/environment.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
@@ -128,5 +130,5 @@ $(BULTIN_TEST_DIR)/%.o: $(BULTIN_TEST_DIR)/%.c
 	$(CC) -I$(LIBFT_DIR)/include -I$(INC_DIR) -I$(BULTIN_TEST_DIR) -c $< -o $@
 
 $(BULTIN_TEST_BIN): $(BULTIN_TEST_OBJS) | libft
-	$(CC) $(BULTIN_TEST_OBJS) -o bultin_test -L$(LIBFT_DIR) $(LIBS) $(BULTIN_TEST_LIBS)
+	@$(CC) $(BULTIN_TEST_OBJS) -o bultin_test -L$(LIBFT_DIR) $(LIBS) $(BULTIN_TEST_LIBS)
 	./bultin_test

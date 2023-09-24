@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/21 22:17:16 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/22 16:50:37 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,8 @@
 # define MISUSE 2
 # define EXIT_OFFSET 128
 # define PATH_MAX	4096
+
+t_list *g_env;
 
 typedef enum e_token_type
 {
@@ -292,6 +294,8 @@ void			free_2_str_and_nullify(char **str1, char **str2);
 int				bultin_echo(char **params);
 int				bultin_pwd(char **params);
 int				bultin_cd(char **params);
+int				bultin_export(char **params);
+int				bultin_env(char **params);
 // ENV
 void            add_env(char *key, char *value);
 void	        init_env(char **envp);

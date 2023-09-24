@@ -1,19 +1,39 @@
 #include "tester.h"
 
-static FILE* original_stdout = NULL;
-static FILE* temp_stdout = NULL;
+int original_stdout;
+int	original_stderr;
 
 void setup() {
-    original_stdout = stdout;
-    temp_stdout = fopen(temp_filename, "w");
-    assert_non_null(temp_stdout);
-    stdout = temp_stdout;
+	original_stdout = dup(STDOUT_FILENO);
+	original_stderr = dup(STDERR_FILENO);
+	// Open a file for redirection
+    int output_fd = open(TEMP_FILENAME, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    if (output_fd == -1) {
+        perror("open");
+        exit(1);
+    }
+    // Redirect stdout to the file descriptor
+    if (dup2(output_fd, STDOUT_FILENO) == -1) {
+        perror("dup2");
+        exit(1);
+    }
+    // Redirect stderr to the file descriptor
+    if (dup2(output_fd, STDERR_FILENO) == -1) {
+        perror("dup2");
+        exit(1);
+    }
+	close(output_fd);
 }
 
 void teardown() {
-    if (temp_stdout) {
-        fclose(temp_stdout);
-        stdout = original_stdout;
+	fflush(stdout);
+    if (dup2(original_stdout, STDERR_FILENO) == -1) {
+        perror("dup2");
+        exit(1);
+    }
+	if (dup2(original_stderr, STDOUT_FILENO) == -1) {
+        perror("dup2");
+        exit(1);
     }
 }
 

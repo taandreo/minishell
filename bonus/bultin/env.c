@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/21 23:09:30 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/21 22:44:45 by tairribe          #+#    #+#             */
+/*   Updated: 2023/09/22 16:56:05 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-int	bultin_cd(char **param)
+void	print_env_node(void *node)
 {
-	char	*dir;
+	t_env *env;
+	
+	env = (t_env *) node;
+	if (env->value != NULL)
+		printf("%s=%s\n", env->key, env->value);
+}
 
-	if (ft_lenmt((void **) param) == 0 || ft_strcmp(param[0], "~") == 0)
-		dir = lookup_variable("HOME");
-	else 
-		dir = param[0];
-	if (chdir(dir) != 0)
-	{
-		print_perror("cd", dir);
-		free(dir);
-		return (1);
-	}
+int	bultin_env(char **params)
+{
+	if (params != NULL)
+		ft_lstiter(g_env, print_env_node);
+	return (EXIT_SUCCESS);
 }

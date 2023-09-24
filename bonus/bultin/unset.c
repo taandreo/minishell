@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/21 23:09:30 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/24 13:42:03 by tairribe          #+#    #+#             */
+/*   Updated: 2023/09/24 14:10:18 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-int	bultin_cd(char **param)
+int	bultin_unset(char **params)
 {
-	char	*dir;
+	size_t	error;
 
-	if (ft_lenmt((void **) param) == 0 || ft_strcmp(param[0], "~") == 0)
-		dir = lookup_variable("HOME");
-	else 
-		dir = param[0];
-	if (chdir(dir) != 0)
+	error = EXIT_SUCCESS;
+	if (!*params)
+		return (EXIT_SUCCESS);
+	while (*params)
 	{
-		print_perror("cd", dir);
-		free(dir);
-		return (1);
+		if (is_valid_env(*params))
+			remove_env(*params);
+		else
+		{
+			error = GENERAL_ERROR;
+			dprintf(2, "minishell: unset: `%s': not a valid identifier\n", *params);
+		}
+		free(*params);
+		params++;
 	}
+	return (error);		
 }

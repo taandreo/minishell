@@ -1,18 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env0.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 16:09:55 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/21 22:33:17 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/22 00:23:36 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
-
-t_list *g_env;
 
 t_list	*search_env(char *key)
 {
@@ -41,14 +39,18 @@ void	add_env(char *key, char *value)
 	{
 		env = node->content;
 		free(env->value);
-		env->value = ft_strdup(value);
-		return ;
+	} 
+	else 
+	{
+		env = ft_calloc(1, sizeof(t_env));
+		env->key = ft_strdup(key);
+		node = ft_lstnew(env);
+		ft_lstadd_back(&g_env, node);
 	}
-	env = ft_calloc(1, sizeof(t_env));
-	env->key = ft_strdup(key);
-	env->value = ft_strdup(value);
-	node = ft_lstnew(env);
-	ft_lstadd_back(&g_env, node);
+	if (value != NULL)
+		env->value = ft_strdup(value);
+	else
+		env->value = NULL;
 }
 
 void	free_env(void *env)
@@ -57,7 +59,8 @@ void	free_env(void *env)
 
 	var = env;
 	free(var->key);
-	free(var->value);
+	if (var->value != NULL)
+		free(var->value);
 	free(var);
 }
 
@@ -83,19 +86,6 @@ void	remove_env(char *key)
 		prev = node;
 		node = node->next;
 	}
-}
-
-void	print_env_node(void *node)
-{
-	t_env *env;
-	
-	env = (t_env *) node;
-	printf("%s=%s\n", env->key, env->value);
-}
-
-void	print_env()
-{
-	ft_lstiter(g_env, print_env_node);
 }
 
 void	init_env(char **envp)

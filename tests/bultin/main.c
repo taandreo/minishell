@@ -1,20 +1,18 @@
 #include "tester.h"
 
-// int main(void){
-//     const struct CMUnitTest echo_tests[] = {
-// 		cmocka_unit_test(echo_simple),
-// 		cmocka_unit_test(echo_simple_with_n),
-// 		cmocka_unit_test(echo_simple_with_nnn),
-// 		cmocka_unit_test(echo_simple_with_nna),
-// 		cmocka_unit_test(echo_no_params),
-// 		cmocka_unit_test(echo_n),
-// 	};
-//     return cmocka_run_group_tests(echo_tests, NULL, NULL);
-// }
-
 int main(int argc, char *argv[], char *envp[]){
 	init_env(envp);
-	add_env("BANANA", "Banana");
-	remove_env("TERM_PROGRAM");
-	print_env();
+	run_echo_tests();
+	run_export_tests();
 }
+
+// int main(int argc, char *argv[], char *envp[]){
+// 	char *input[]       = {"1teste", NULL};
+// 	char *empty_input[] = {NULL};
+
+// 	setup();
+// 	bultin_export(input);
+// 	teardown();
+// 	// char *out = file_to_string(TEMP_FILENAME);
+// 	// printf("%s", out);
+// }
