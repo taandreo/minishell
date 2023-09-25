@@ -54,6 +54,10 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			bultin/pwd.c\
 			bultin/export.c\
 			bultin/env.c\
+			bultin/unset.c\
+			bultin/cd.c\
+			bultin/exit.c\
+			error/errors.c\
 			env/environment.c\
 		)
 

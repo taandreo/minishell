@@ -80,3 +80,14 @@ char *file_to_string(const char *filename) {
 
     return buffer;
 }
+
+void	empty_file(char *filename)
+{
+	FILE *file = fopen(filename, "w");
+    if (file == NULL) {
+        perror("fopen");
+        exit(1);
+    }
+    // Close the file
+    fclose(file);
+}

@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 18:53:19 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/19 20:38:47 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/24 18:49:40 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,10 @@ int	bultin_pwd(char **params)
 		return (1);
 	pwd = getcwd(NULL, 0);
 	if (pwd != NULL)
+	{
 		printf("%s\n", pwd);
+		free(pwd);
+	}
 	else 
 		return (1);
 	return (0);

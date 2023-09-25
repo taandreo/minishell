@@ -138,6 +138,21 @@ void	export_2_errors()
 	assert_string_equal(out, "minishell: export: `=': not a valid identifier\nminishell: export: `=teste': not a valid identifier\n");
 }
 
+void	export_two_equals()
+{
+	char *input[]       = {"limao=limao=limao", NULL};
+	char *empty_input[] = {NULL};
+
+	char *limao = NULL;
+	setup();
+	bultin_export(input);
+	bultin_export(empty_input);
+	teardown();
+	char *out = file_to_string(TEMP_FILENAME);
+	limao = strstr(out, "declare -x limao=\"limao=limao\"");
+	assert_true(limao != NULL);	
+}
+
 void	export_2_args_one_error()
 {
 	char *input[]       = {"1_b", "teste=teste", NULL};
@@ -171,6 +186,7 @@ int	run_export_tests(void)
 		cmocka_unit_test(export_error_ok),
 		cmocka_unit_test(export_error_equal),
 		cmocka_unit_test(export_2_errors),
+		cmocka_unit_test(export_two_equals),
 		cmocka_unit_test(export_2_args_one_error),
 	};
     return cmocka_run_group_tests(export_tests, NULL, NULL);

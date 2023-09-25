@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/21 23:09:30 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/24 22:03:29 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,26 @@
 int	bultin_cd(char **param)
 {
 	char	*dir;
+	char	*pwd;
+	char	*old_pwd;
 
 	if (ft_lenmt((void **) param) == 0 || ft_strcmp(param[0], "~") == 0)
-		dir = lookup_variable("HOME");
+		dir = get_env("HOME");
 	else 
 		dir = param[0];
 	if (chdir(dir) != 0)
 	{
 		print_perror("cd", dir);
-		free(dir);
 		return (1);
 	}
+	old_pwd = get_env("PWD");
+	if (old_pwd && *old_pwd)
+		add_env("OLDPWD", old_pwd);
+	pwd = getcwd(NULL, 0);
+	if (pwd && *pwd)
+	{
+		add_env("PWD", pwd);
+		free(pwd);
+	}
+	return (EXIT_SUCCESS);
 }

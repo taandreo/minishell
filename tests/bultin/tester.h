@@ -16,5 +16,8 @@ char *file_to_string(const char *filename);
 
 int	run_export_tests(void);
 int	run_echo_tests(void);
+int	run_unset_tests(void);
+int	run_cd_tests(void);
+void	empty_file(char *filename);
 
 #define TEMP_FILENAME "stdout_test.tmp"

@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env0.c                                             :+:      :+:    :+:   */
+/*   environment.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 16:09:55 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/22 00:23:36 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/24 21:22:39 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,18 @@ void	add_env(char *key, char *value)
 		env->value = ft_strdup(value);
 	else
 		env->value = NULL;
+}
+
+char	*get_env(char *key)
+{
+	t_list	*node;
+	t_env	*env;
+
+	node = search_env(key);
+	if (!node)
+		return (NULL);
+	env = node->content;
+	return(env->value);
 }
 
 void	free_env(void *env)
