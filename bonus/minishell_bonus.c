@@ -29,10 +29,16 @@ int	main(void)
 
 	while (true)
 	{
-//		prompt = ft_strdup("$VAR2 echo bla$?\"$VAR2\"$VAR2>$?\"$?\" foo*baz\"baz*\" && \"bar \"<<$? | exit \"$?\" abc");
+//		prompt = strdup("((&& infile cat<<EOF|less||echo ok)&&(echo bla && echo ok)>abc.txt)");
 		prompt = readline("~> ");
 		flags = init_token_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
+		if (flags.status != SUCCESS)
+		{
+			free_token_list(&tokens);
+			free(prompt);
+			exit(flags.status);
+		}
 		// Print Tokens
 		if (tokens)
 		{
@@ -52,9 +58,7 @@ int	main(void)
 			free_token_list(&tokens);
 		}
 		free(prompt);
-//		if (flags.status != SUCCESS)
-//			exit (flags.status);
-		exit (flags.status);
+		exit (state.status);
 	}
 	return (SUCCESS);
 }
@@ -127,8 +131,13 @@ void print_redirections(t_redirections *redirections, size_t indent)
 	{
 		print_indent(indent);
 		printf("%s(\n", token_type_to_string(redirections->redirection->type));
+		t_string *filename = redirections->redirection->filename;
 		print_indent(indent + 2);
-		printf("%s(%s),\n", token_type_to_string(redirections->redirection->filename->type), redirections->redirection->filename->value);
+		while (filename)
+		{
+			printf("%s(%s),", token_type_to_string(filename->type), filename->value);
+			filename = filename->next;
+		}
 		print_indent(indent);
 		printf("),\n");
 
@@ -140,8 +149,14 @@ void print_arguments(t_arguments *arguments, size_t indent)
 {
 	while (arguments)
 	{
+		t_string *string = arguments->string;
 		print_indent(indent);
-		printf("%s(%s),\n", token_type_to_string(arguments->string->type), arguments->string->value);
+		while (string)
+		{
+			printf("%s(%s), ", token_type_to_string(string->type), string->value);
+			string = string->next;
+		}
+		printf("\n");
 		arguments = arguments->next;
 	}
 }
@@ -167,11 +182,17 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 		print_indent(indent);
 		printf("%s(\n", token_type_to_string(pipeline->type));
 
+		t_command_part *cmd_name = pipeline->cmd_part;
 		switch (pipeline->cmd_part->type)
 		{
 			case TOKEN_COMMAND_NAME:
 				print_indent(indent + 2);
-				printf("%s(%s),\n", token_type_to_string(pipeline->cmd_part->u_cmd.cmd_name->type), pipeline->cmd_part->u_cmd.cmd_name->value);
+				while (cmd_name->u_cmd.cmd_name)
+				{
+					printf("%s(%s), ", token_type_to_string(pipeline->cmd_part->u_cmd.cmd_name->type), pipeline->cmd_part->u_cmd.cmd_name->value);
+					cmd_name->u_cmd.cmd_name = cmd_name->u_cmd.cmd_name->next;
+				}
+				printf("\n");
 				break;
 
 			case TOKEN_ECHO:  // And other built-in commands...

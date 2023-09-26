@@ -34,7 +34,6 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/tokenizer_bonus.c\
 			tokenizer/token_list_creation_bonus.c\
 			tokenizer/tokenizer_helper_functions_bonus.c\
-			tokenizer/command_not_found_bonus.c\
 			tokenizer/handle_quotes_bonus.c\
 			tokenizer/strings_tokenizer_helper_bonus.c\
 			tokenizer/add_string_token_helper.c\
@@ -47,10 +46,13 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/parse_arguments_bonus.c\
 			parser/parser_helper_functions_bonus.c\
 			parser/command_part_helper_bonus.c\
-			error/return_errors_helper_bonus.c\
 			parser/free/free_parse_tree1_bonus.c\
 			parser/free/free_parse_tree2_bonus.c\
 			parser/init/init_structures_bonus.c\
+			parser/parser_state_error.c\
+			parser/parser_utils_bonus.c\
+			error/return_errors_helper_bonus.c\
+            error/misuse_or_unclosed_error_bonus.c\
 			bultin/echo.c\
 		)
 

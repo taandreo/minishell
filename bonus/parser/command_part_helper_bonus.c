@@ -33,51 +33,73 @@ void	subsequent_redirections(t_command_part *command_part,
 }
 
 t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
-						t_token_list *tokens)
+						t_token_list *tokens, t_parser_state *state)
 {
 	command_part->type = current_token_type(tokens);
 	command_part->u_cmd.builtin_cmd = malloc(sizeof(t_builtin_cmd));
 	if (!command_part->u_cmd.builtin_cmd)
 	{
 		free_command_part(command_part);
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	}
 	command_part->u_cmd.builtin_cmd->type = command_part->type;
-	command_part->u_cmd.builtin_cmd->value = ft_strdup(current_token(tokens).value);
+	command_part->u_cmd.builtin_cmd->value = ft_strdup(
+			current_token(tokens).value);
 	if (!command_part->u_cmd.builtin_cmd->value)
 	{
 		free_command_part(command_part);
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	}
 	advance_token(tokens);
-	command_part->arguments = parse_arguments(tokens);
+	command_part->arguments = parse_arguments(tokens, state);
 	return (command_part->u_cmd.builtin_cmd);
 }
 
 t_string	*handle_command_name_tokens(t_command_part *command_part,
-					t_token_list *tokens)
+					t_token_list *tokens, t_parser_state *state)
 {
 	command_part->type = TOKEN_COMMAND_NAME;
-	command_part->u_cmd.cmd_name = parse_string(tokens);
+	command_part->u_cmd.cmd_name = parse_string(tokens, state);
 	if (!command_part->u_cmd.cmd_name)
 	{
 		free_command_part(command_part);
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	}
 	if (current_token_type(tokens) == TOKEN_SPACE)
 		advance_token(tokens);
 	if (current_token_type(tokens) == TOKEN_END)
 		command_part->arguments = NULL;
 	else
-		command_part->arguments = parse_arguments(tokens);
+		command_part->arguments = parse_arguments(tokens, state);
 	return (command_part->u_cmd.cmd_name);
 }
 
-t_bool	is_operator_or_end(t_token_type type)
+t_bool	add_command_union(t_command_part *command_part,
+		t_redirections *redirections, t_token_list *tokens,
+		t_parser_state *state)
 {
-	if ((type >= TOKEN_AND && type <= TOKEN_PIPE)
-			|| (type >= TOKEN_REDIRECTIONS && type <= TOKEN_REDIRECTION_HEREDOC)
-			|| type == TOKEN_END)
-		return (true);
-	return (false);
+	if (current_token_type(tokens) == TOKEN_LEFT_PARENTHESIS)
+	{
+		state->has_paren = true;
+		command_part->u_cmd.grouping = parse_grouping(command_part, tokens,
+				state);
+	}
+	else if (is_builtin_token(current_token_type(tokens)))
+		command_part->u_cmd.builtin_cmd = handle_builtin_tokens(
+				command_part, tokens, state);
+	else if (current_token_type(tokens) == TOKEN_COMMAND_NAME)
+		command_part->u_cmd.cmd_name = handle_command_name_tokens(
+				command_part, tokens, state);
+	else if (redirections)
+	{
+		command_part->type = TOKEN_REDIRECTIONS;
+		command_part->redirections = redirections;
+	}
+	else
+	{
+		free_command_part(command_part);
+		state->error = true;
+		return (false);
+	}
+	return (true);
 }

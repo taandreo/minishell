@@ -48,12 +48,16 @@ int main(void)
 //			cmocka_unit_test(test_tokenize_quotes_success),
 //	};
 
-	const struct CMUnitTest test_quotes_fail[] = {
+//	const struct CMUnitTest test_quotes_fail[] = {
 //			cmocka_unit_test(test_tokenize_quotes_unclosed),
 //			cmocka_unit_test(test_tokenize_quotes_fail),
 //			cmocka_unit_test(test_tokenizer),
-			cmocka_unit_test(test_printf),
+//			cmocka_unit_test(test_printf),
 //			cmocka_unit_test(test_handle_quotes_fail),
+//	};
+
+	const struct CMUnitTest test_parser_fail[] = {
+			cmocka_unit_test(test_parse_fail),
 	};
 
 //	total_failures += cmocka_run_group_tests(test_add_token, NULL, NULL);
@@ -61,7 +65,7 @@ int main(void)
 //			NULL, NULL);
 //	total_failures += cmocka_run_group_tests(test_tokenizer_functions, NULL, NULL);
 //	total_failures += cmocka_run_group_tests(test_tokenizer_functions_fail, NULL, NULL);
-	total_failures += cmocka_run_group_tests(test_quotes_fail, NULL, NULL);
+	total_failures += cmocka_run_group_tests(test_parser_fail, NULL, NULL);
 
 	return (total_failures);
 }

@@ -26,25 +26,16 @@ char	*get_string_from_input(char **input, size_t *pos,
 		flags->string = ft_strdup("");
 	start = (*input) + *pos;
 	if (!flags->string)
-	{
-		flags->has_exit_code = false;
-		return (return_mem_alloc_error());
-	}
+		return (error_and_exit_code_false(flags));
 	if (!flags->var)
 		flags->var = initialize_var_string((*input), *pos, flags, start);
 	if (!flags->var)
-	{
-		flags->has_exit_code = false;
-		return (return_mem_alloc_error());
-	}
+		return (error_and_exit_code_false(flags));
 	while (decrease_len(flags) && (*input)[*pos]
 			&& is_string_start((*input)[*pos], flags))
 	{
 		if (!handle_character(input, pos, tokens, flags))
-		{
-			flags->has_exit_code = false;
-			return (NULL);
-		}
+			return (null_exit_code_false(flags));
 	}
 	return (flags->string);
 }
@@ -79,7 +70,9 @@ t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 		if ((*input)[*pos] == '\'' || (*input)[*pos] == '\"')
 		{
 			flags->string = process_quotes(input, pos, tokens, flags);
-			return (flags->string != NULL);
+			if (!flags->has_exit_code)
+				return (flags->string != NULL);
+			return (true);
 		}
 		if ((*input)[*pos] == '$' && !flags->has_heredoc)
 			return (has_variable_expansion(input, pos, tokens, flags));
@@ -90,7 +83,10 @@ t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 		free_str_and_nullify(&flags->string);
 		return (return_mem_alloc_error() != NULL);
 	}
-	flags->string = join_and_cleanup(&flags->string, &buffer);
+	if (flags->string)
+		flags->string = join_and_cleanup(&flags->string, &buffer);
+	else
+		flags->string = join_1st_and_cleanup(&buffer, "");
 	if (!flags->string)
 		return (return_mem_alloc_error() != NULL);
 	(*pos)++;
@@ -117,7 +113,7 @@ int	strings_handle_variable_expansion(char **input, size_t *pos,
 	if (!to_be_tokenized)
 	{
 		free_2_str_and_nullify(&flags->string, &tmp);
-		ft_dprintf(STDERR_FILENO, "Error: Memory allocation failed\n");
+		print_mem_alloc_error();
 		return (MISUSE);
 	}
 	free(*input);

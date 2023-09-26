@@ -12,11 +12,10 @@
 
 #include "minishell_bonus.h"
 
-t_grouping		*parse_grouping(t_command_part *command_part,
-					t_token_list *tokens, t_parser_state *state);
 t_pipeline		*parse_pipeline(t_token_list *tokens, t_parser_state *state);
 t_conjunctions	*parse_conjuctions(t_token_list *tokens, t_parser_state *state);
-t_command_part	*parse_command_part(t_token_list *tokens, t_parser_state *state);
+t_command_part	*parse_command_part(t_token_list *tokens,
+					t_parser_state *state);
 
 t_command	*parse_command(t_token_list *tokens, t_parser_state *state)
 {
@@ -29,7 +28,7 @@ t_command	*parse_command(t_token_list *tokens, t_parser_state *state)
 		return (NULL);
 	}
 	if (!command)
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	command->pipeline = parse_pipeline(tokens, state);
 	if (!command->pipeline)
 		return (free_and_return_null(command));
@@ -43,7 +42,7 @@ t_pipeline	*parse_pipeline(t_token_list *tokens, t_parser_state *state)
 
 	pipeline = malloc(sizeof(t_pipeline));
 	if (!pipeline)
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	pipeline->type = TOKEN_NONE;
 	pipeline->cmd_part = parse_command_part(tokens, state);
 	if (!pipeline->cmd_part)
@@ -72,7 +71,7 @@ t_conjunctions	*parse_conjuctions(t_token_list *tokens, t_parser_state *state)
 		return (NULL);
 	conjunctions = malloc(sizeof(t_conjunctions));
 	if (!conjunctions)
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	conjunctions->type = current_token_type(tokens);
 	advance_token(tokens);
 	conjunctions->pipeline = parse_pipeline(tokens, state);
@@ -89,32 +88,21 @@ t_command_part	*parse_command_part(t_token_list *tokens, t_parser_state *state)
 
 	command_part = malloc(sizeof(t_command_part));
 	if (!command_part)
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	init_command_part_fields(command_part);
 	initial_redirections = parse_redirections(tokens, state);
-	if (current_token_type(tokens) == TOKEN_LEFT_PARENTHESIS)
-		command_part->u_cmd.grouping = parse_grouping(command_part, tokens,
-				state);
-	else if (current_token_type(tokens) >= TOKEN_ECHO && current_token_type(tokens) <= TOKEN_EXIT)
-		command_part->u_cmd.builtin_cmd = handle_builtin_tokens(command_part, tokens);
-	else if (current_token_type(tokens) == TOKEN_COMMAND_NAME)
-		command_part->u_cmd.cmd_name = handle_command_name_tokens(command_part, tokens);
-	else if (initial_redirections)
-	{
-		command_part->type = TOKEN_REDIRECTIONS;
-		command_part->redirections = initial_redirections;
-	}
-	else
-	{
-		free_command_part(command_part);
+	if (initial_redirections && current_token_type(tokens) == TOKEN_SPACE)
+		advance_token(tokens);
+	if (!add_command_union(command_part, initial_redirections, tokens, state))
 		return (NULL);
-	}
 	if (state->error)
 	{
 		free_command_part(command_part);
 		return (NULL);
 	}
 	subsequent_redirections(command_part, initial_redirections, tokens, state);
+	if (!state->has_paren || (state->has_paren && state->paren_count > 0))
+		subsequent_arguments(command_part, tokens, state);
 	return (command_part);
 }
 
@@ -127,16 +115,13 @@ t_grouping	*parse_grouping(t_command_part *command_part, t_token_list *tokens,
 	state->paren_count++;
 	grouping = malloc(sizeof(t_grouping));
 	if (!grouping)
-		return (return_mem_alloc_error());
+		return (print_misuse_state_error(state));
 	advance_token(tokens);
 	grouping->enclosed_cmd = parse_command(tokens, state);
 	if (!grouping->enclosed_cmd)
 		return (free_and_return_null(grouping));
-	if (current_token_type(tokens) != TOKEN_RIGHT_PARENTHESIS)
-	{
-		free_grouping(grouping);
-		return (NULL);
-	}
+	if (current_token_type(tokens) != TOKEN_RIGHT_PARENTHESIS || state->error)
+		return (null_and_free_grouping(grouping));
 	state->paren_count--;
 	advance_token(tokens);
 	if (!is_operator_or_end(current_token_type(tokens)))

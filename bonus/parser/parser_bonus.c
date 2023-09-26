@@ -18,15 +18,21 @@ t_command	*parse(t_token_list *tokens, t_parser_state *state)
 
 	state->paren_count = 0;
 	state->status = SUCCESS;
+	state->has_paren = false;
 	state->error = false;
 	parse_tree = parse_command(tokens, state);
 	if (!parse_tree || current_token_type(tokens) != TOKEN_END)
 	{
+		if (state->status != MISUSE)
+		{
+			if (current_token_type(tokens) == TOKEN_SPACE)
+				advance_token(tokens);
+			return_syntax_error(current_token(tokens).value);
+		}
 		if (parse_tree && current_token_type(tokens) != TOKEN_END)
 		{
 			free_command(parse_tree);
 			parse_tree = NULL;
-			return_syntax_error(current_token(tokens).value);
 		}
 		state->status = MISUSE;
 	}

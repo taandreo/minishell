@@ -76,7 +76,8 @@ int	tokenize_operators(char *input, size_t *pos,
 		status = add_token_2_pos(pos, tokens, TOKEN_OR, flags);
 	else if (input[*pos] == '|')
 		status = add_token_1_pos(pos, tokens, TOKEN_PIPE, flags);
-	else if (input[*pos] == '&' && peek_next(input, *pos, flags->input_len) == '&')
+	else if (input[*pos] == '&' && peek_next(
+			input, *pos, flags->input_len) == '&')
 		status = add_token_2_pos(pos, tokens, TOKEN_AND, flags);
 	else
 		status = add_token_1_pos(pos, tokens, TOKEN_INVALID, flags);

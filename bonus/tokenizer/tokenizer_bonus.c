@@ -68,7 +68,7 @@ void	advance_space(char *input, size_t *pos, t_token_list **tokens,
 			&& (*tokens)->tail->token.type <= TOKEN_REDIRECTION_HEREDOC))
 	{
 		if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
-			ft_dprintf(STDERR_FILENO, "Error: Memory allocation failed\n");
+			print_mem_alloc_error();
 	}
 	(*pos)++;
 }
@@ -78,7 +78,7 @@ void	add_token_end(t_token_list **tokens, t_token_flags *flags,
 {
 	if (flags->status == SUCCESS)
 		if (add_token(tokens, TOKEN_END, "") != SUCCESS)
-			ft_dprintf(STDERR_FILENO, "Error: Memory allocation failed\n");
+			print_mem_alloc_error();
 	if (prompt && *prompt)
 	{
 		free(*prompt);

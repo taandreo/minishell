@@ -103,8 +103,9 @@ typedef struct s_token_list
 typedef struct s_parser_state
 {
 	int		paren_count;
-	size_t	status;
+	int		status;
 	t_bool	error;
+	t_bool	has_paren;
 }	t_parser_state;
 
 typedef struct s_string
@@ -212,10 +213,12 @@ t_bool			add_command_or_string(t_token_list **tokens,
 					t_token_flags *flags, char *input, size_t *pos);
 t_command		*parse(t_token_list *tokens, t_parser_state *state);
 t_command		*parse_command(t_token_list *tokens, t_parser_state *state);
+t_grouping		*parse_grouping(t_command_part *command_part,
+					t_token_list *tokens, t_parser_state *state);
 t_redirections	*parse_redirections(t_token_list *tokens,
 					t_parser_state *state);
-t_arguments		*parse_arguments(t_token_list *tokens);
-t_string		*parse_string(t_token_list *tokens);
+t_arguments		*parse_arguments(t_token_list *tokens, t_parser_state *state);
+t_string		*parse_string(t_token_list *tokens, t_parser_state *state);
 t_bool			is_operator_or_end(t_token_type type);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
@@ -223,7 +226,7 @@ void			advance_token(t_token_list *tokens);
 t_token			peek_token(t_token_list *tokens);
 void			free_command(t_command *cmd);
 void			free_grouping(t_grouping *grouping);
-void			free_conjunction(t_conjunctions *conj);
+void			free_conjunctions(t_conjunctions *conj);
 void			free_pipeline(t_pipeline *pipe);
 void			free_command_part(t_command_part *cmd_part);
 void			free_builtin_command(t_builtin_cmd *cmd);
@@ -236,9 +239,9 @@ void			subsequent_redirections(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);
 t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
-					t_token_list *tokens);
+					t_token_list *tokens, t_parser_state *state);
 t_string		*handle_command_name_tokens(t_command_part *command_part,
-					t_token_list *tokens);
+					t_token_list *tokens, t_parser_state *state);
 void			*return_mem_alloc_error(void);
 void			*return_syntax_error(const char *value);
 void			*free_and_return_null(void *ptr);
@@ -246,7 +249,7 @@ void			*free_2_and_return_null(void *ptr1, void *ptr2);
 char			*expand_variable_string(char *input, size_t *pos,
 					t_token_flags *flags);
 char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
-char			*join_and_cleanup_1st(char **malloced_str1, char *str2);
+char			*join_1st_and_cleanup(char **malloced_str1, char *str2);
 char			*substitute_variable(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				strings_handle_variable_expansion(char **input, size_t *pos,
@@ -286,4 +289,20 @@ void			*free_str_nullify_and_malloc_error(char **str);
 void			free_2_str_and_nullify(char **str1, char **str2);
 int				bultin_echo(char **params);
 int				success_or_mem_error(int exit_status);
+void			print_mem_alloc_error(void);
+void			*misuse_state_error(t_parser_state *state);
+void			*print_misuse_state_error(t_parser_state *state);
+void			subsequent_arguments(t_command_part *command_part, t_token_list *tokens,
+					t_parser_state *state);
+void			*error_and_exit_code_false(t_token_flags *flags);
+void			*null_exit_code_false_free_string(t_token_flags *flags);
+void			*null_exit_code_false(t_token_flags *flags);
+void			set_flags_variables(char *input, size_t *pos,
+					t_token_flags *flags);
+t_bool			is_builtin_token(t_token_type type);
+t_bool			add_command_union(t_command_part  *command_part,
+				t_redirections	*redirections, t_token_list  *tokens,
+					t_parser_state *state);
+t_bool			is_operator_or_invalid_token(t_token_type type);
+void			*null_and_free_grouping(t_grouping *grouping);
 #endif

@@ -55,21 +55,16 @@ char	*extract_quoted_string(char **input, size_t *pos,
 	(*pos)++;
 	while ((*input)[*pos] && (*input)[*pos] != flags->quote_type)
 	{
-		if (flags->quote_type == '\"' && (*input)[*pos] == '$' && !flags->has_heredoc)
+		if (flags->quote_type == '\"' && (*input)[*pos] == '$'
+			&& !flags->has_heredoc)
 			tmp = substitute_variable(*input, pos, tokens, flags);
 		else
 			tmp = add_char_and_advance_pos(*input, pos);
 		if (!tmp)
-		{
-			flags->has_exit_code = false;
-			return (free_and_return_null(flags->string));
-		}
+			return (null_exit_code_false_free_string(flags));
 		flags->string = join_and_cleanup(&flags->string, &tmp);
 		if (!flags->string)
-		{
-			flags->has_exit_code = false;
-			return (NULL);
-		}
+			return (null_exit_code_false(flags));
 	}
 	if (flags->has_exit_code && flags->string && ft_strlen(flags->string) == 0)
 		free_str_and_nullify(&flags->string);

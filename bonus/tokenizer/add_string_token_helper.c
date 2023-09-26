@@ -58,8 +58,10 @@ int	check_ambiguous_redirect(char *string, t_token_list **tokens,
 {
 	if (flags->var_len > -1 || ft_strlen(string) == 0)
 	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: %s: ambiguous redirect\n", flags->var);
+		write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
+		write(STDERR_FILENO, flags->var, ft_strlen(flags->var));
+		write(STDERR_FILENO, ": ambiguous redirect\n",
+			ft_strlen(": ambiguous redirect\n"));
 		free_token_list(tokens);
 		return (GENERAL_ERROR);
 	}
