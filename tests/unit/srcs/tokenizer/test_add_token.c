@@ -170,10 +170,10 @@ void test_add_token_success(void **state)
 	assert_int_equal(current->token.type, TOKEN_SPACE);
 	assert_string_equal(current->token.value, " ");
 
-	result = add_token(&tokens, TOKEN_SPECIAL_ARG, "-n");
+	result = add_token(&tokens, TOKEN_STRING, "-n");
 	current = current->next;
 	assert_int_equal(result, 0);
-	assert_int_equal(current->token.type, TOKEN_SPECIAL_ARG);
+	assert_int_equal(current->token.type, TOKEN_STRING);
 	assert_string_equal(current->token.value, "-n");
 
 	result = add_token(&tokens, TOKEN_INVALID, "&");

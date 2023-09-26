@@ -3,7 +3,7 @@
 CC = clang
 NAME = minishell
 NAME_BONUS = .minishell_bonus.txt
-LIBFT = lib/libft.a
+LIBFT = libft/libft.a
 LIBFT_DIR = libft
 MANDATORY_DIR := mandatory
 BONUS_DIR := bonus
@@ -25,7 +25,7 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			free_utils_bonus.c\
 			free_utils2_bonus.c\
-			string_utils_bonus.c\
+			utils_bonus.c\
 			tokenizer/tokenize_by_category_bonus.c\
 			tokenizer/tokenize_functions.c\
 			tokenizer/tokenize_wildcard.c\
@@ -34,19 +34,18 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/tokenizer_bonus.c\
 			tokenizer/token_list_creation_bonus.c\
 			tokenizer/tokenizer_helper_functions_bonus.c\
-			tokenizer/command_not_found_bonus.c\
 			tokenizer/handle_quotes_bonus.c\
 			tokenizer/strings_tokenizer_helper_bonus.c\
 			tokenizer/add_string_token_helper.c\
-			tokenizer/variable_expansion.c\
+			tokenizer/variable_expansion_bonus.c\
 			tokenizer/handle_variable_expansion_bonus.c\
 			tokenizer/add_token_helper_bonus.c\
 			parser/parser_bonus.c\
 			parser/parse_command_bonus.c\
 			parser/parse_redirections_bonus.c\
+			parser/parse_arguments_bonus.c\
 			parser/parser_helper_functions_bonus.c\
 			parser/command_part_helper_bonus.c\
-			error/return_errors_helper_bonus.c\
 			parser/free/free_parse_tree1_bonus.c\
 			parser/free/free_parse_tree2_bonus.c\
 			parser/init/init_structures_bonus.c\
@@ -60,6 +59,10 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			env/env_vars_0_bonus.c\
 			env/env_vars_1_bonus.c\
 			error/errors_bonus.c\
+			parser/parser_state_error.c\
+			parser/parser_utils_bonus.c\
+			error/return_errors_helper_bonus.c\
+            error/misuse_or_unclosed_error_bonus.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
@@ -93,11 +96,11 @@ $(NAME_BONUS): $(BONUS_OBJS) | libft
 	@echo ______________________________
 
 $(OBJS_DIR)/%.o: $(MANDATORY_DIR)/%.c
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
 
 $(BONUS_OBJS_DIR)/%.o: $(BONUS_DIR)/%.c
-	mkdir -p $(@D)
+	@mkdir -p $(@D)
 	@$(CC) $(CFLAGS) -I$(LIBFT_DIR)/include -I$(INC_DIR) -c $< -o $@
 
 all: $(NAME)
@@ -105,17 +108,18 @@ all: $(NAME)
 bonus: $(NAME_BONUS)
 
 libft:
-	make -C $(LIBFT_DIR)
+	@make -C $(LIBFT_DIR)
 
 clean:
+	@rm -f minishell.o
 	rm -rf $(OBJS_DIR)
 	rm -rf $(BONUS_OBJS_DIR)
 	rm -f  $(BULTIN_TEST_OBJS)
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean
-	rm -f $(NAME) $(NAME_BONUS) $(LIBFT)
-	make fclean -C $(LIBFT_DIR)
+	@rm -f $(NAME) $(NAME_BONUS) $(LIBFT)
+	@make fclean -C $(LIBFT_DIR)
 
 re: fclean all
 

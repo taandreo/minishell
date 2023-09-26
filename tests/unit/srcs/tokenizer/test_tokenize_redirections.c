@@ -12,7 +12,7 @@
 
 #include "tester.h"
 
-int	tokenize_redirections(const char *input, size_t *pos,
+int				tokenize_redirections(char *input, size_t *position,
 		t_token_list **tokens, t_token_flags *flags);
 
 void test_tokenize_redirections(void **state)
@@ -21,7 +21,7 @@ void test_tokenize_redirections(void **state)
 	t_token_list *tokens = create_token_list();
 	char *input = "<<>><>abc";
 	size_t input_len = strlen(input);
-	t_token_flags flags = init_flags(input_len);
+	t_token_flags flags = init_token_flags(input_len);
 	size_t pos = 0;
 	int status = tokenize_redirections(input, &pos, &tokens, &flags);
 	assert_int_equal(status, 0);
@@ -62,4 +62,18 @@ void test_tokenize_redirections(void **state)
 	free_token_list(&tokens);
 	status = tokenize_redirections(input, &pos, &tokens, &flags);
 	assert_int_equal(status, 2);
+}
+
+void test_tokenize_redirections_fail(void **state)
+{
+	(void)state;
+	t_token_list *tokens = create_token_list();
+	char *input = "<";
+	size_t input_len = strlen(input);
+	t_token_flags flags = init_token_flags(input_len);
+	size_t pos = 0;
+	setup_malloc_behavior(1,1);
+	int status = tokenize_redirections(input, &pos, &tokens, &flags);
+	assert_int_equal(status, 2);
+	assert_null(tokens);
 }

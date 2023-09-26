@@ -12,6 +12,9 @@
 
 #include "minishell_bonus.h"
 
+int	add_hdoc_filename_or_error(char *string, t_token_list **tokens,
+		t_token_flags *flags);
+
 int	add_builtin_or_command(char *string, t_token_list **tokens,
 		t_token_flags *flags, char next)
 {
@@ -40,20 +43,7 @@ int	add_filename_or_string(char *string, t_token_list **tokens,
 
 	exit_status = SUCCESS;
 	if (string)
-	{
-		if (flags->has_heredoc)
-			exit_status = add_token(tokens, TOKEN_STRING, string);
-		else
-		{
-			if (flags->inside_quotes)
-			{
-				exit_status = add_token(tokens, TOKEN_FILENAME, string);
-				flags->inside_quotes = false;
-			}
-			else
-				exit_status = check_ambiguous_redirect(string, tokens, flags);
-		}
-	}
+		exit_status = add_hdoc_filename_or_error(string, tokens, flags);
 	if (!next || next == ' ')
 	{
 		flags->is_redirection = false;
@@ -68,8 +58,10 @@ int	check_ambiguous_redirect(char *string, t_token_list **tokens,
 {
 	if (flags->var_len > -1 || ft_strlen(string) == 0)
 	{
-		ft_dprintf(STDERR_FILENO,
-			"minishell: %s: ambiguous redirect\n", flags->var);
+		write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
+		write(STDERR_FILENO, flags->var, ft_strlen(flags->var));
+		write(STDERR_FILENO, ": ambiguous redirect\n",
+			ft_strlen(": ambiguous redirect\n"));
 		free_token_list(tokens);
 		return (GENERAL_ERROR);
 	}
@@ -92,4 +84,27 @@ void	*add_unclosed_quotes_token(t_token_list **tokens, t_token_flags *flags,
 		flags->string = NULL;
 	}
 	return (NULL);
+}
+
+int	add_hdoc_filename_or_error(char *string, t_token_list **tokens,
+		t_token_flags *flags)
+{
+	int	status;
+
+	if (flags->has_heredoc)
+	{
+		status = add_token(tokens, TOKEN_STRING, string);
+		flags->has_heredoc = false;
+	}
+	else
+	{
+		if (flags->inside_quotes)
+		{
+			status = add_token(tokens, TOKEN_FILENAME, string);
+			flags->inside_quotes = false;
+		}
+		else
+			status = check_ambiguous_redirect(string, tokens, flags);
+	}
+	return (status);
 }

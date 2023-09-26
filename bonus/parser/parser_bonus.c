@@ -12,19 +12,29 @@
 
 #include "minishell_bonus.h"
 
-t_command	*parse(t_token_list *tokens)
+t_command	*parse(t_token_list *tokens, t_parser_state *state)
 {
 	t_command	*parse_tree;
 
-	parse_tree = parse_command(tokens);
+	state->paren_count = 0;
+	state->status = SUCCESS;
+	state->has_paren = false;
+	state->error = false;
+	parse_tree = parse_command(tokens, state);
 	if (!parse_tree || current_token_type(tokens) != TOKEN_END)
 	{
-		if (parse_tree)
+		if (state->status != MISUSE)
 		{
-			free_command(parse_tree);
+			if (current_token_type(tokens) == TOKEN_SPACE)
+				advance_token(tokens);
 			return_syntax_error(current_token(tokens).value);
 		}
-		exit(MISUSE);
+		if (parse_tree && current_token_type(tokens) != TOKEN_END)
+		{
+			free_command(parse_tree);
+			parse_tree = NULL;
+		}
+		state->status = MISUSE;
 	}
 	return (parse_tree);
 }

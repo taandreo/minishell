@@ -42,7 +42,7 @@ t_token_list	*tokenizer(char *input, t_token_flags *flags)
 		if (flags->status != SUCCESS)
 			break ;
 	}
-	if (flags->paren_count)
+	if (tokens && flags->paren_count)
 		flags->status = unclosed_paren_error(&tokens, &flags->input);
 	add_token_end(&tokens, flags, &flags->input);
 	return (tokens);
@@ -66,7 +66,10 @@ void	advance_space(char *input, size_t *pos, t_token_list **tokens,
 	if (!ft_strchr("><|&() ", peek_next(input, *pos, input_len))
 		&& !((*tokens)->tail->token.type >= TOKEN_AND
 			&& (*tokens)->tail->token.type <= TOKEN_REDIRECTION_HEREDOC))
-		add_token(tokens, TOKEN_SPACE, " ");
+	{
+		if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)
+			print_mem_alloc_error();
+	}
 	(*pos)++;
 }
 
@@ -74,7 +77,11 @@ void	add_token_end(t_token_list **tokens, t_token_flags *flags,
 			char **prompt)
 {
 	if (flags->status == SUCCESS)
-		add_token(tokens, TOKEN_END, "");
+		if (add_token(tokens, TOKEN_END, "") != SUCCESS)
+			print_mem_alloc_error();
 	if (prompt && *prompt)
+	{
 		free(*prompt);
+		*prompt = NULL;
+	}
 }

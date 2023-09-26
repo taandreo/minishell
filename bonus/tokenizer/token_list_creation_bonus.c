@@ -77,7 +77,7 @@ t_token_node	*init_new_node(t_token_list **tokens,
 	if (!new_node)
 	{
 		free_token_list(tokens);
-		return (return_mem_alloc_error());
+		return (NULL);
 	}
 	new_node->token.type = type;
 	new_node->token.value = ft_strdup(value);
@@ -86,7 +86,7 @@ t_token_node	*init_new_node(t_token_list **tokens,
 		free(new_node);
 		new_node = NULL;
 		free_token_list(tokens);
-		return (return_mem_alloc_error());
+		return (NULL);
 	}
 	new_node->next = NULL;
 	return (new_node);

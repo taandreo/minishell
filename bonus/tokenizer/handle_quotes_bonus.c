@@ -23,11 +23,9 @@ char	*handle_quotes(char **input, size_t *position,
 {
 	flags->quote_type = (*input)[*position];
 	if (!flags->string)
-	{
 		flags->string = ft_strdup("");
-		if (!flags->string)
-			return (return_mem_alloc_error());
-	}
+	if (!flags->string)
+		return (return_mem_alloc_error());
 	flags->string = extract_quoted_string(input, position, tokens, flags);
 	if (!flags->string && !flags->has_exit_code)
 		return (return_mem_alloc_error());
@@ -51,21 +49,22 @@ char	*extract_quoted_string(char **input, size_t *pos,
 
 	start = *input + *pos;
 	if (!flags->var)
-	{
 		flags->var = initialize_var_string(*input, *pos, flags, start);
-		if (!flags->var)
-			return (NULL);
-	}
+	if (!flags->var)
+		return (NULL);
 	(*pos)++;
 	while ((*input)[*pos] && (*input)[*pos] != flags->quote_type)
 	{
-		if (flags->quote_type == '\"' && (*input)[*pos] == '$')
+		if (flags->quote_type == '\"' && (*input)[*pos] == '$'
+			&& !flags->has_heredoc)
 			tmp = substitute_variable(*input, pos, tokens, flags);
 		else
 			tmp = add_char_and_advance_pos(*input, pos);
 		if (!tmp)
-			return (free_str_nullify_and_malloc_error(&flags->string));
+			return (null_exit_code_false_free_string(flags));
 		flags->string = join_and_cleanup(&flags->string, &tmp);
+		if (!flags->string)
+			return (null_exit_code_false(flags));
 	}
 	if (flags->has_exit_code && flags->string && ft_strlen(flags->string) == 0)
 		free_str_and_nullify(&flags->string);
@@ -100,16 +99,21 @@ char	*handle_question_mark(char *input, size_t *pos, t_token_list **tokens,
 
 	var = ft_strdup("");
 	if (!var)
-		return (return_mem_alloc_error());
+		return (NULL);
 	if (flags->string && ft_strlen(flags->string) > 0)
 	{
 		if (!add_command_or_string(tokens, flags, input, pos))
 			return (free_and_return_null(var));
 		free(flags->string);
 		flags->string = ft_strdup("");
+		if (!flags->string)
+			return (free_and_return_null(var));
 	}
 	if (add_token(tokens, TOKEN_EXIT_CODE, "$?") != SUCCESS)
-		return (free_2_and_return_null(flags->string, var));
+	{
+		free_2_str_and_nullify(&flags->string, &var);
+		return (NULL);
+	}
 	*pos += 2;
 	flags->has_exit_code = true;
 	return (var);

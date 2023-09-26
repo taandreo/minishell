@@ -15,6 +15,7 @@
 
 # include "libft.h"
 # include "ft_printf.h"
+# include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
 # include <readline/readline.h>
@@ -29,7 +30,7 @@
 # define EXIT_OFFSET 128
 # define PATH_MAX	4096
 
-t_list *g_env;
+extern t_list *g_env;
 
 typedef enum e_token_type
 {
@@ -43,6 +44,7 @@ typedef enum e_token_type
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_PIPE,
+	TOKEN_INVALID,
 	TOKEN_LEFT_PARENTHESIS,
 	TOKEN_RIGHT_PARENTHESIS,
 	TOKEN_REDIRECTIONS,
@@ -50,15 +52,15 @@ typedef enum e_token_type
 	TOKEN_REDIRECTION_OUTPUT,
 	TOKEN_REDIRECTION_APPEND,
 	TOKEN_REDIRECTION_HEREDOC,
+	TOKEN_ERROR,
 	TOKEN_COMMAND_NAME,
-	TOKEN_WILDCARD,
 	TOKEN_FILENAME,
+	TOKEN_WILDCARD,
 	TOKEN_STRING,
 	TOKEN_EXIT_CODE,
 	TOKEN_SPACE,
-	TOKEN_SPECIAL_ARG,
-	TOKEN_INVALID,
-	TOKEN_ERROR,
+	TOKEN_GROUP,
+	TOKEN_NONE,
 	TOKEN_END
 }	t_token_type;
 
@@ -101,29 +103,32 @@ typedef struct s_token_list
 	size_t			count;
 }	t_token_list;
 
-typedef struct s_argument
+typedef struct s_parser_state
+{
+	int		paren_count;
+	int		status;
+	t_bool	error;
+	t_bool	has_paren;
+}	t_parser_state;
+
+typedef struct s_string
 {
 	t_token_type	type;
 	char			*value;
-}	t_argument;
+	struct s_string	*next;
+}	t_string;
 
 typedef struct s_arguments
 {
-	t_argument			*argument;
+	t_token_type		type;
+	t_string			*string;
 	struct s_arguments	*next;
 }	t_arguments;
-
-typedef struct s_filename
-{
-	t_token_type		type;
-	char				*value;
-	struct s_filename	*next;
-}	t_filename;
 
 typedef struct s_redirection
 {
 	t_token_type	type;
-	t_filename		*filename;
+	t_string		*filename;
 }	t_redirection;
 
 typedef struct s_redirections
@@ -132,19 +137,27 @@ typedef struct s_redirections
 	struct s_redirections	*next;
 }	t_redirections;
 
-typedef struct s_builtin_command
+typedef struct s_builtin_cmd
 {
 	t_token_type	type;
-	t_arguments		*arguments;
-}	t_builtin_command;
+	char			*value;
+}	t_builtin_cmd;
+
+typedef struct s_command	t_command;
+
+typedef struct s_grouping
+{
+	t_command		*enclosed_cmd;
+}	t_grouping;
 
 typedef struct s_command_part
 {
 	t_token_type			type;
 	union
 	{
-		t_builtin_command	*builtin_cmd;
-		char				*cmd_name;
+		t_builtin_cmd	*builtin_cmd;
+		t_string		*cmd_name;
+		t_grouping		*grouping;
 	} u_cmd;
 	t_arguments				*arguments;
 	t_redirections			*redirections;
@@ -152,6 +165,7 @@ typedef struct s_command_part
 
 typedef struct s_pipeline
 {
+	t_token_type		type;
 	t_command_part		*cmd_part;
 	struct s_pipeline	*next;
 }	t_pipeline;
@@ -163,21 +177,11 @@ typedef struct s_conjunctions
 	struct s_conjunctions	*next;
 }	t_conjunctions;
 
-typedef struct s_grouping	t_grouping;
-
 typedef struct s_command
 {
 	t_pipeline		*pipeline;
 	t_conjunctions	*conjunctions;
-	t_grouping		*grouping;
 }	t_command;
-
-typedef struct s_grouping
-{
-	t_command		*enclosed_cmd;
-	t_conjunctions	*conjunctions;
-	t_grouping		*next_grouping;
-}	t_grouping;
 
 typedef struct s_env
 {
@@ -202,7 +206,7 @@ void			free_token_list(t_token_list **token_list_ptr);
 t_bool			has_quotes(char c);
 char			peek_next(const char *input, size_t position, size_t input_len);
 t_bool			is_string_start(char c, t_token_flags *flags);
-t_token_flags	init_flags(size_t input_len);
+t_token_flags	init_token_flags(size_t input_len);
 int				add_token_1_pos(size_t *pos, t_token_list **tokens,
 					t_token_type type, t_token_flags *flags);
 int				add_token_2_pos(size_t *pos, t_token_list **tokens,
@@ -214,37 +218,39 @@ int				add_builtin_or_command(char *return_string,
 					t_token_list **tokens, t_token_flags *flags, char next);
 int				add_filename_or_string(char *return_string,
 					t_token_list **tokens, t_token_flags *flags, char next);
-int				add_special_or_string(char *string, t_token_list **tokens,
-					char *input, size_t pos);
-int				add_string_and_maybe_space(char *string, t_token_list **tokens,
-					char *input, size_t pos);
 t_bool			add_command_or_string(t_token_list **tokens,
 					t_token_flags *flags, char *input, size_t *pos);
-t_command		*parse(t_token_list *tokens);
-t_command		*parse_command(t_token_list *tokens);
-t_redirections	*parse_redirections(t_token_list *tokens);
+t_command		*parse(t_token_list *tokens, t_parser_state *state);
+t_command		*parse_command(t_token_list *tokens, t_parser_state *state);
+t_grouping		*parse_grouping(t_command_part *command_part,
+					t_token_list *tokens, t_parser_state *state);
+t_redirections	*parse_redirections(t_token_list *tokens,
+					t_parser_state *state);
+t_arguments		*parse_arguments(t_token_list *tokens, t_parser_state *state);
+t_string		*parse_string(t_token_list *tokens, t_parser_state *state);
+t_bool			is_operator_or_end(t_token_type type);
 t_token			current_token(const t_token_list *tokens);
 t_token_type	current_token_type(t_token_list *tokens);
 void			advance_token(t_token_list *tokens);
 t_token			peek_token(t_token_list *tokens);
 void			free_command(t_command *cmd);
 void			free_grouping(t_grouping *grouping);
-void			free_conjunction(t_conjunctions *conj);
+void			free_conjunctions(t_conjunctions *conj);
 void			free_pipeline(t_pipeline *pipe);
 void			free_command_part(t_command_part *cmd_part);
-void			free_builtin_command(t_builtin_command *cmd);
+void			free_builtin_command(t_builtin_cmd *cmd);
 void			free_redirections(t_redirections *redirs);
 void			free_redirection(t_redirection *redir);
 void			free_arguments(t_arguments *args);
-void			free_argument(t_argument *arg);
+void			free_string(t_string *str);
 void			init_command_part_fields(t_command_part *command_part);
-void			add_subsequent_redirections_to_initial(
-					t_command_part *command_part,
-					t_redirections *initial_redirections, t_token_list *tokens);
-t_command_part	*handle_builtin_tokens(t_command_part *command_part,
-					t_token_list *tokens);
-t_command_part	*handle_command_name_tokens(t_command_part *command_part,
-					t_token_list *tokens);
+void			subsequent_redirections(t_command_part *command_part,
+					t_redirections *initial_redirections, t_token_list *tokens,
+					t_parser_state *state);
+t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
+					t_token_list *tokens, t_parser_state *state);
+t_string		*handle_command_name_tokens(t_command_part *command_part,
+					t_token_list *tokens, t_parser_state *state);
 void			*return_mem_alloc_error(void);
 void			*return_syntax_error(const char *value);
 void			*free_and_return_null(void *ptr);
@@ -252,7 +258,7 @@ void			*free_2_and_return_null(void *ptr1, void *ptr2);
 char			*expand_variable_string(char *input, size_t *pos,
 					t_token_flags *flags);
 char			*join_and_cleanup(char **malloced_str1, char **malloced_str2);
-char			*join_and_cleanup_1st(char **malloced_str1, char *str2);
+char			*join_1st_and_cleanup(char **malloced_str1, char *str2);
 char			*substitute_variable(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				strings_handle_variable_expansion(char **input, size_t *pos,
@@ -280,7 +286,7 @@ int				tokenize_operators(char *input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_strings(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
-int				tokenize_parenthesis(char *input, size_t *pos,
+int				tokenize_parenthesis(const char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
 int				tokenize_wildcard(char *input, size_t *pos,
 					t_token_list **tokens, t_token_flags *flags);
@@ -311,6 +317,21 @@ void			free_all_envs(void);
 
 // ERROR
 void			print_perror(char *cmd, char *msg);
-
-
+int				success_or_mem_error(int exit_status);
+void			print_mem_alloc_error(void);
+void			*misuse_state_error(t_parser_state *state);
+void			*print_misuse_state_error(t_parser_state *state);
+void			subsequent_arguments(t_command_part *command_part, t_token_list *tokens,
+					t_parser_state *state);
+void			*error_and_exit_code_false(t_token_flags *flags);
+void			*null_exit_code_false_free_string(t_token_flags *flags);
+void			*null_exit_code_false(t_token_flags *flags);
+void			set_flags_variables(char *input, size_t *pos,
+					t_token_flags *flags);
+t_bool			is_builtin_token(t_token_type type);
+t_bool			add_command_union(t_command_part  *command_part,
+				t_redirections	*redirections, t_token_list  *tokens,
+					t_parser_state *state);
+t_bool			is_operator_or_invalid_token(t_token_type type);
+void			*null_and_free_grouping(t_grouping *grouping);
 #endif

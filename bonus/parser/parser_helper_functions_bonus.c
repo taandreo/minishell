@@ -47,3 +47,9 @@ t_token	peek_token(t_token_list *tokens)
 	empty_token.value = NULL;
 	return (empty_token);
 }
+
+void	*null_and_free_grouping(t_grouping *grouping)
+{
+	free_grouping(grouping);
+	return (NULL);
+}

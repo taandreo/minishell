@@ -12,7 +12,7 @@
 
 #include "tester.h"
 
-int	tokenize_operators(const char *input, size_t *position,
+int				tokenize_operators(char *input, size_t *position,
 		t_token_list **tokens, t_token_flags *flags);
 
 void test_peek_next(void **state)
@@ -32,15 +32,29 @@ void test_peek_next(void **state)
 void test_is_string_start(void **state)
 {
 	(void) state;
-	assert_true(is_string_start('*'));
-	assert_true(is_string_start('?'));
-	assert_false(is_string_start('&'));
-	assert_false(is_string_start('|'));
-	assert_false(is_string_start('>'));
-	assert_false(is_string_start('<'));
-	assert_true(is_string_start('$'));
-	assert_true(is_string_start('a'));
-	assert_false(is_string_start('\0'));
+	char *str = "abc";
+	t_token_flags flags = init_token_flags(strlen(str));
+	assert_false(is_string_start('*', &flags));
+	flags.has_heredoc = true;
+	assert_true(is_string_start('*', &flags));
+	flags.has_heredoc = false;
+	assert_true(is_string_start('?', &flags));
+	assert_false(is_string_start('&', &flags));
+	assert_false(is_string_start('|', &flags));
+	assert_false(is_string_start('>', &flags));
+	assert_false(is_string_start('<', &flags));
+	flags.var_len = 10;
+	if (flags.var_len > -1)
+	{
+		assert_true(is_string_start('&', &flags));
+		assert_true(is_string_start('|', &flags));
+		assert_true(is_string_start('>', &flags));
+		assert_true(is_string_start('<', &flags));
+	}
+	flags.var_len = -1;
+	assert_true(is_string_start('$', &flags));
+	assert_true(is_string_start('a', &flags));
+	assert_false(is_string_start('\0', &flags));
 }
 
 void test_has_quotes(void **state)
@@ -64,7 +78,7 @@ void test_tokenize_operators_success(void **state)
 	t_token_list *tokens = create_token_list();
 	char *input = "&&|||&abc";
 	size_t input_len = strlen(input);
-	t_token_flags flags = init_flags(input_len);
+	t_token_flags flags = init_token_flags(input_len);
 	size_t pos = 0;
 	int status = tokenize_operators(input, &pos, &tokens, &flags);
 	assert_int_equal(status, 0);
@@ -105,5 +119,19 @@ void test_tokenize_operators_success(void **state)
 	free_token_list(&tokens);
 	status = tokenize_operators(input, &pos, &tokens, &flags);
 	assert_int_equal(status, 2);
+}
+
+void test_tokenize_operators_fail(void **state)
+{
+	(void)state;
+	t_token_list *tokens = create_token_list();
+	char *input = "||";
+	size_t input_len = strlen(input);
+	t_token_flags flags = init_token_flags(input_len);
+	size_t pos = 0;
+	setup_malloc_behavior(0,1);
+	int status = tokenize_operators(input, &pos, &tokens, &flags);
+	assert_int_equal(status, 2);
+	assert_null(tokens);
 }
 

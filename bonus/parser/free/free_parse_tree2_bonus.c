@@ -12,53 +12,45 @@
 
 #include "minishell_bonus.h"
 
-void	free_argument(t_argument *arg)
+void	free_string(t_string *str)
 {
-	if (arg)
-	{
-		free(arg->value);
-		free(arg);
-	}
+	if (!str)
+		return ;
+	free(str->value);
+	free_string(str->next);
+	free(str);
 }
 
 void	free_arguments(t_arguments *args)
 {
-	if (args)
-	{
-		free_argument(args->argument);
-		args->argument = NULL;
-		free_arguments(args->next);
-		args->next = NULL;
-		free(args);
-	}
+	if (!args)
+		return ;
+	free_string(args->string);
+	free_arguments(args->next);
+	free(args);
 }
 
 void	free_redirection(t_redirection *redir)
 {
-	if (redir)
-	{
-		free(redir->filename);
-		free(redir);
-	}
+	if (!redir)
+		return ;
+	free_string(redir->filename);
+	free(redir);
 }
 
 void	free_redirections(t_redirections *redirs)
 {
-	if (redirs)
-	{
-		free_redirection(redirs->redirection);
-		redirs->redirection = NULL;
-		free_redirections(redirs->next);
-		redirs->next = NULL;
-		free(redirs);
-	}
+	if (!redirs)
+		return ;
+	free_redirection(redirs->redirection);
+	free_redirections(redirs->next);
+	free(redirs);
 }
 
-void	free_builtin_command(t_builtin_command *cmd)
+void	free_builtin_command(t_builtin_cmd *cmd)
 {
-	if (cmd)
-	{
-		free_arguments(cmd->arguments);
-		free(cmd);
-	}
+	if (!cmd)
+		return ;
+	free(cmd->value);
+	free(cmd);
 }

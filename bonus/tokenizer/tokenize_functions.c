@@ -35,44 +35,53 @@ int	tokenize_quotes(char **input, size_t *pos,
 	else
 	{
 		if (flags->string)
-			exit_status = add_special_or_string(flags->string, tokens,
-					*input, *pos);
+			exit_status = add_token(tokens, TOKEN_STRING, flags->string);
 	}
 	free_2_str_and_nullify(&flags->var, &flags->string);
-	return (exit_status);
+	return (success_or_mem_error(exit_status));
 }
 
 int	tokenize_redirections(char *input, size_t *pos,
 		t_token_list **tokens, t_token_flags *flags)
 {
+	int	status;
+
 	flags->is_command = false;
 	flags->is_redirection = true;
 	if (!tokens || !*tokens)
 		return (MISUSE);
 	if (input[*pos] == '<' && peek_next(input, *pos, flags->input_len) == '<')
-		return (add_token_2_pos(pos, tokens, TOKEN_REDIRECTION_HEREDOC, flags));
-	if (input[*pos] == '<')
-		return (add_token_1_pos(pos, tokens, TOKEN_REDIRECTION_INPUT, flags));
-	if (input[*pos] == '>' && peek_next(input, *pos, flags->input_len) == '>')
-		return (add_token_2_pos(pos, tokens, TOKEN_REDIRECTION_APPEND, flags));
-	return (add_token_1_pos(pos, tokens, TOKEN_REDIRECTION_OUTPUT, flags));
+		status = add_token_2_pos(pos, tokens, TOKEN_REDIRECTION_HEREDOC, flags);
+	else if (input[*pos] == '<')
+		status = add_token_1_pos(pos, tokens, TOKEN_REDIRECTION_INPUT, flags);
+	else if (input[*pos] == '>'
+		&& peek_next(input, *pos, flags->input_len) == '>')
+		status = add_token_2_pos(pos, tokens, TOKEN_REDIRECTION_APPEND, flags);
+	else
+		status = add_token_1_pos(pos, tokens, TOKEN_REDIRECTION_OUTPUT, flags);
+	return (success_or_mem_error(status));
 }
 
 int	tokenize_operators(char *input, size_t *pos,
 		t_token_list **tokens, t_token_flags *flags)
 {
+	int	status;
+
 	flags->is_command = true;
 	flags->is_redirection = false;
 	flags->has_command = false;
 	if (!tokens || !*tokens)
 		return (MISUSE);
 	if (input[*pos] == '|' && peek_next(input, *pos, flags->input_len) == '|')
-		return (add_token_2_pos(pos, tokens, TOKEN_OR, flags));
-	if (input[*pos] == '|')
-		return (add_token_1_pos(pos, tokens, TOKEN_PIPE, flags));
-	if (input[*pos] == '&' && peek_next(input, *pos, flags->input_len) == '&')
-		return (add_token_2_pos(pos, tokens, TOKEN_AND, flags));
-	return (add_token_1_pos(pos, tokens, TOKEN_INVALID, flags));
+		status = add_token_2_pos(pos, tokens, TOKEN_OR, flags);
+	else if (input[*pos] == '|')
+		status = add_token_1_pos(pos, tokens, TOKEN_PIPE, flags);
+	else if (input[*pos] == '&' && peek_next(
+			input, *pos, flags->input_len) == '&')
+		status = add_token_2_pos(pos, tokens, TOKEN_AND, flags);
+	else
+		status = add_token_1_pos(pos, tokens, TOKEN_INVALID, flags);
+	return (success_or_mem_error(status));
 }
 
 int	tokenize_strings(char **input, size_t *pos,
@@ -96,21 +105,26 @@ int	tokenize_strings(char **input, size_t *pos,
 	else
 	{
 		if (return_string)
-			exit_status = add_special_or_string(return_string, tokens, *input,
-					*pos);
+			exit_status = add_token(tokens, TOKEN_STRING, return_string);
 	}
 	free_2_str_and_nullify(&flags->var, &flags->string);
-	return (exit_status);
+	return (success_or_mem_error(exit_status));
 }
 
-int	tokenize_parenthesis(char *input, size_t *pos, t_token_list **tokens,
+int	tokenize_parenthesis(const char *input, size_t *pos, t_token_list **tokens,
 		t_token_flags *flags)
 {
+	int	status;
+
 	if (input[*pos] == '(')
 	{
 		flags->paren_count++;
-		return (add_token_1_pos(pos, tokens, TOKEN_LEFT_PARENTHESIS, flags));
+		status = add_token_1_pos(pos, tokens, TOKEN_LEFT_PARENTHESIS, flags);
 	}
-	flags->paren_count--;
-	return (add_token_1_pos(pos, tokens, TOKEN_RIGHT_PARENTHESIS, flags));
+	else
+	{
+		flags->paren_count--;
+		status = add_token_1_pos(pos, tokens, TOKEN_RIGHT_PARENTHESIS, flags);
+	}
+	return (success_or_mem_error(status));
 }
