@@ -137,9 +137,10 @@ void print_redirections(t_redirections *redirections, size_t indent)
 		print_indent(indent + 2);
 		while (filename)
 		{
-			printf("%s(%s),", token_type_to_string(filename->type), filename->value);
+			printf("%s(%s), ", token_type_to_string(filename->type), filename->value);
 			filename = filename->next;
 		}
+		printf("\n");
 		print_indent(indent);
 		printf("),\n");
 
@@ -159,6 +160,8 @@ void print_arguments(t_arguments *arguments, size_t indent)
 			string = string->next;
 		}
 		printf("\n");
+		print_indent(indent);
+		printf("),\n");
 		arguments = arguments->next;
 	}
 }
@@ -184,15 +187,15 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 		print_indent(indent);
 		printf("%s(\n", token_type_to_string(pipeline->type));
 
-		t_command_part *cmd_name = pipeline->cmd_part;
+		t_string *cmd_name = pipeline->cmd_part->u_cmd.cmd_name;
 		switch (pipeline->cmd_part->type)
 		{
 			case TOKEN_COMMAND_NAME:
 				print_indent(indent + 2);
-				while (cmd_name->u_cmd.cmd_name)
+				while (cmd_name)
 				{
-					printf("%s(%s), ", token_type_to_string(pipeline->cmd_part->u_cmd.cmd_name->type), pipeline->cmd_part->u_cmd.cmd_name->value);
-					cmd_name->u_cmd.cmd_name = cmd_name->u_cmd.cmd_name->next;
+					printf("%s(%s), ", token_type_to_string(cmd_name->type), cmd_name->value);
+					cmd_name = cmd_name->next;
 				}
 				printf("\n");
 				break;
@@ -235,28 +238,26 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 
 void print_conjunctions(t_conjunctions *conjunctions, size_t indent)
 {
-	while (conjunctions)
+	t_conjunctions *conj = conjunctions;
+	while (conj)
 	{
 		print_indent(indent);
-		printf("%s(\n", token_type_to_string(conjunctions->type));
+		printf("%s(\n", token_type_to_string(conj->type));
 
-		if (conjunctions->pipeline)
+		if (conj->pipeline)
 		{
-			print_pipeline(conjunctions->pipeline, indent + 2);
+			print_pipeline(conj->pipeline, indent + 2);
 		}
 
 		print_indent(indent);
 		printf("),\n");
 
-		conjunctions = conjunctions->next;
+		conj = conj->next;
 	}
 }
 
 void print_command(t_command *cmd, size_t indent)
 {
-//	print_indent(indent);
-//	printf("COMMAND(\n");
-
 	if (cmd->pipeline)
 	{
 		print_pipeline(cmd->pipeline, indent + 2);
@@ -266,9 +267,6 @@ void print_command(t_command *cmd, size_t indent)
 	{
 		print_conjunctions(cmd->conjunctions, indent + 2);
 	}
-
-//	print_indent(indent);
-//	printf("),\n");
 }
 
 void print_parse_tree(t_command *parse_tree, size_t indent)
