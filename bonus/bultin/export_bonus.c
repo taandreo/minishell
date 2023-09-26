@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   export.c                                           :+:      :+:    :+:   */
+/*   export_bonus.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 22:50:25 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/24 13:26:07 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/25 21:04:07 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 void	print_export_node(void *node)
 {
-	t_env *env;
-	
+	t_env	*env;
+
 	env = (t_env *) node;
 	if (env->value == NULL)
 		printf("declare -x %s\n", env->key);
@@ -30,7 +30,7 @@ t_bool	is_valid_env(char *env)
 	i = 0;
 	if (!(ft_isalpha(env[i]) || env[i] == '_'))
 		return (false);
-	while(env[i])
+	while (env[i])
 	{
 		if (!(ft_isalnum(env[i]) || env[i] == '_'))
 			return (false);
@@ -39,10 +39,31 @@ t_bool	is_valid_env(char *env)
 	return (true);
 }
 
-int bultin_export(char **params)
+void	get_export_variable(char *param, size_t *error)
 {
-	char    *key;
+	char	*key;
 	char	*value;
+
+	value = ft_strchr(param, '=');
+	if (value)
+	{
+		value++;
+		key = ft_strndup(param, value - param - 1);
+	}
+	else
+		key = ft_strdup(param);
+	if (is_valid_env(key))
+		add_env(key, value);
+	else
+	{
+		*error = GENERAL_ERROR;
+		dprintf(2, "minishell: export: `%s': not a valid identifier\n", param);
+	}
+	free(key);
+}
+
+int	bultin_export(char **params)
+{
 	size_t	error;
 
 	error = EXIT_SUCCESS;
@@ -50,22 +71,7 @@ int bultin_export(char **params)
 		ft_lstiter(g_env, print_export_node);
 	while (*params)
 	{
-		value = ft_strchr(*params, '=');
-		if (value)
-		{
-			value++;
-			key = ft_strndup(*params, value - *params - 1);
-		}
-		else
-			key = ft_strdup(*params);
-		if (is_valid_env(key))
-			add_env(key, value);
-		else
-		{
-			error = GENERAL_ERROR;
-			dprintf(2, "minishell: export: `%s': not a valid identifier\n", *params);
-		}
-		free(key);
+		get_export_variable(*params, &error);
 		params++;
 	}
 	return (error);

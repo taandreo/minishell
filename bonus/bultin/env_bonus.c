@@ -1,40 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   env_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/24 22:03:29 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/21 22:44:45 by tairribe          #+#    #+#             */
+/*   Updated: 2023/09/25 20:49:48 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-int	bultin_cd(char **param)
+void	print_env_node(void *node)
 {
-	char	*dir;
-	char	*pwd;
-	char	*old_pwd;
+	t_env	*env;
 
-	if (ft_lenmt((void **) param) == 0 || ft_strcmp(param[0], "~") == 0)
-		dir = get_env("HOME");
-	else 
-		dir = param[0];
-	if (chdir(dir) != 0)
-	{
-		print_perror("cd", dir);
-		return (1);
-	}
-	old_pwd = get_env("PWD");
-	if (old_pwd && *old_pwd)
-		add_env("OLDPWD", old_pwd);
-	pwd = getcwd(NULL, 0);
-	if (pwd && *pwd)
-	{
-		add_env("PWD", pwd);
-		free(pwd);
-	}
+	env = (t_env *) node;
+	if (env->value != NULL)
+		printf("%s=%s\n", env->key, env->value);
+}
+
+int	bultin_env(char **params)
+{
+	if (params != NULL)
+		ft_lstiter(g_env, print_env_node);
 	return (EXIT_SUCCESS);
 }

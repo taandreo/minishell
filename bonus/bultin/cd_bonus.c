@@ -1,34 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   unset.c                                            :+:      :+:    :+:   */
+/*   cd_bonus.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/24 13:42:03 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/24 19:15:16 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
+/*   Updated: 2023/09/25 21:04:27 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-int	bultin_unset(char **params)
+int	bultin_cd(char **param)
 {
-	size_t	error;
+	char	*dir;
+	char	*pwd;
+	char	*old_pwd;
 
-	error = EXIT_SUCCESS;
-	if (!*params)
-		return (EXIT_SUCCESS);
-	while (*params)
+	if (ft_lenmt((void **) param) == 0 || ft_strcmp(param[0], "~") == 0)
+		dir = get_env("HOME");
+	else
+		dir = param[0];
+	if (chdir(dir) != 0)
 	{
-		if (is_valid_env(*params))
-			remove_env(*params);
-		else
-		{
-			error = EXIT_FAILURE;
-			dprintf(2, "minishell: unset: `%s': not a valid identifier\n", *params);
-		}
-		params++;
+		print_perror("cd", dir);
+		return (1);
 	}
-	return (error);		
+	old_pwd = get_env("PWD");
+	if (old_pwd && *old_pwd)
+		add_env("OLDPWD", old_pwd);
+	pwd = getcwd(NULL, 0);
+	if (pwd && *pwd)
+	{
+		add_env("PWD", pwd);
+		free(pwd);
+	}
+	return (EXIT_SUCCESS);
 }

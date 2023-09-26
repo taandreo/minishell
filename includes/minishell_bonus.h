@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 00:07:33 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/25 20:36:42 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -306,6 +306,9 @@ void	        init_env(char **envp);
 void	        print_env();
 void			remove_env(char *key);
 char			*get_env(char *key);
+void			free_env(void *env);
+void			free_all_envs(void);
+
 // ERROR
 void			print_perror(char *cmd, char *msg);
 

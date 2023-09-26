@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env.c                                              :+:      :+:    :+:   */
+/*   env_vars_1_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/21 22:44:45 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/22 16:56:05 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/25 20:11:22 by tairribe          #+#    #+#             */
+/*   Updated: 2023/09/25 22:23:19 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	print_env_node(void *node)
+void	free_env(void *env)
 {
-	t_env *env;
-	
-	env = (t_env *) node;
-	if (env->value != NULL)
-		printf("%s=%s\n", env->key, env->value);
+	t_env	*var;
+
+	var = env;
+	free(var->key);
+	if (var->value != NULL)
+		free(var->value);
+	free(var);
 }
 
-int	bultin_env(char **params)
+void	free_all_envs(void)
 {
-	if (params != NULL)
-		ft_lstiter(g_env, print_env_node);
-	return (EXIT_SUCCESS);
+	ft_lstclear(&g_env, free_env);
 }

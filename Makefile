@@ -50,15 +50,16 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/free/free_parse_tree1_bonus.c\
 			parser/free/free_parse_tree2_bonus.c\
 			parser/init/init_structures_bonus.c\
-			bultin/echo.c\
-			bultin/pwd.c\
-			bultin/export.c\
-			bultin/env.c\
-			bultin/unset.c\
-			bultin/cd.c\
-			bultin/exit.c\
-			error/errors.c\
-			env/environment.c\
+			bultin/echo_bonus.c\
+			bultin/pwd_bonus.c\
+			bultin/export_bonus.c\
+			bultin/env_bonus.c\
+			bultin/unset_bonus.c\
+			bultin/cd_bonus.c\
+			bultin/exit_bonus.c\
+			env/env_vars_0_bonus.c\
+			env/env_vars_1_bonus.c\
+			error/errors_bonus.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))

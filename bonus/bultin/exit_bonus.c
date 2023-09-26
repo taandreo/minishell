@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   exit.c                                             :+:      :+:    :+:   */
+/*   exit_bonus.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:14 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 00:08:35 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/25 22:20:23 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,8 +21,9 @@ void	exit_minishell(int nb)
 
 int	bultin_exit(char **params)
 {
-	unsigned char nb;
+	unsigned char	nb;
 
+	ft_dprintf(2, "exit\n");
 	if (!*params)
 	{
 		// Necessário rever e entender como vamos pegar a saída do último comando
@@ -31,15 +32,17 @@ int	bultin_exit(char **params)
 	}
 	if (!ft_is_number(*params))
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: exit: %s: numeric argument required", *params);
-		return(EXIT_FAILURE);
+		ft_dprintf(STDERR_FILENO, \
+		"minishell: exit: %s: numeric argument required\n", *params);
+		exit_minishell(255);
 	}
 	if (ft_lenmt((void **) params) > 1)
 	{
-		ft_dprintf(STDERR_FILENO, "minishell: exit: too many arguments", *params);
-		return(EXIT_FAILURE);
+		ft_dprintf(STDERR_FILENO, \
+		"minishell: exit: too many arguments\n", *params);
+		return (EXIT_FAILURE);
 	}
 	nb = ft_atoi(*params);
 	exit_minishell(nb);
-	return(EXIT_SUCCESS);
+	return (EXIT_SUCCESS);
 }

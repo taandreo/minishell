@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   environment.c                                      :+:      :+:    :+:   */
+/*   env_vars_0_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 16:09:55 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/24 21:22:39 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/25 22:24:26 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ t_list	*search_env(char *key)
 	t_env	*env;
 
 	node = g_env;
-	while(node)
+	while (node)
 	{
 		env = node->content;
 		if (ft_strcmp(env->key, key) == 0)
@@ -39,8 +39,8 @@ void	add_env(char *key, char *value)
 	{
 		env = node->content;
 		free(env->value);
-	} 
-	else 
+	}
+	else
 	{
 		env = ft_calloc(1, sizeof(t_env));
 		env->key = ft_strdup(key);
@@ -62,18 +62,7 @@ char	*get_env(char *key)
 	if (!node)
 		return (NULL);
 	env = node->content;
-	return(env->value);
-}
-
-void	free_env(void *env)
-{
-	t_env	*var;
-
-	var = env;
-	free(var->key);
-	if (var->value != NULL)
-		free(var->value);
-	free(var);
+	return (env->value);
 }
 
 void	remove_env(char *key)
@@ -84,7 +73,7 @@ void	remove_env(char *key)
 
 	node = g_env;
 	prev = NULL;
-	while(node)
+	while (node)
 	{
 		env = node->content;
 		if (ft_strcmp(env->key, key) == 0)
@@ -108,7 +97,7 @@ void	init_env(char **envp)
 
 	i = 0;
 	g_env = NULL;
-	while(envp[i])
+	while (envp[i])
 	{
 		value = ft_strchr(envp[i], '=');
 		value++;
