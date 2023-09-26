@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   return_errors_helper_bonus.c                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 15:33:04 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/09/15 15:33:05 by ebezerra         ###   ########.fr       */
+/*   Updated: 2023/09/19 22:20:24 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

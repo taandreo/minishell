@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/19 16:10:32 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/25 20:36:42 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,9 @@
 # define GENERAL_ERROR 1
 # define MISUSE 2
 # define EXIT_OFFSET 128
+# define PATH_MAX	4096
+
+t_list *g_env;
 
 typedef enum e_token_type
 {
@@ -176,6 +179,12 @@ typedef struct s_grouping
 	t_grouping		*next_grouping;
 }	t_grouping;
 
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+}			t_env;
+
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);
@@ -281,5 +290,27 @@ t_bool			decrease_len(t_token_flags *flags);
 int				free_vars_and_return_misuse(char *string, char *tmp);
 void			*free_str_nullify_and_malloc_error(char **str);
 void			free_2_str_and_nullify(char **str1, char **str2);
+// BULTIN
 int				bultin_echo(char **params);
+int				bultin_pwd(char **params);
+int				bultin_cd(char **params);
+int				bultin_export(char **params);
+int				bultin_env(char **params);
+int				bultin_unset(char **params);
+int				bultin_exit(char **params);
+t_bool			is_valid_env(char *env);
+t_list			*search_env(char *key);
+// ENV
+void            add_env(char *key, char *value);
+void	        init_env(char **envp);
+void	        print_env();
+void			remove_env(char *key);
+char			*get_env(char *key);
+void			free_env(void *env);
+void			free_all_envs(void);
+
+// ERROR
+void			print_perror(char *cmd, char *msg);
+
+
 #endif
