@@ -40,15 +40,15 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/variable_expansion_bonus.c\
 			tokenizer/handle_variable_expansion_bonus.c\
 			tokenizer/add_token_helper_bonus.c\
-			parser/parser_bonus.c\
-			parser/parse_command_bonus.c\
-			parser/parse_redirections_bonus.c\
-			parser/parse_arguments_bonus.c\
-			parser/parser_helper_functions_bonus.c\
-			parser/command_part_helper_bonus.c\
-			parser/free/free_parse_tree1_bonus.c\
-			parser/free/free_parse_tree2_bonus.c\
-			parser/init/init_structures_bonus.c\
+			parse_tree/parser_bonus.c\
+			parse_tree/parse_command_bonus.c\
+			parse_tree/parse_redirections_bonus.c\
+			parse_tree/parse_arguments_bonus.c\
+			parse_tree/parser_helper_functions_bonus.c\
+			parse_tree/command_part_helper_bonus.c\
+			parse_tree/free/free_parse_tree1_bonus.c\
+			parse_tree/free/free_parse_tree2_bonus.c\
+			parse_tree/init/init_structures_bonus.c\
 			bultin/echo_bonus.c\
 			bultin/pwd_bonus.c\
 			bultin/export_bonus.c\
@@ -59,10 +59,11 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			env/env_vars_0_bonus.c\
 			env/env_vars_1_bonus.c\
 			error/errors_bonus.c\
-			parser/parser_state_error.c\
-			parser/parser_utils_bonus.c\
+			parse_tree/parser_state_error.c\
+			parse_tree/parser_utils_bonus.c\
 			error/return_errors_helper_bonus.c\
             error/misuse_or_unclosed_error_bonus.c\
+            parser/execute_command_bonus.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))

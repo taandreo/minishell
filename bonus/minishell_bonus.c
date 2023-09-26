@@ -22,11 +22,8 @@ t_list *g_env;
 int	main(void)
 {
 	char			*prompt;
-	t_token_list	*tokens;
+	t_vars			vars;
 	t_token_flags	flags;
-	t_command		*parse_tree;
-	t_parser_state	state;
-
 
 	extern char **environ;
 	init_env(environ);
@@ -35,33 +32,34 @@ int	main(void)
 //		prompt = strdup("((&& infile cat<<EOF|less||echo ok)&&(echo bla && echo ok)>abc.txt)");
 		prompt = readline("~> ");
 		flags = init_token_flags(ft_strlen(prompt));
-		tokens = tokenizer(prompt, &flags);
+		vars.tokens = tokenizer(prompt, &flags);
 		if (flags.status != SUCCESS)
 		{
-			free_token_list(&tokens);
+			free_token_list(&vars.tokens);
 			free(prompt);
 			exit(flags.status);
 		}
 		// Print Tokens
-		if (tokens)
+		if (vars.tokens)
 		{
 			printf("Tokens:\n");
-			print_tokens(tokens);
+			print_tokens(vars.tokens);
 			printf("\n");
-			tokens->current = tokens->head;
-
-			parse_tree = parse(tokens, &state);
+			vars.tokens->current = vars.tokens->head;
+//
+			vars.parse_tree = parse(vars.tokens, &vars.state);
 			// Print parse_tree
-			if (parse_tree)
+			if (vars.parse_tree)
 			{
 				printf("Parse Tree:\n");
-				print_parse_tree(parse_tree, 2);
-				free_command(parse_tree);
+				print_parse_tree(vars.parse_tree, 2);
+				free_command(vars.parse_tree);
+				execute_command(vars.parse_tree, &vars);
 			}
-			free_token_list(&tokens);
+			free_token_list(&vars.tokens);
 		}
 		free(prompt);
-		exit (state.status);
+		exit (vars.state.status);
 	}
 	return (SUCCESS);
 }
@@ -193,12 +191,16 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 		{
 			case TOKEN_COMMAND_NAME:
 				print_indent(indent + 2);
+				printf("%s(\n", token_type_to_string(pipeline->cmd_part->type));
+				print_indent(indent + 4);
 				while (cmd_name)
 				{
 					printf("%s(%s), ", token_type_to_string(cmd_name->type), cmd_name->value);
 					cmd_name = cmd_name->next;
 				}
 				printf("\n");
+				print_indent(indent + 2);
+				printf("),\n");
 				break;
 
 			case TOKEN_ECHO:  // And other built-in commands...
@@ -211,7 +213,6 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 				print_indent(indent + 2);
 				printf("%s(%s),\n", token_type_to_string(pipeline->cmd_part->u_cmd.builtin_cmd->type), pipeline->cmd_part->u_cmd.builtin_cmd->value);
 				break;
-
 			default:
 				if (pipeline->cmd_part->u_cmd.grouping)
 				{
@@ -227,7 +228,16 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 
 		if (pipeline->cmd_part->redirections)
 		{
-			print_redirections(pipeline->cmd_part->redirections, indent + 2);
+			if (pipeline->cmd_part->type == TOKEN_REDIRECTIONS)
+			{
+				print_indent(indent + 2);
+				printf("%s(\n", token_type_to_string(pipeline->cmd_part->type));
+				print_redirections(pipeline->cmd_part->redirections, indent + 4);
+				print_indent(indent + 2);
+				printf("),\n");
+			}
+			else
+				print_redirections(pipeline->cmd_part->redirections, indent + 2);
 		}
 
 		print_indent(indent);
