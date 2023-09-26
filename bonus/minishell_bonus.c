@@ -28,7 +28,8 @@ int	main(void)
 	t_parser_state	state;
 
 
-
+	extern char **environ;
+	init_env(environ);
 	while (true)
 	{
 //		prompt = strdup("((&& infile cat<<EOF|less||echo ok)&&(echo bla && echo ok)>abc.txt)");

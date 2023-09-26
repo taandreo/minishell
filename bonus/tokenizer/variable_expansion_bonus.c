@@ -51,7 +51,7 @@ char	*lookup_variable(char *var)
 	char	*new_str;
 
 	new_str = NULL;
-	value = getenv(var);
+	value = get_env(var);
 	if (!value)
 		return (ft_strdup(""));
 	new_str = ft_strdup(value);
