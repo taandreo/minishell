@@ -22,3 +22,11 @@ t_bool	is_operator_or_end(t_token_type type)
 		return (true);
 	return (false);
 }
+
+t_bool is_token_command_name(t_token_type type)
+{
+	if (type == TOKEN_COMMAND_NAME || type == TOKEN_WILDCARD
+		|| type == TOKEN_EXIT_CODE)
+		return (true);
+	return (false);
+}

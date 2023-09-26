@@ -87,7 +87,7 @@ t_bool	add_command_union(t_command_part *command_part,
 	else if (is_builtin_token(current_token_type(tokens)))
 		command_part->u_cmd.builtin_cmd = handle_builtin_tokens(
 				command_part, tokens, state);
-	else if (current_token_type(tokens) == TOKEN_COMMAND_NAME)
+	else if (is_token_command_name(current_token_type(tokens)))
 		command_part->u_cmd.cmd_name = handle_command_name_tokens(
 				command_part, tokens, state);
 	else if (redirections)

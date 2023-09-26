@@ -303,6 +303,9 @@ t_bool			decrease_len(t_token_flags *flags);
 int				free_vars_and_return_misuse(char *string, char *tmp);
 void			*free_str_nullify_and_malloc_error(char **str);
 void			free_2_str_and_nullify(char **str1, char **str2);
+t_bool			is_token_command_name(t_token_type type);
+int				execute_command(t_command *cmd, t_vars *vars);
+
 // BULTIN
 int				bultin_echo(char **params);
 int				bultin_pwd(char **params);
@@ -341,5 +344,4 @@ t_bool			add_command_union(t_command_part  *command_part,
 					t_parser_state *state);
 t_bool			is_operator_or_invalid_token(t_token_type type);
 void			*null_and_free_grouping(t_grouping *grouping);
-int				execute_command(t_command *cmd, t_vars *vars);
 #endif
