@@ -67,14 +67,16 @@ int	execute_conjunctions(t_conjunctions *conj, t_vars *vars)
 				return (vars->state.status);
 			}
 			vars->state.status = execute_pipeline(conj->pipeline, vars);
-			if (vars->state.status != SUCCESS)
+		}
+		else
+		{
+			if (vars->state.status == SUCCESS)
 			{
 				free_conjunctions(conj);
 				return (vars->state.status);
 			}
-		}
-		else
 			vars->state.status = execute_pipeline(conj->pipeline, vars);
+		}
 		conj = conj->next;
 	}
 	return (vars->state.status);
@@ -82,6 +84,12 @@ int	execute_conjunctions(t_conjunctions *conj, t_vars *vars)
 
 int	execute_command_part(t_command_part *cmd_part, t_vars *vars)
 {
-	(void)cmd_part;
+	if (cmd_part->type == TOKEN_)
 	return (vars->state.status);
+}
+
+while (redirections->next)
+{
+	if (redirections->redirection->type == REDIRECTION_OUTPUT)
+	redirections = redirections->next;
 }

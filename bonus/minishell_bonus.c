@@ -53,7 +53,7 @@ int	main(void)
 			{
 				printf("Parse Tree:\n");
 				print_parse_tree(vars.parse_tree, 2);
-				free_command(vars.parse_tree);
+//				free_command(vars.parse_tree);
 				execute_command(vars.parse_tree, &vars);
 			}
 			free_token_list(&vars.tokens);
