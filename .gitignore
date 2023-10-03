@@ -8,3 +8,4 @@ minishell.o
 .idea/
 ignore/
 tests/unit/tests
+compile_commands.json

@@ -32,22 +32,23 @@ int	execute_command(t_command *cmd, t_vars *vars)
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 {
 	// create pipelinefd[2]
+//	int fd[2] = pipe()
 	while (pipeline)
 	{
 		if (pipeline->type == TOKEN_PIPE)
 		{
 			//dup2 stdout to write and fork
+//			dup2()
+
 		}
 		vars->state.status = execute_command_part(pipeline->cmd_part, vars);
 		if (vars->state.status != SUCCESS)
-		{
-			//close fds
-			free_pipeline(pipeline);
 			return (vars->state.status);
-		}
 		if (pipeline->type == TOKEN_PIPE)
 		{
 			//close write
+//			close(fd[1])
+//			dup2(fd[0], STDIN)
 			//dup2 stdin with read
 		}
 		pipeline = pipeline->next;
@@ -62,19 +63,13 @@ int	execute_conjunctions(t_conjunctions *conj, t_vars *vars)
 		if (conj->type == TOKEN_AND)
 		{
 			if (vars->state.status != SUCCESS)
-			{
-				free_conjunctions(conj);
 				return (vars->state.status);
-			}
 			vars->state.status = execute_pipeline(conj->pipeline, vars);
 		}
 		else
 		{
 			if (vars->state.status == SUCCESS)
-			{
-				free_conjunctions(conj);
 				return (vars->state.status);
-			}
 			vars->state.status = execute_pipeline(conj->pipeline, vars);
 		}
 		conj = conj->next;
@@ -84,12 +79,10 @@ int	execute_conjunctions(t_conjunctions *conj, t_vars *vars)
 
 int	execute_command_part(t_command_part *cmd_part, t_vars *vars)
 {
-	if (cmd_part->type == TOKEN_)
+	if (update_cmd_part_values(cmd_part, vars) != SUCCESS)
+		return (vars->state.status);
+
+
 	return (vars->state.status);
 }
 
-while (redirections->next)
-{
-	if (redirections->redirection->type == REDIRECTION_OUTPUT)
-	redirections = redirections->next;
-}

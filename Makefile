@@ -64,6 +64,12 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			error/return_errors_helper_bonus.c\
             error/misuse_or_unclosed_error_bonus.c\
             parser/execute_command_bonus.c\
+            parser/expand_variables/update_command_part_bonus.c\
+            parser/expand_variables/expand_and_concat_exit_code_bonus.c\
+            parser/expand_variables/add_concat_string_bonus.c\
+            parser/expand_variables/concat_string_utils_bonus.c\
+            parser/expand_variables/expand_wildcard_bonus.c\
+            parser/expand_variables/concat_string_bonus.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
