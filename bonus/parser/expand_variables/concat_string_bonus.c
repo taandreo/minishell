@@ -9,10 +9,6 @@ t_string	*check_if_is_builtin(t_string *string, t_string *concat_str,
 t_string *concat_string(t_string *string, t_command_part  *cmd_part,
 		t_vars *vars, t_token_type type)
 {
-	t_redirection	*redir;
-
-	if (cmd_part->redirections && cmd_part->redirections->redirection)
-		redir = cmd_part->redirections->redirection;
 	string = expand_exit_code(string, vars, type);
 	if (!string)
 		return (NULL);
@@ -21,8 +17,7 @@ t_string *concat_string(t_string *string, t_command_part  *cmd_part,
 		return (NULL);
 	if (cmd_part->type == TOKEN_COMMAND_NAME
 		|| (cmd_part->arguments && cmd_part->arguments->type == TOKEN_STRING)
-		|| (cmd_part->redirections && cmd_part->redirections->redirection
-			&& redir->filename->type == TOKEN_FILENAME))
+		|| (cmd_part->redirections && cmd_part->redirections->redirection))
 	{
 		if (string->next)
 			string = concat_str_routine(string, cmd_part, vars, type);
@@ -34,16 +29,14 @@ t_string	*concat_str_routine(t_string *string, t_command_part *cmd_part,
 				t_vars *vars, t_token_type type)
 {
 	t_string		*concat_str;
-	t_redirection	*redir;
 
 	concat_str = expand_wildcard(string, vars, type);
 	if (concat_str && concat_str->next)
 	{
 		if (cmd_part->redirections && cmd_part->redirections->redirection)
 		{
-			redir = cmd_part->redirections->redirection;
-			if (redir->filename->type == TOKEN_FILENAME)
-				return (general_error_ambiguous_redirect(vars));
+			if (type == TOKEN_FILENAME)
+				return (general_error_ambiguous_redirect(vars, string));
 		}
 		add_concat_string(cmd_part, concat_str, vars, type);
 	}

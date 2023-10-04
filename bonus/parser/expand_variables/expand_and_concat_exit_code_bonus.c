@@ -14,10 +14,9 @@ t_string	*expand_exit_code(t_string	*string, t_vars *vars, t_token_type type)
 			str->value = ft_itoa(vars->state.status);
 			if (!str->value)
 			{
-				print_mem_alloc_error();
 				free_string(string);
 				vars->state.status = MISUSE;
-				return (NULL);
+				return (return_mem_alloc_error());
 			}
 		}
 		str = str->next;

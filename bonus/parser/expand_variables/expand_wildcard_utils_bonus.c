@@ -26,17 +26,15 @@ t_string	*add_new_node(char *filename, t_vars *vars,	t_token_type type)
 	new_node = malloc(sizeof(t_string));
 	if (!new_node)
 	{
-		print_mem_alloc_error();
 		vars->state.status = MISUSE;
-		return (NULL);
+		return (return_mem_alloc_error());
 	}
 	new_node->type = type;
 	new_node->value = ft_strdup(filename);
 	if (!new_node->value)
 	{
-		print_mem_alloc_error();
 		vars->state.status = MISUSE;
-		return (NULL);
+		return (return_mem_alloc_error());
 	}
 	return (new_node);
 }

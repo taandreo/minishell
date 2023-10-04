@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <dirent.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 # include <sys/stat.h>
 
 # define NBR_BUILTINS 7
@@ -305,7 +306,7 @@ int				free_vars_and_return_misuse(char *string, char *tmp);
 void			*free_str_nullify_and_malloc_error(char **str);
 void			free_2_str_and_nullify(char **str1, char **str2);
 t_bool			is_token_command_name(t_token_type type);
-int				execute_command(t_command *cmd, t_vars *vars);
+int				execute_command(t_command **cmd, t_vars *vars);
 t_string		*expand_exit_code(t_string	*string, t_vars *vars, t_token_type type);
 t_string		*expand_wildcard(t_string *string, t_vars *vars, t_token_type type);
 t_string		*concat_exit_code(t_string *string, t_vars *vars, t_token_type type);
@@ -366,7 +367,8 @@ t_bool			add_command_union(t_command_part  *command_part,
 					t_parser_state *state);
 t_bool			is_operator_or_invalid_token(t_token_type type);
 void			*null_and_free_grouping(t_grouping *grouping);
-void			*general_error_ambiguous_redirect(t_vars *vars);
+void			*general_error_ambiguous_redirect(t_vars *vars,
+					t_string *string);
 void			*null_free_args_misuse(t_arguments *args,
 					t_arguments *curr_args, t_string *str_list, t_vars *vars);
 #endif

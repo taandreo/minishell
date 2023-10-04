@@ -1,4 +1,5 @@
 #include "minishell_bonus.h"
+char		*concat_wildcards(t_string *string, t_vars *vars);
 
 char *builtin_type_to_value(t_token_type  type)
 {
@@ -29,10 +30,43 @@ t_string	*delete_first_node(t_string *str)
 	return (next);
 }
 
-void	*general_error_ambiguous_redirect(t_vars *vars)
+void	*general_error_ambiguous_redirect(t_vars *vars, t_string *string)
 {
-	write(STDERR_FILENO, "minishell: ambiguous redirect\n",
-			ft_strlen("minishell: ambiguous redirect\n"));
+	char	*variable;
+
+	variable = concat_wildcards(string, vars);
+	write(STDERR_FILENO, "minishell: ",
+			ft_strlen("minishell: "));
+	write(STDERR_FILENO, variable,
+			ft_strlen(variable));
+	write(STDERR_FILENO, ": ambiguous redirect\n",
+			ft_strlen(": ambiguous redirect\n"));
 	vars->state.status = GENERAL_ERROR;
+	free(variable);
 	return (NULL);
+}
+
+char	*concat_wildcards(t_string *string, t_vars *vars)
+{
+	t_string	*current_str;
+	char		*concat_str;
+
+	current_str = string;
+	concat_str = ft_strdup("");
+	if (!concat_str)
+	{
+		vars->state.status = MISUSE;
+		return (return_mem_alloc_error());
+	}
+	while (current_str)
+	{
+		concat_str = join_1st_and_cleanup(&concat_str, current_str->value);
+		if (!concat_str)
+		{
+			vars->state.status = MISUSE;
+			return (return_mem_alloc_error());
+		}
+		current_str = current_str->next;
+	}
+	return (concat_str);
 }
