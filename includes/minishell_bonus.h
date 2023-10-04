@@ -329,6 +329,7 @@ void			*free_resources_and_return_null(DIR *dir,
 					t_string *result_head);
 t_string		*add_new_node(char *filename, t_vars *vars,	t_token_type type);
 void			sorted_insert(t_string **head_ref, t_string *new_node);
+DIR				*open_dir_or_error(void);
 // BULTIN
 int				bultin_echo(char **params);
 int				bultin_pwd(char **params);

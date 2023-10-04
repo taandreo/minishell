@@ -19,7 +19,7 @@ t_string *concat_string(t_string *string, t_command_part  *cmd_part,
 		|| (cmd_part->arguments && cmd_part->arguments->type == TOKEN_STRING)
 		|| (cmd_part->redirections && cmd_part->redirections->redirection))
 	{
-		if (string->next)
+		if (string->next || string->type == TOKEN_WILDCARD)
 			string = concat_str_routine(string, cmd_part, vars, type);
 	}
 	return (string);

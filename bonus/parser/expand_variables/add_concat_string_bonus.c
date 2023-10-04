@@ -98,7 +98,8 @@ void	update_arguments(t_command_part  *cmd_part, t_string *concat_str,
 	current_args = cmd_part->arguments;
 	while (current_args)
 	{
-		if (current_args->string->next)
+		if (current_args->string->next
+			|| current_args->string->type == TOKEN_WILDCARD)
 		{
 			free_string(current_args->string);
 			current_args->string = NULL;
