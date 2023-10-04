@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 22:07:29 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 22:25:20 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/09/26 22:40:28 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,9 @@
 
 void	print_perror(char *cmd, char *msg)
 {
-	ft_dprintf(STDERR_FILENO, "minishell: %s: ", cmd);
+	if (cmd != NULL)
+		ft_dprintf(STDERR_FILENO, "minishell: %s: ", cmd);
+	else
+		ft_dprintf(STDERR_FILENO, "minishell: ");
 	perror(msg);
 }

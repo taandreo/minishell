@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 20:36:42 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/01 11:55:49 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # include <stdio.h>
 # include <readline/readline.h>
 # include <sys/stat.h>
+# include <fcntl.h>
 
 # define NBR_BUILTINS 7
 # define NOTEXEC 126
@@ -152,15 +153,16 @@ typedef struct s_grouping
 
 typedef struct s_command_part
 {
-	t_token_type			type;
+	t_token_type		type;
+	int					in_out[2];
 	union
 	{
 		t_builtin_cmd	*builtin_cmd;
 		t_string		*cmd_name;
 		t_grouping		*grouping;
 	} u_cmd;
-	t_arguments				*arguments;
-	t_redirections			*redirections;
+	t_arguments			*arguments;
+	t_redirections		*redirections;
 }	t_command_part;
 
 typedef struct s_pipeline
