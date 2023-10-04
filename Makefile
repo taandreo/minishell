@@ -70,6 +70,9 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
             parser/expand_variables/concat_string_utils_bonus.c\
             parser/expand_variables/expand_wildcard_bonus.c\
             parser/expand_variables/concat_string_bonus.c\
+            parser/expand_variables/add_args_list_bonus.c\
+            parser/expand_variables/add_args_utils_bonus.c\
+            parser/expand_variables/expand_wildcard_utils_bonus.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))

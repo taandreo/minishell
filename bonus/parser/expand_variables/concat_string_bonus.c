@@ -23,7 +23,10 @@ t_string *concat_string(t_string *string, t_command_part  *cmd_part,
 		|| (cmd_part->arguments && cmd_part->arguments->type == TOKEN_STRING)
 		|| (cmd_part->redirections && cmd_part->redirections->redirection
 			&& redir->filename->type == TOKEN_FILENAME))
-		string = concat_str_routine(string, cmd_part, vars, type);
+	{
+		if (string->next)
+			string = concat_str_routine(string, cmd_part, vars, type);
+	}
 	return (string);
 }
 
@@ -33,7 +36,7 @@ t_string	*concat_str_routine(t_string *string, t_command_part *cmd_part,
 	t_string		*concat_str;
 	t_redirection	*redir;
 
-	concat_str = expand_wildcard(string, type);
+	concat_str = expand_wildcard(string, vars, type);
 	if (concat_str && concat_str->next)
 	{
 		if (cmd_part->redirections && cmd_part->redirections->redirection)

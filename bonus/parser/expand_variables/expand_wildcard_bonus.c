@@ -1,78 +1,98 @@
 #include "minishell_bonus.h"
 
-// Function to insert in a sorted manner
-void sortedInsert(t_string **headRef, t_string *newNode) {
-	t_string *current;
-	if (*headRef == NULL || strcmp((*headRef)->value, newNode->value) >= 0) {
-		newNode->next = *headRef;
-		*headRef = newNode;
-	} else {
-		current = *headRef;
-		while (current->next != NULL && strcmp(current->next->value, newNode->value) < 0) {
-			current = current->next;
-		}
-		newNode->next = current->next;
-		current->next = newNode;
-	}
-}
+t_bool	current_token_match(char **position, t_string *current, int *match);
+t_bool	next_tokens_match(char **position, t_string *current, int *match);
+t_bool	match_logic(char *position, t_string *string);
 
-t_string *expand_wildcard(t_string *string, t_token_type type) {
-	t_string *resultHead = NULL;
-
-	if (!string)
-		return (NULL);
-	DIR *dir = opendir(".");
-	if (!dir) {
-		perror("opendir");
-		return NULL;
-	}
+t_string *expand_wildcard(t_string *string, t_vars *vars, t_token_type type)
+{
+	t_string *result_head;
+	t_string *new_node;
 	struct dirent *entry;
-	while ((entry = readdir(dir)) != NULL) {
-		char *filename = entry->d_name;
-		t_string *current = string;
-		char *position = filename;
-		int match = 1;  // assume a match by default
 
-		while (current && match) {
-			if (current->type == type) {
-				char *found;
-				if (current->next && current->next->type == TOKEN_WILDCARD) {
-					// Match up to the next wildcard
-					found = ft_strnstr(position, current->value, strlen(current->next->value));
-				} else {
-					found = strncmp(position, current->value, strlen(current->value)) == 0 ? position : NULL;
-				}
-
-				if (!found) {
-					match = 0;
-					break;
-				} else {
-					position = found + strlen(current->value);
-				}
-			} else if (current->type == TOKEN_WILDCARD) {
-				// Move position after wildcard unless it's the last token
-				if (current->next) {
-					position++;
-				} else {
-					break;  // if it's the last token, match is guaranteed
-				}
-			}
-			current = current->next;
-		}
-
-		if (match && (!position || *position == '\0' || (current && current->type == TOKEN_WILDCARD))) {
-			t_string *newNode = malloc(sizeof(t_string));
-			if (!newNode) {
-				perror("malloc");
-				closedir(dir);
-				free_string(resultHead);  // clean up the already created nodes
-				return NULL;
-			}
-			newNode->type = type;
-			newNode->value = strdup(entry->d_name);
-			sortedInsert(&resultHead, newNode);
+	DIR *dir = opendir(".");
+	if (!dir)
+	{
+		perror("minishell: opendir: Error while opening the current directory");
+		return (NULL);
+	}
+	result_head = NULL;
+	while ((entry = readdir(dir)) != NULL)
+	{
+		if (match_logic(entry->d_name, string))
+		{
+			new_node = add_new_node(entry->d_name, vars, type);
+			if (!new_node)
+				return (free_resources_and_return_null(dir, result_head));
+			sorted_insert(&result_head, new_node);
 		}
 	}
 	closedir(dir);
-	return resultHead;
+	return (result_head);
+}
+
+t_bool	match_logic(char *position, t_string *string)
+{
+	t_string *current;
+	int match;
+
+	current = string;
+	match = 1;
+	while (current && match)
+	{
+		if (current->type == TOKEN_WILDCARD)
+		{
+			if (!current->next)
+				break ;
+			if (!next_tokens_match(&position, current, &match))
+				break ;
+		}
+		else
+		{
+			if (!current_token_match(&position, current, &match))
+				break ;
+		}
+		current = current->next;
+	}
+	return (match && (!position || *position == '\0'
+			|| (current && current->type == TOKEN_WILDCARD)));
+}
+
+t_bool	current_token_match(char **position, t_string *current, int *match)
+{
+	if (ft_strncmp(*position, current->value,
+			ft_strlen(current->value)) == 0)
+		*position += ft_strlen(current->value);
+	else
+	{
+		*match = 0;
+		return (false);
+	}
+	return (true);
+}
+
+t_bool	next_tokens_match(char **position, t_string *current, int *match)
+{
+	if (current->next && current->next->type != TOKEN_WILDCARD
+		&& current->next->next)
+	{
+		*position = ft_strnstr(*position, current->next->value,
+				ft_strlen(*position));
+		if (!*position) {
+			*match = 0;
+			return (false);
+		}
+	}
+	else if (current->next && current->next->type != TOKEN_WILDCARD
+				&& !current->next->next)
+	{
+		*position += ft_strlen(*position) - ft_strlen(current->next->value);
+		if (ft_strncmp(*position, current->next->value,
+				strlen(current->next->value)) != 0)
+		{
+			*match = 0;
+			return (false);
+		}
+	}
+	return (true);
 }
