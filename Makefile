@@ -64,6 +64,9 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			error/return_errors_helper_bonus.c\
             error/misuse_or_unclosed_error_bonus.c\
             parser/execute_command_bonus.c\
+            parser/execute_builtin_bonus.c\
+            parser/execute_cmd_name_bonus.c\
+            parser/execute_redirections_only_bonus.c\
             parser/expand_variables/update_command_part_bonus.c\
             parser/expand_variables/expand_and_concat_exit_code_bonus.c\
             parser/expand_variables/add_concat_string_bonus.c\
