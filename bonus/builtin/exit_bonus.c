@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:14 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 22:20:23 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/04 21:50:07 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void	exit_minishell(int nb)
 	exit(nb);
 }
 
-int	bultin_exit(char **params)
+int	builtin_exit(char **params)
 {
 	unsigned char	nb;
 

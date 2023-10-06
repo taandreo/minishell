@@ -1,4 +1,4 @@
-.PHONY: all clean fclean re log bonus libft bultin_test
+.PHONY: all clean fclean re log bonus libft builtin_test
 
 CC = clang
 NAME = minishell
@@ -49,13 +49,13 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parse_tree/free/free_parse_tree1_bonus.c\
 			parse_tree/free/free_parse_tree2_bonus.c\
 			parse_tree/init/init_structures_bonus.c\
-			bultin/echo_bonus.c\
-			bultin/pwd_bonus.c\
-			bultin/export_bonus.c\
-			bultin/env_bonus.c\
-			bultin/unset_bonus.c\
-			bultin/cd_bonus.c\
-			bultin/exit_bonus.c\
+			builtin/echo_bonus.c\
+			builtin/pwd_bonus.c\
+			builtin/export_bonus.c\
+			builtin/env_bonus.c\
+			builtin/unset_bonus.c\
+			builtin/cd_bonus.c\
+			builtin/exit_bonus.c\
 			env/env_vars_0_bonus.c\
 			env/env_vars_1_bonus.c\
 			error/errors_bonus.c\
@@ -127,7 +127,7 @@ clean:
 	@rm -f minishell.o
 	rm -rf $(OBJS_DIR)
 	rm -rf $(BONUS_OBJS_DIR)
-	rm -f  $(BULTIN_TEST_OBJS)
+	rm -f  $(BUILTIN_TEST_OBJS)
 	make clean -C $(LIBFT_DIR)
 
 fclean: clean
@@ -139,18 +139,18 @@ re: fclean all
 git_libft:
 	git clone https://github.com/taandreo/42-libft.git libft
 log:
-	@echo $(BULTIN_TEST_OBJS)
+	@echo $(BUILTIN_TEST_OBJS)
 
-# BULTIN TESTER
-BULTIN_TEST_BIN  = bultin_test
-BULTIN_TEST_DIR  = tests/bultin
-BULTIN_TEST_SRCS = $(wildcard $(BULTIN_TEST_DIR)/*.c) $(subst $(BONUS_DIR)/minishell_bonus.c,,$(BONUS))
-BULTIN_TEST_OBJS = $(subst $(BONUS_DIR)/, $(BONUS_OBJS_DIR)/, $(patsubst %.c, %.o, $(BULTIN_TEST_SRCS)))
-BULTIN_TEST_LIBS = -lcmocka
+# builtin TESTER
+BUILTIN_TEST_BIN  = builtin_test
+BUILTIN_TEST_DIR  = tests/builtin
+BUILTIN_TEST_SRCS = $(wildcard $(BUILTIN_TEST_DIR)/*.c) $(subst $(BONUS_DIR)/minishell_bonus.c,,$(BONUS))
+BUILTIN_TEST_OBJS = $(subst $(BONUS_DIR)/, $(BONUS_OBJS_DIR)/, $(patsubst %.c, %.o, $(BUILTIN_TEST_SRCS)))
+BUILTIN_TEST_LIBS = -lcmocka
 
-$(BULTIN_TEST_DIR)/%.o: $(BULTIN_TEST_DIR)/%.c
-	$(CC) -I$(LIBFT_DIR)/include -I$(INC_DIR) -I$(BULTIN_TEST_DIR) -c $< -o $@
+$(BUILTIN_TEST_DIR)/%.o: $(BUILTIN_TEST_DIR)/%.c
+	$(CC) -I$(LIBFT_DIR)/include -I$(INC_DIR) -I$(BUILTIN_TEST_DIR) -c $< -o $@
 
-$(BULTIN_TEST_BIN): $(BULTIN_TEST_OBJS) | libft
-	@$(CC) $(BULTIN_TEST_OBJS) -o bultin_test -L$(LIBFT_DIR) $(LIBS) $(BULTIN_TEST_LIBS)
-	./bultin_test
+$(BUILTIN_TEST_BIN): $(BUILTIN_TEST_OBJS) | libft
+	@$(CC) $(BUILTIN_TEST_OBJS) -o builtin_test -L$(LIBFT_DIR) $(LIBS) $(BUILTIN_TEST_LIBS)
+	./builtin_test

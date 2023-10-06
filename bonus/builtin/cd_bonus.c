@@ -6,13 +6,13 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 21:04:27 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/04 21:53:07 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-int	bultin_cd(char **param)
+int	builtin_cd(char **param)
 {
 	char	*dir;
 	char	*pwd;

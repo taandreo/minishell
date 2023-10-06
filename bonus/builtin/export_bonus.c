@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 22:50:25 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 21:04:07 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/04 21:50:17 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	get_export_variable(char *param, size_t *error)
 	free(key);
 }
 
-int	bultin_export(char **params)
+int	builtin_export(char **params)
 {
 	size_t	error;
 

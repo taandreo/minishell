@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/01 11:55:49 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/04 21:49:36 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,7 +156,9 @@ typedef struct s_grouping
 typedef struct s_command_part
 {
 	t_token_type		type;
-	int					in_out[2];
+	int					in;
+	int					out;
+	t_bool				fork;
 	union
 	{
 		t_builtin_cmd	*builtin_cmd;
@@ -337,14 +339,14 @@ int				execute_builtin(char *builtin, t_command_part *cmd_part,
 int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
 					t_vars *vars);
 int				execute_redirections_only(t_redirections *redirs, t_vars *vars);
-// BULTIN
-int				bultin_echo(char **params);
-int				bultin_pwd(char **params);
-int				bultin_cd(char **params);
-int				bultin_export(char **params);
-int				bultin_env(char **params);
-int				bultin_unset(char **params);
-int				bultin_exit(char **params);
+// BUILTIN
+int				builtin_echo(char **params);
+int				builtin_pwd(char **params);
+int				builtin_cd(char **params);
+int				builtin_export(char **params);
+int				builtin_env(char **params);
+int				builtin_unset(char **params);
+int				builtin_exit(char **params);
 t_bool			is_valid_env(char *env);
 t_list			*search_env(char *key);
 // ENV

@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   env_bonus.c                                        :+:      :+:    :+:   */
+/*   unset_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/21 22:44:45 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 20:49:48 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/24 13:42:03 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/04 21:50:27 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	print_env_node(void *node)
+int	builtin_unset(char **params)
 {
-	t_env	*env;
+	size_t	error;
 
-	env = (t_env *) node;
-	if (env->value != NULL)
-		printf("%s=%s\n", env->key, env->value);
-}
-
-int	bultin_env(char **params)
-{
-	if (params != NULL)
-		ft_lstiter(g_env, print_env_node);
-	return (EXIT_SUCCESS);
+	error = EXIT_SUCCESS;
+	if (!*params)
+		return (EXIT_SUCCESS);
+	while (*params)
+	{
+		if (is_valid_env(*params))
+			remove_env(*params);
+		else
+		{
+			error = EXIT_FAILURE;
+			dprintf(2, "minishell: unset: `%s': not a valid identifier\n"\
+			, *params);
+		}
+		params++;
+	}
+	return (error);
 }
