@@ -18,7 +18,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <dirent.h>
 # include <readline/readline.h>
+# include <readline/history.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -306,8 +308,35 @@ int				free_vars_and_return_misuse(char *string, char *tmp);
 void			*free_str_nullify_and_malloc_error(char **str);
 void			free_2_str_and_nullify(char **str1, char **str2);
 t_bool			is_token_command_name(t_token_type type);
-int				execute_command(t_command *cmd, t_vars *vars);
-
+int				execute_command(t_command **cmd, t_vars *vars);
+t_string		*expand_exit_code(t_string	*string, t_vars *vars, t_token_type type);
+t_string		*expand_wildcard(t_string *string, t_vars *vars, t_token_type type);
+t_string		*concat_exit_code(t_string *string, t_vars *vars, t_token_type type);
+t_token_type	peek_string_type(t_string	*string);
+t_string		*clean_next_token(t_string *current);
+t_string		*concat_string(t_string *string, t_command_part  *cmd_part, t_vars *vars, t_token_type type);
+void			add_concat_string(t_command_part *cmd_part, t_string *concat_str,
+					t_vars *vars, t_token_type type);
+int				update_cmd_part_values(t_command_part *cmd_part, t_vars *vars);
+char			*builtin_type_to_value(t_token_type  type);
+t_string		*delete_first_node(t_string *str);
+t_arguments		*add_first_args(t_string *str_list, t_arguments *args,
+					t_vars *vars, t_token_type type);
+t_arguments		*add_last_arg_list(t_string *str_list, t_arguments *args,
+					t_vars *vars, t_token_type type);
+t_arguments		*add_middle_args(t_string *str_list, t_arguments *args,
+					t_vars *vars, t_token_type type);
+void			walk_last_args(t_arguments *last_args);
+void			*free_resources_and_return_null(DIR *dir,
+					t_string *result_head);
+t_string		*add_new_node(char *filename, t_vars *vars,	t_token_type type);
+void			sorted_insert(t_string **head_ref, t_string *new_node);
+DIR				*open_dir_or_error(void);
+int				execute_builtin(char *builtin, t_command_part *cmd_part,
+					t_vars *vars);
+int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
+					t_vars *vars);
+int				execute_redirections_only(t_redirections *redirs, t_vars *vars);
 // BULTIN
 int				bultin_echo(char **params);
 int				bultin_pwd(char **params);
@@ -346,4 +375,8 @@ t_bool			add_command_union(t_command_part  *command_part,
 					t_parser_state *state);
 t_bool			is_operator_or_invalid_token(t_token_type type);
 void			*null_and_free_grouping(t_grouping *grouping);
+void			*general_error_ambiguous_redirect(t_vars *vars,
+					t_string *string);
+void			*null_free_args_misuse(t_arguments *args,
+					t_arguments *curr_args, t_string *str_list, t_vars *vars);
 #endif

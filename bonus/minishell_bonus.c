@@ -31,6 +31,7 @@ int	main(void)
 	{
 //		prompt = strdup("((&& infile cat<<EOF|less||echo ok)&&(echo bla && echo ok)>abc.txt)");
 		prompt = readline("~> ");
+		add_history(prompt);
 		flags = init_token_flags(ft_strlen(prompt));
 		vars.tokens = tokenizer(prompt, &flags);
 		if (flags.status != SUCCESS)
@@ -52,15 +53,16 @@ int	main(void)
 			if (vars.parse_tree)
 			{
 				printf("Parse Tree:\n");
-				print_parse_tree(vars.parse_tree, 2);
 //				free_command(vars.parse_tree);
-				execute_command(vars.parse_tree, &vars);
+				execute_command(&vars.parse_tree, &vars);
+				if (vars.parse_tree)
+					print_parse_tree(vars.parse_tree, 2);
 			}
 			free_token_list(&vars.tokens);
 		}
 		free(prompt);
-		exit (vars.state.status);
 	}
+	exit (vars.state.status);
 	return (SUCCESS);
 }
 
