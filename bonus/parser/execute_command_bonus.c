@@ -79,19 +79,19 @@ int	execute_conjunctions(t_conjunctions *conj, t_vars *vars)
 	return (vars->state.status);
 }
 
-//int	execute_command_part(t_command_part *cmd_part, t_vars *vars)
-//{
-////	if (update_cmd_part_values(cmd_part, vars) != SUCCESS)
-////		return (vars->state.status);
-////	if (is_builtin_token(cmd_part->type))
-////		vars->state.status = execute_builtin(cmd_part->u_cmd.builtin_cmd->value,
-////				cmd_part, vars);
-////	else if (cmd_part->type == TOKEN_COMMAND_NAME)
-////		vars->state.status = execute_cmd_name(cmd_part->u_cmd.cmd_name->value,
-////				cmd_part, vars);
-////	else
-////		vars->state.status = execute_redirections_only(cmd_part->redirections,
-////				vars);
-//	return (vars->state.status);
-//}
+int	execute_command_part(t_command_part *cmd_part, t_vars *vars)
+{
+	if (update_cmd_part_values(cmd_part, vars) != SUCCESS)
+		return (vars->state.status);
+//	if (is_builtin_token(cmd_part->type))
+//		vars->state.status = execute_builtin(cmd_part->u_cmd.builtin_cmd->value,
+//				cmd_part, vars);
+//	else if (cmd_part->type == TOKEN_COMMAND_NAME)
+//		vars->state.status = execute_cmd_name(cmd_part->u_cmd.cmd_name->value,
+//				cmd_part, vars);
+//	else
+//		vars->state.status = execute_redirections_only(cmd_part->redirections,
+//				vars);
+	return (vars->state.status);
+}
 

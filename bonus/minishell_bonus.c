@@ -24,19 +24,22 @@ int	main(void)
 	char			*prompt;
 	t_vars			vars;
 	t_token_flags	flags;
+	t_token_list	*tokens;
+	t_command		*parse_tree;
 
 	extern char **environ;
 	init_env(environ);
 	while (true)
 	{
-//		prompt = strdup("((&& infile cat<<EOF|less||echo ok)&&(echo bla && echo ok)>abc.txt)");
 		prompt = readline("~> ");
 		add_history(prompt);
+		vars.prompt = &prompt;
 		flags = init_token_flags(ft_strlen(prompt));
-		vars.tokens = tokenizer(prompt, &flags);
+		tokens = tokenizer(prompt, &flags);
+		vars.tokens = &tokens;
 		if (flags.status != SUCCESS)
 		{
-			free_token_list(&vars.tokens);
+			free_token_list(vars.tokens);
 			free(prompt);
 			exit(flags.status);
 		}
@@ -44,23 +47,21 @@ int	main(void)
 		if (vars.tokens)
 		{
 			printf("Tokens:\n");
-			print_tokens(vars.tokens);
+			print_tokens(*vars.tokens);
 			printf("\n");
-			vars.tokens->current = vars.tokens->head;
-//
-			vars.parse_tree = parse(vars.tokens, &vars.state);
+			tokens->current = tokens->head;
+			parse_tree = parse(*vars.tokens, &vars.state);
+			vars.parse_tree = &parse_tree;
 			// Print parse_tree
-			if (vars.parse_tree)
+			if (*vars.parse_tree)
 			{
 				printf("Parse Tree:\n");
-//				free_command(vars.parse_tree);
-				execute_command(&vars.parse_tree, &vars);
-				if (vars.parse_tree)
-					print_parse_tree(vars.parse_tree, 2);
+				execute_command(vars.parse_tree, &vars);
+				if (*vars.parse_tree)
+					print_parse_tree(*vars.parse_tree, 2);
 			}
-			free_token_list(&vars.tokens);
 		}
-		free(prompt);
+		free_minishell(&vars);
 	}
 	exit (vars.state.status);
 	return (SUCCESS);

@@ -187,9 +187,10 @@ typedef struct s_command
 
 typedef struct s_vars
 {
-	t_token_list	*tokens;
-	t_command		*parse_tree;
+	t_token_list	**tokens;
+	t_command		**parse_tree;
 	t_parser_state	state;
+	char			**prompt;
 }	t_vars;
 
 typedef struct s_env
@@ -377,4 +378,5 @@ void			*general_error_ambiguous_redirect(t_vars *vars,
 					t_string *string);
 void			*null_free_args_misuse(t_arguments *args,
 					t_arguments *curr_args, t_string *str_list, t_vars *vars);
+void			free_minishell(t_vars *vars);
 #endif
