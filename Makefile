@@ -23,8 +23,6 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 		)
 
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
-			free_utils_bonus.c\
-			free_utils2_bonus.c\
 			utils_bonus.c\
 			tokenizer/tokenize_by_category_bonus.c\
 			tokenizer/tokenize_functions.c\
@@ -59,6 +57,9 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			env/env_vars_0_bonus.c\
 			env/env_vars_1_bonus.c\
 			error/errors_bonus.c\
+			error/free_minishell_bonus.c\
+			error/free_utils_bonus.c\
+			error/free_utils2_bonus.c\
 			parse_tree/parser_state_error.c\
 			parse_tree/parser_utils_bonus.c\
 			error/return_errors_helper_bonus.c\
@@ -76,7 +77,6 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
             parser/expand_variables/add_args_list_bonus.c\
             parser/expand_variables/add_args_utils_bonus.c\
             parser/expand_variables/expand_wildcard_utils_bonus.c\
-            error/free_minishell_bonus.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))
