@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_structures_bonus.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 15:32:59 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/09/15 15:33:00 by ebezerra         ###   ########.fr       */
+/*   Updated: 2023/10/07 21:12:01 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,9 @@ void	init_command_part_fields(t_command_part *command_part)
 	command_part->u_cmd.grouping = NULL;
 	command_part->arguments = NULL;
 	command_part->redirections = NULL;
+	command_part->fork = true;
+	command_part->in_pipe[0] = -1;
+	command_part->in_pipe[1] = -1;
+	command_part->out_pipe[0] = -1;
+	command_part->out_pipe[1] = -1;
 }

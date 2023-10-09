@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/04 21:49:36 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/07 21:16:53 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -156,8 +156,8 @@ typedef struct s_grouping
 typedef struct s_command_part
 {
 	t_token_type		type;
-	int					in;
-	int					out;
+	int					in_pipe[2];
+	int					out_pipe[2];
 	t_bool				fork;
 	union
 	{
@@ -194,6 +194,7 @@ typedef struct s_vars
 	t_token_list	*tokens;
 	t_command		*parse_tree;
 	t_parser_state	state;
+	char			*prompt;
 }	t_vars;
 
 typedef struct s_env
@@ -351,7 +352,7 @@ t_bool			is_valid_env(char *env);
 t_list			*search_env(char *key);
 // ENV
 void            add_env(char *key, char *value);
-void	        init_env(char **envp);
+void	        init_env(char **envp)
 void	        print_env();
 void			remove_env(char *key);
 char			*get_env(char *key);
@@ -359,6 +360,7 @@ void			free_env(void *env);
 void			free_all_envs(void);
 
 // ERROR
+void			free_minishell(t_vars *vars);
 void			print_perror(char *cmd, char *msg);
 int				success_or_mem_error(int exit_status);
 void			print_mem_alloc_error(void);
