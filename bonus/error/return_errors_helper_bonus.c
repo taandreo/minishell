@@ -32,3 +32,5 @@ void	*return_syntax_error(const char *value)
 	write(STDERR_FILENO, "'\n", ft_strlen("'\n"));
 	return (NULL);
 }
+
+

@@ -69,6 +69,8 @@ void	close_pipe(int fd[2])
 // 	return (data->fd);
 // }
 
+
+
 static void	child_proc_routine(char **argv, char **environ, t_command_part *data, int i)
 {
 	if (i == 0)
@@ -188,31 +190,38 @@ int	execute_conjunctions(t_conjunctions *conj, t_vars *vars)
 // 	return (fd);
 // }
 
+
+
+
+
 static void	child_proc_routine(t_command_part *data, t_vars *vars)
 {
+	char **arg_list;
 	if (data->out_pipe[1] != -1)
+	{
 		// if there is stdout pipe, closes the read side of this pipe
-		close(data->out_pipe[0]);
-		dup2(STDOUT_FILENO, fd[1]);
-	if (data->in_pipe[0] != -1)
+		close(data->out_pipe[0]);}
+
+	dup2(STDOUT_FILENO, fd[1]);
+	if (data->in_pipe[0] != -1){
 		// if there is a stdin pipe, closes the write side of this pipe
 		close(data->r_pipe[1]);
 		dup2(STDIN_FILENO, fd[1]);
-		// last_cmd_routine(data, argv, i);
-	data->bin_file = get_bin_name(argv[i + data->inc]);
-	data->cmd_path = cmd_path_routine(data->bin_file, data);
-	check_cmd_not_found(data->cmd_path, data, data->bin_file);
-	if (check_for_quotes(argv[i + data->inc]))
-	{
-		data->cmd_args = split_with_quotes(argv[i + data->inc]);
-		if (!data->cmd_args)
-			invalid_num_quotes(data);
+	// last_cmd_routine(data, argv, i);
 	}
-	else
-		data->cmd_args = ft_split(argv[i + data->inc], ' ');
-	free(data->bin_file);
-	execve(data->cmd_path, data->cmd_args, environ);
-	handle_exec_errors(data->cmd_path, data->cmd_args, data);
+	if (data->type == TOKEN_COMMAND_NAME)
+	{
+		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value, vars);
+		if (!data->cmd_path)
+		{
+			free_minishell(vars);
+			exit(vars->state.status);
+		}
+		execve(data->cmd_path, data->cmd_args, g_env);
+		handle_exec_errors(data->cmd_path, data->cmd_args, data);
+	}
+	else if (is_builtin_token(data->type))
+
 }
 
 int	execute_command_part(t_command_part *cmd_part, t_vars *vars)
@@ -229,3 +238,4 @@ int	execute_command_part(t_command_part *cmd_part, t_vars *vars)
 
 	if ()
 }
+
