@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:28:51 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/15 15:31:28 by ebezerra         ###   ########.fr       */
+/*   Updated: 2023/10/10 19:26:46 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ int	main(void)
 			tokens->current = tokens->head;
 			parse_tree = parse(*vars.tokens, &vars.state);
 			vars.parse_tree = &parse_tree;
+			vars.args = NULL;
 			// Print parse_tree
 			if (*vars.parse_tree)
 			{

@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:14 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/04 21:50:07 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/10 20:47:38 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,27 +14,27 @@
 
 /* The program has to exit with the last command exit 
    status before exit*/
-void	exit_minishell(int nb)
+void	exit_minishell(int nb, t_vars *vars)
 {
+	free_minishell(vars);
 	exit(nb);
 }
 
-int	builtin_exit(char **params)
+int	builtin_exit(char **params, t_vars *vars)
 {
 	unsigned char	nb;
 
 	ft_dprintf(2, "exit\n");
 	if (!*params)
 	{
-		// Necessário rever e entender como vamos pegar a saída do último comando
-		nb = EXIT_SUCCESS;
-		exit_minishell(nb);
+		nb = vars->state.status;
+		exit_minishell(nb, vars);
 	}
 	if (!ft_is_number(*params))
 	{
 		ft_dprintf(STDERR_FILENO, \
 		"minishell: exit: %s: numeric argument required\n", *params);
-		exit_minishell(255);
+		exit_minishell(255, vars);
 	}
 	if (ft_lenmt((void **) params) > 1)
 	{

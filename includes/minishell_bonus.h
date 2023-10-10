@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/09 20:05:54 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/10 20:12:55 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,8 @@ typedef struct s_command_part
 	t_token_type		type;
 	int					in_pipe[2];
 	int					out_pipe[2];
-	t_bool				fork;
+	t_bool				forked;
+	char				**args;
 	union
 	{
 		t_builtin_cmd	*builtin_cmd;
@@ -195,6 +196,7 @@ typedef struct s_vars
 	t_command		**parse_tree;
 	t_parser_state	state;
 	char			**prompt;
+	void			*args;
 }	t_vars;
 
 typedef struct s_env
@@ -335,8 +337,7 @@ void			*free_resources_and_return_null(DIR *dir,
 t_string		*add_new_node(char *filename, t_vars *vars,	t_token_type type);
 void			sorted_insert(t_string **head_ref, t_string *new_node);
 DIR				*open_dir_or_error(void);
-int				execute_builtin(char *builtin, t_command_part *cmd_part,
-					t_vars *vars);
+int				execute_builtin(t_command_part *data, t_vars *vars);
 int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
 					t_vars *vars);
 int				execute_redirections_only(t_redirections *redirs, t_vars *vars);
@@ -347,7 +348,7 @@ int				builtin_cd(char **params);
 int				builtin_export(char **params);
 int				builtin_env(char **params);
 int				builtin_unset(char **params);
-int				builtin_exit(char **params);
+int				builtin_exit(char **params, t_vars *vars);
 t_bool			is_valid_env(char *env);
 t_list			*search_env(char *key);
 // ENV
@@ -360,6 +361,7 @@ void			free_env(void *env);
 void			free_all_envs(void);
 
 // ERROR
+void			free_and_perror(t_vars *vars, int exit_code);
 void			free_minishell(t_vars *vars);
 void			print_perror(char *cmd, char *msg);
 int				success_or_mem_error(int exit_status);

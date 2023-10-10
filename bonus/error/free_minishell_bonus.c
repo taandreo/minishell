@@ -13,4 +13,9 @@ void	free_minishell(t_vars *vars)
 		free(*vars->prompt);
 		*vars->prompt = NULL;
 	}
+	if (vars->args)
+	{
+		free(vars->args);
+		vars->args = NULL;
+	}
 }
