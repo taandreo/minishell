@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:14 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/10 20:47:38 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/10 20:49:30 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,6 @@ int	builtin_exit(char **params, t_vars *vars)
 		return (EXIT_FAILURE);
 	}
 	nb = ft_atoi(*params);
-	exit_minishell(nb);
+	exit_minishell(nb, vars);
 	return (EXIT_SUCCESS);
 }

@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/10 20:12:55 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/10 23:12:59 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <dirent.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
 
@@ -160,6 +161,7 @@ typedef struct s_command_part
 	int					out_pipe[2];
 	t_bool				forked;
 	char				**args;
+	pid_t				pid;
 	union
 	{
 		t_builtin_cmd	*builtin_cmd;
@@ -168,6 +170,7 @@ typedef struct s_command_part
 	} u_cmd;
 	t_arguments			*arguments;
 	t_redirections		*redirections;
+	char				*cmd_path;
 }	t_command_part;
 
 typedef struct s_pipeline
@@ -341,6 +344,7 @@ int				execute_builtin(t_command_part *data, t_vars *vars);
 int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
 					t_vars *vars);
 int				execute_redirections_only(t_redirections *redirs, t_vars *vars);
+char			*cmd_path_routine(char *cmd, t_vars *vars);
 // BUILTIN
 int				builtin_echo(char **params);
 int				builtin_pwd(char **params);
@@ -386,4 +390,12 @@ void			*general_error_ambiguous_redirect(t_vars *vars,
 void			*null_free_args_misuse(t_arguments *args,
 					t_arguments *curr_args, t_string *str_list, t_vars *vars);
 void			free_minishell(t_vars *vars);
+void			*return_no_such_file(char *str, t_vars *vars);
+void			*return_no_such_cmd(char *str, t_vars *vars);
+void			*return_is_dir_error_cmd(char *str, t_vars *vars);
+void			*return_is_dir_error_open(char *str, t_vars *vars);
+void			*return_permission_denied(char *str, t_vars *vars);
+void			*return_cmd_not_found(char *str, t_vars *vars);
+// WAIT
+int				wait_process(t_pipeline *pipeline);
 #endif
