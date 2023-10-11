@@ -20,7 +20,7 @@ void	*return_is_dir_error_open(char *str, t_vars *vars)
 		  ft_strlen(str));
 	write(STDERR_FILENO, ": Is a directory\n",
 		  ft_strlen(": Is a directory\n"));
-	vars->state.status = NOTEXEC;
+	vars->state.status = GENERAL_ERROR;
 	return (NULL);
 }
 
@@ -55,7 +55,7 @@ void	*return_permission_denied(char *str, t_vars *vars)
 	write(STDERR_FILENO, str,
 		  ft_strlen(str));
 	write(STDERR_FILENO, ": Permission denied\n",
-		  ft_strlen(": No Permission denied\n"));
+		  ft_strlen(": Permission denied\n"));
 	vars->state.status = NOTEXEC;
 	return (NULL);
 }
