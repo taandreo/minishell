@@ -71,29 +71,19 @@ void	close_pipe(int fd[2])
 
 
 
-static void	child_proc_routine(char **argv, char **environ, t_command_part *data, int i)
-{
-	if (i == 0)
-		first_cmd_routine(data, argv, i);
-	if (i == data->cmd_num - 1)
-		last_cmd_routine(data, argv, i);
-	if (i > 0 && i < data->cmd_num - 1)
-		intermediates_cmd_routine(data, i);
-	data->bin_file = get_bin_name(argv[i + data->inc]);
-	data->cmd_path = cmd_path_routine(data->bin_file, data);
-	check_cmd_not_found(data->cmd_path, data, data->bin_file);
-	if (check_for_quotes(argv[i + data->inc]))
-	{
-		data->cmd_args = split_with_quotes(argv[i + data->inc]);
-		if (!data->cmd_args)
-			invalid_num_quotes(data);
-	}
-	else
-		data->cmd_args = ft_split(argv[i + data->inc], ' ');
-	free(data->bin_file);
-	execve(data->cmd_path, data->cmd_args, environ);
-	handle_exec_errors(data->cmd_path, data->cmd_args, data);
-}
+//static void	child_proc_routine(char **argv, char **environ, t_command_part *data, int i)
+//{
+//	if (i == 0)
+//		first_cmd_routine(data, argv, i);
+//	if (i == data->cmd_num - 1)
+//		last_cmd_routine(data, argv, i);
+//	if (i > 0 && i < data->cmd_num - 1)
+//		intermediates_cmd_routine(data, i);
+//	data->bin_file = get_bin_name(argv[i + data->inc]);
+//	data->cmd_path = cmd_path_routine(data->bin_file, data);
+//	execve(data->cmd_path, data->cmd_args, environ);
+//	handle_exec_errors(data->cmd_path, data->cmd_args, data);
+//}
 
 int	get_pipe_cmd(t_pipeline *pipeline)
 {
@@ -207,7 +197,7 @@ static void	child_proc_routine(t_command_part *data, t_vars *vars)
 		// if there is a stdin pipe, closes the write side of this pipe
 		close(data->r_pipe[1]);
 		dup2(STDIN_FILENO, fd[1]);
-	// last_cmd_routine(data, argv, i);
+		// last_cmd_routine(data, argv, i);
 	}
 	if (data->type == TOKEN_COMMAND_NAME)
 	{
