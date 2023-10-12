@@ -12,12 +12,11 @@
 
 #include "minishell_bonus.h"
 
-int	builtin_pwd(char **params)
+int	builtin_pwd(char **param)
 {
 	char	*pwd;
 
-	if (params == NULL)
-		return (EXIT_FAILURE);
+	(void) param;
 	pwd = getcwd(NULL, 0);
 	if (pwd != NULL)
 	{

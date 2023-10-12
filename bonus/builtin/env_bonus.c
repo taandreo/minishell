@@ -23,7 +23,7 @@ void	print_env_node(void *node)
 
 int	builtin_env(char **params)
 {
-	if (params != NULL)
-		ft_lstiter(g_env, print_env_node);
+	(void) params;
+	ft_lstiter(g_env, print_env_node);
 	return (EXIT_SUCCESS);
 }

@@ -57,10 +57,15 @@ char	*cmd_path_routine(char *cmd, t_vars *vars)
 			{
 				if (S_ISDIR(file_info.st_mode))
 					return (return_is_dir_error_cmd(cmd, vars));
-				else if (access(cmd, X_OK) == -1)
-					return (return_permission_denied(cmd, vars));
-				else if (access(cmd, X_OK) == 0)
+				if (access(cmd, X_OK) == 0)
 					cmd_path = ft_strdup(cmd);
+				if (access(cmd, X_OK) == -1)
+					return (return_permission_denied(cmd, vars));
+			}
+			else
+			{
+				perror("");
+				return (NULL);
 			}
 		}
 		else

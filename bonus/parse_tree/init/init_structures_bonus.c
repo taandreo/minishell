@@ -21,7 +21,7 @@ void	init_command_part_fields(t_command_part *command_part)
 	command_part->arguments = NULL;
 	command_part->redirections = NULL;
 	command_part->cmd_path = NULL;
-	command_part->fork = true;
+	command_part->forked = false;
 	command_part->in_pipe[0] = -1;
 	command_part->in_pipe[1] = -1;
 	command_part->out_pipe[0] = -1;

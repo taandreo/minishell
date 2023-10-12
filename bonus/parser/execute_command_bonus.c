@@ -3,6 +3,7 @@
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars);
 int	execute_conjunctions(t_conjunctions *conj, t_vars *vars);
 int	execute_command_part(t_command_part *cmd_part, t_vars *vars);
+int	execute_fork_command(t_command_part *data, t_vars *vars);
 
 int	execute_command(t_command **cmd, t_vars *vars)
 {
@@ -66,32 +67,25 @@ void	copy_pipe(int src[2], int dst[2])
 
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 {
-	int				pipex[2];
-	t_command_part	*cmd;
 	pid_t			pid;
-	t_bool			is_pipe;
-	t_pipeline		*start;
 
-	is_pipe = false;
-	start = pipeline;
-	while(pipeline->type == TOKEN_PIPE)
-	{ 
-		is_pipe = true;
+	if (pipeline->type == TOKEN_NONE && is_builtin_token(pipeline->cmd_part->type))
+		return(execute_command_part(pipeline->cmd_part, vars));
+
+	if (pipeline->type == TOKEN_PIPE)
+	{
 		pipe(pipeline->cmd_part->out_pipe);
 		copy_pipe(pipeline->cmd_part->out_pipe, pipeline->next->cmd_part->in_pipe);
-		pid = fork();
-		if (pid == -1)
-			free_and_perror(vars, EXIT_FAILURE);
-		if (pid == 0)
-			execute_fork_command(pipeline->cmd_part, vars);
-		pipeline->cmd_part->pid = pid;
-		close_pipe(pipeline->cmd_part->out_pipe);
-		pipeline = pipeline->next;
 	}
-	if (!is_pipe)
-		return(execute_command_part(pipeline->cmd_part, vars));
-	execute_fork_command(pipeline->cmd_part, vars);
-	return(wait_process(start));
+	pid = fork();
+	pipeline->cmd_part->pid = pid;
+	if (pipeline->type == TOKEN_PIPE)
+		close_pipe(pipeline->cmd_part->out_pipe);
+	if (pid == -1)
+		free_and_perror(vars, EXIT_FAILURE);
+	if (pid == 0)
+		execute_fork_command(pipeline->cmd_part, vars);
+	return (wait_process(pipeline));
 }
 
 
@@ -120,7 +114,7 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 // 	return (fd);
 // }
 
-char	**list_to_args(t_arguments *list)
+char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 {
 	size_t		len;
 	t_arguments	*start;
@@ -136,31 +130,33 @@ char	**list_to_args(t_arguments *list)
 		len++;
 		list = list->next;
 	}
-	args = ft_calloc(len + 1, sizeof(char *));
-	i = 0;
+	args = ft_calloc(len + 2, sizeof(char *));
+	args[0] = cmd_part->u_cmd.cmd_name->value;
+	i = 1;
 	while (start)
 	{
-		args[i] = start->string;
+		args[i] = start->string->value;
 		i++;
+		start = start->next;
 	}
 	args[i] = NULL;
+	return (args);
 }
 
-int	execute_bultin(t_command_part *data, t_vars *vars)
+int	execute_builtin(t_command_part *data, t_vars *vars)
 {
 	if (data->type == TOKEN_PWD)
-		return(builtin_pwd(data->args));
+		return(builtin_pwd());
 	if (data->type == TOKEN_CD)
 		return(builtin_cd(data->args));
 	if (data->type == TOKEN_ECHO)
 		return(builtin_echo(data->args));
 	if (data->type == TOKEN_ENV)
-		return(builtin_env(data->args));
+		return(builtin_env());
 	if (data->type == TOKEN_EXPORT)
 		return(builtin_export(data->args));
 	if (data->type == TOKEN_UNSET)
 		return(builtin_unset(data->args));
-	// adicionar o status do ultimo comando
 	if (data->type == TOKEN_EXIT)
 		return(builtin_exit(data->args, vars));
 	return (0);
@@ -168,8 +164,6 @@ int	execute_bultin(t_command_part *data, t_vars *vars)
 
 int	execute_fork_command(t_command_part *data, t_vars *vars)
 {
-	char **args;
-
 	if (data->out_pipe[1] != -1)
 	{
 		// if there is stdout pipe, closes the read side of this pipe
@@ -183,16 +177,72 @@ int	execute_fork_command(t_command_part *data, t_vars *vars)
 		dup2(STDIN_FILENO, data->in_pipe[0]);
 	}
 	data->forked = true;
-	execute_command_part(data, vars);
+	return (execute_command_part(data, vars));
+}
+
+size_t get_env_size()
+{
+	size_t	i;
+	t_list	*current;
+
+	i = 0;
+	current = g_env;
+	while (current)
+	{
+		i++;
+		current = current->next;
+	}
+	return (i);
+}
+
+char *join_tmp_key_value(t_env *tmp)
+{
+	char *tmp2;
+	char *envp;
+
+	tmp2 = ft_strjoin(tmp->key, "=");
+	if (!tmp2)
+		return (return_mem_alloc_error());
+	envp = ft_strjoin(tmp2, tmp->value);
+	if (!envp)
+		return (return_mem_alloc_error());
+	free(tmp2);
+	return (envp);
+}
+
+
+char **list_to_envp()
+{
+	size_t	len;
+	char	**envp;
+	t_list	*current;
+	t_env	*tmp;
+	size_t	i;
+
+	i = 0;
+	current = g_env;
+	len = get_env_size();
+	envp = ft_calloc((len + 1),sizeof(char *));
+	while (current)
+	{
+		tmp = current->content;
+		envp[i] = join_tmp_key_value(tmp);
+		if (!envp[i])
+			return (NULL);
+		current = current->next;
+		i++;
+	}
+	return (envp);
 }
 
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
 	size_t exit_code;
+	char	**envp;
 
 	if (update_cmd_part_values(data, vars) != SUCCESS)
 		return (vars->state.status);
-	data->args = list_to_args(data->arguments);
+	data->args = list_to_args(data->arguments, data);
 	if (data->type == TOKEN_COMMAND_NAME)
 	{
 		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value, vars);
@@ -201,8 +251,9 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 			free_minishell(vars);
 			exit(vars->state.status);
 		}
-		execve(data->cmd_path, data->args, g_env);
-		handle_exec_errors(data->cmd_path, data->args, data);
+		envp = list_to_envp();
+		execve(data->cmd_path, data->args, envp);
+//		handle_exec_errors(data->cmd_path, data->args, data);
 	} 
 	else if (is_builtin_token(data->type) && data->forked)
 	{
@@ -211,5 +262,6 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 		exit(exit_code);
 	}
 	else if (is_builtin_token(data->type) && !data->forked)
-		execute_builtin(data, vars);
+		return (execute_builtin(data, vars));
+	return (vars->state.status);
 }

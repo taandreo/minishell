@@ -12,6 +12,9 @@
 
 # include "minishell_bonus.h"
 
+static char	*get_signal_description(int sig);
+static int	check_for_sign(int status);
+
 int	wait_process(t_pipeline *pipeline)
 {
 	pid_t	pid;
@@ -21,8 +24,9 @@ int	wait_process(t_pipeline *pipeline)
 	{
 		pid = pipeline->cmd_part->pid;
 		waitpid(pid, &status, 0);
+		pipeline = pipeline->next;
 	}
-	return(check_for_sign(status));
+	return (check_for_sign(status));
 }
 
 static int	check_for_sign(int status)
@@ -30,19 +34,21 @@ static int	check_for_sign(int status)
 	char	*description;
 
 	if (WIFEXITED(status))
-		return(WEXITSTATUS(status));
+		return (WEXITSTATUS(status));
 	else
 	{
 		if (WIFSIGNALED(status))
 		{
 			description = get_signal_description(WTERMSIG(status));
-			ft_dprintf(STDERR_FILENO, "%s", description);
+			write(STDERR_FILENO, description, ft_strlen(description));
 			if (WCOREDUMP(status))
-				ft_dprintf(STDERR_FILENO, " (core dumped)");
+				write(STDERR_FILENO, " (core dumped)", ft_strlen(" (core dumped)"));
 			if (description != NULL)
-				ft_dprintf(STDERR_FILENO, "\n");
-			return(EXIT_OFFSET + WTERMSIG(status));
+				write(STDERR_FILENO, "\n", ft_strlen("\n"));
+			return (EXIT_OFFSET + WTERMSIG(status));
 		}
+		else
+			return (EXIT_SUCCESS);
 	}
 }
 
@@ -60,6 +66,5 @@ static char	*get_signal_description(int sig)
 	[SIGALRM] = "Alarm clock",
 	[SIGTERM] = "Terminated",
 	};
-
 	return (descriptions[sig]);
 }

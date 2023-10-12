@@ -23,6 +23,7 @@
 # include <readline/history.h>
 # include <sys/types.h>
 # include <sys/stat.h>
+# include <sys/wait.h>
 # include <fcntl.h>
 
 # define NBR_BUILTINS 7
@@ -357,7 +358,7 @@ t_bool			is_valid_env(char *env);
 t_list			*search_env(char *key);
 // ENV
 void            add_env(char *key, char *value);
-void	        init_env(char **envp)
+void	        init_env(char **envp);
 void	        print_env();
 void			remove_env(char *key);
 char			*get_env(char *key);
@@ -398,4 +399,5 @@ void			*return_permission_denied(char *str, t_vars *vars);
 void			*return_cmd_not_found(char *str, t_vars *vars);
 // WAIT
 int				wait_process(t_pipeline *pipeline);
+
 #endif

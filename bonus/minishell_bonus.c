@@ -29,6 +29,10 @@ int	main(void)
 
 	extern char **environ;
 	init_env(environ);
+	t_env	*env;
+
+	env = g_env->content;
+//	printf("%s, %s\n", env->key, env->value);
 	while (true)
 	{
 		prompt = readline("~> ");
@@ -46,9 +50,9 @@ int	main(void)
 		// Print Tokens
 		if (vars.tokens)
 		{
-			printf("Tokens:\n");
-			print_tokens(*vars.tokens);
-			printf("\n");
+//			printf("Tokens:\n");
+//			print_tokens(*vars.tokens);
+//			printf("\n");
 			tokens->current = tokens->head;
 			parse_tree = parse(*vars.tokens, &vars.state);
 			vars.parse_tree = &parse_tree;
@@ -56,10 +60,10 @@ int	main(void)
 			// Print parse_tree
 			if (*vars.parse_tree)
 			{
-				printf("Parse Tree:\n");
+//				printf("Parse Tree:\n");
 				execute_command(vars.parse_tree, &vars);
-				if (*vars.parse_tree)
-					print_parse_tree(*vars.parse_tree, 2);
+//				if (*vars.parse_tree)
+//					print_parse_tree(*vars.parse_tree, 2);
 			}
 		}
 		free_minishell(&vars);
