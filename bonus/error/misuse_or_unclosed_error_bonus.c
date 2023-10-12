@@ -16,6 +16,7 @@ int	unclosed_quotes_error(t_token_list **tokens)
 {
 	write(STDERR_FILENO, (*tokens)->tail->token.value,
 		ft_strlen((*tokens)->tail->token.value));
+	write(STDERR_FILENO, "\n", ft_strlen("\n"));
 	free_token_list(tokens);
 	return (GENERAL_ERROR);
 }

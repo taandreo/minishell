@@ -16,6 +16,7 @@
 void	print_tokens(t_token_list *tokens);
 void	print_command(t_command *cmd, size_t indent);
 void	print_parse_tree(t_command *parse_tree, size_t indent);
+void	init_vars(t_vars *vars);
 
 t_list *g_env;
 
@@ -29,23 +30,21 @@ int	main(void)
 
 	extern char **environ;
 	init_env(environ);
-	t_env	*env;
 
-	env = g_env->content;
-//	printf("%s, %s\n", env->key, env->value);
 	while (true)
 	{
 		prompt = readline("~> ");
 		add_history(prompt);
+		init_vars(&vars);
 		vars.prompt = &prompt;
 		flags = init_token_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
 		vars.tokens = &tokens;
 		if (flags.status != SUCCESS)
 		{
-			free_token_list(vars.tokens);
-			free(prompt);
-			exit(flags.status);
+			free_minishell(&vars);
+			vars.state.status = flags.status;
+			continue ;
 		}
 		// Print Tokens
 		if (vars.tokens)
@@ -71,6 +70,15 @@ int	main(void)
 	exit (vars.state.status);
 	return (SUCCESS);
 }
+
+void	init_vars(t_vars *vars)
+{
+	vars->tokens = NULL;
+	vars->parse_tree = NULL;
+	vars->args = NULL;
+	vars->prompt = NULL;
+}
+
 
 const char *token_names[] =
 		{
