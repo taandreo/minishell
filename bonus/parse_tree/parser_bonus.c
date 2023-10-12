@@ -17,7 +17,8 @@ t_command	*parse(t_token_list *tokens, t_parser_state *state)
 	t_command	*parse_tree;
 
 	state->paren_count = 0;
-	state->status = SUCCESS;
+	if (!state->is_set)
+		state->status = SUCCESS;
 	state->has_paren = false;
 	state->error = false;
 	parse_tree = parse_command(tokens, state);

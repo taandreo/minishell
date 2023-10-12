@@ -31,6 +31,7 @@ int	main(void)
 	extern char **environ;
 	init_env(environ);
 
+	vars.state.is_set = false;
 	while (true)
 	{
 		prompt = readline("~> ");
@@ -40,18 +41,28 @@ int	main(void)
 		flags = init_token_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
 		vars.tokens = &tokens;
+
+//		printf("Tokens:\n");
+//		print_tokens(*vars.tokens);
+//		printf("\n");
 		if (flags.status != SUCCESS)
 		{
 			free_minishell(&vars);
+			vars.state.is_set = true;
 			vars.state.status = flags.status;
 			continue ;
 		}
 		// Print Tokens
 		if (vars.tokens)
 		{
-//			printf("Tokens:\n");
-//			print_tokens(*vars.tokens);
-//			printf("\n");
+			if (tokens->head == tokens->tail)
+			{
+				if (tokens->head->token.type == TOKEN_END)
+				{
+					free_minishell(&vars);
+					continue ;
+				}
+			}
 			tokens->current = tokens->head;
 			parse_tree = parse(*vars.tokens, &vars.state);
 			vars.parse_tree = &parse_tree;

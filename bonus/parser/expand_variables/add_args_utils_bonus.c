@@ -9,6 +9,7 @@ void	*null_free_args_misuse(t_arguments *args, t_arguments *curr_args,
 		free_arguments(curr_args);
 	free_string(str_list);
 	vars->state.status = MISUSE;
+	vars->state.error = true;
 	return (NULL);
 }
 

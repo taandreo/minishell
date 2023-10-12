@@ -113,6 +113,7 @@ typedef struct s_parser_state
 	int		paren_count;
 	int		status;
 	t_bool	error;
+	t_bool	is_set;
 	t_bool	has_paren;
 }	t_parser_state;
 

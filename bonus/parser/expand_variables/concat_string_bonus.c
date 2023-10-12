@@ -83,6 +83,7 @@ t_string	*concat_unmatched_string(t_string *string, t_vars *vars)
 				{
 					free_string(string);
 					vars->state.status = MISUSE;
+					vars->state.error = true;
 					return (return_mem_alloc_error());
 				}
 				current->next = clean_next_token(current);

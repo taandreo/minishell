@@ -16,6 +16,7 @@ t_string	*expand_exit_code(t_string	*string, t_vars *vars, t_token_type type)
 			{
 				free_string(string);
 				vars->state.status = MISUSE;
+				vars->state.error = true;
 				return (return_mem_alloc_error());
 			}
 		}
@@ -41,6 +42,7 @@ t_string	*concat_exit_code(t_string *string, t_vars *vars, t_token_type type)
 				{
 					free_string(string);
 					vars->state.status = MISUSE;
+					vars->state.error = true;
 					return (return_mem_alloc_error());
 				}
 				current->next = clean_next_token(current);

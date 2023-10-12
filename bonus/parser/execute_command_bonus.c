@@ -7,8 +7,11 @@ int	execute_fork_command(t_command_part *data, t_vars *vars);
 
 int	execute_command(t_command **cmd, t_vars *vars)
 {
-	vars->state.status = SUCCESS;
-	vars->state.error = false;
+	if (!vars->state.is_set)
+	{
+		vars->state.status = SUCCESS;
+		vars->state.error = false;
+	}
 	if ((*cmd)->pipeline)
 	{
 		vars->state.status = execute_pipeline((*cmd)->pipeline, vars);
