@@ -64,32 +64,35 @@ void	copy_pipe(int src[2], int dst[2])
 	dst[1] = src[1];
 }
 
+
+void	execute_fork(t_pipeline *pipeline, t_vars *vars)
+{
+	pid_t	pid;
+
+	pid = fork();
+	if (pid == -1)
+		free_and_perror(vars, EXIT_FAILURE);
+	if (pid == 0)
+		execute_fork_command(pipeline->cmd_part, vars);
+	pipeline->cmd_part->pid = pid;
+}
+
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 {
-	int				pipex[2];
-	t_command_part	*cmd;
-	pid_t			pid;
-	t_bool			is_pipe;
 	t_pipeline		*start;
 
-	is_pipe = false;
 	start = pipeline;
+	if (is_builtin_token(pipeline->type) && pipeline->type == TOKEN_NONE)
+		return(execute_command_part(pipeline->cmd_part, vars));
 	while(pipeline->type == TOKEN_PIPE)
 	{ 
-		is_pipe = true;
 		pipe(pipeline->cmd_part->out_pipe);
 		copy_pipe(pipeline->cmd_part->out_pipe, pipeline->next->cmd_part->in_pipe);
-		pid = fork();
-		if (pid == -1)
-			free_and_perror(vars, EXIT_FAILURE);
-		if (pid == 0)
-			execute_fork_command(pipeline->cmd_part, vars);
-		pipeline->cmd_part->pid = pid;
+		execute_fork(pipeline, vars);
 		close_pipe(pipeline->cmd_part->out_pipe);
 		pipeline = pipeline->next;
-	}
-	if (!is_pipe)
-		return(execute_command_part(pipeline->cmd_part, vars));
+	}	
+	execute_fork(pipeline, vars);
 	execute_fork_command(pipeline->cmd_part, vars);
 	return(wait_process(start));
 }
@@ -118,6 +121,18 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 // 		}
 // 	}
 // 	return (fd);
+// }
+
+// int	set_redirections(t_redirections *files)
+// {
+// 	int	out_fd;
+
+// 	out_fd = output_redirection(files)
+// 	if (out_fd == -1)
+// 	{
+// 		;
+// 	}
+// 	in_fd  = input_redirection(files)
 // }
 
 char	**list_to_args(t_arguments *list)
@@ -188,11 +203,15 @@ int	execute_fork_command(t_command_part *data, t_vars *vars)
 
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
-	size_t exit_code;
+	size_t	exit_code;
+	int		infile_fd;
 
 	if (update_cmd_part_values(data, vars) != SUCCESS)
 		return (vars->state.status);
-	data->args = list_to_args(data->arguments);
+	output_redirection(data->redirections)
+	infile_fd = data->args = list_to_args(data->arguments);
+	if ()
+
 	if (data->type == TOKEN_COMMAND_NAME)
 	{
 		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value, vars);
