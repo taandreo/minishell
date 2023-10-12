@@ -81,20 +81,25 @@ void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 {
 	t_pipeline		*start;
+	t_pipeline		*prev;
 
 	start = pipeline;
-	if (is_builtin_token(pipeline->type) && pipeline->type == TOKEN_NONE)
+	prev = pipeline;
+	if (is_builtin_token(pipeline->cmd_part->type) && pipeline->type == TOKEN_NONE)
 		return(execute_command_part(pipeline->cmd_part, vars));
 	while(pipeline->type == TOKEN_PIPE)
 	{ 
 		pipe(pipeline->cmd_part->out_pipe);
 		copy_pipe(pipeline->cmd_part->out_pipe, pipeline->next->cmd_part->in_pipe);
 		execute_fork(pipeline, vars);
-		close_pipe(pipeline->cmd_part->out_pipe);
+		if (pipeline != prev)
+			close_pipe(prev->cmd_part->out_pipe);
+		prev = pipeline;
 		pipeline = pipeline->next;
 	}	
 	execute_fork(pipeline, vars);
-	execute_fork_command(pipeline->cmd_part, vars);
+	if (pipeline != prev)
+		close_pipe(prev->cmd_part->out_pipe);
 	return(wait_process(start));
 }
 
@@ -132,8 +137,6 @@ char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 	char		**args;
 	size_t		i;
 
-	if (list == NULL)
-		return (NULL);
 	start = list;
 	len = 0;
 	while (list)
@@ -157,13 +160,13 @@ char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 int	execute_builtin(t_command_part *data, t_vars *vars)
 {
 	if (data->type == TOKEN_PWD)
-		return(builtin_pwd());
+		return(builtin_pwd(data->args));
 	if (data->type == TOKEN_CD)
 		return(builtin_cd(data->args));
 	if (data->type == TOKEN_ECHO)
 		return(builtin_echo(data->args));
 	if (data->type == TOKEN_ENV)
-		return(builtin_env());
+		return(builtin_env(data->args));
 	if (data->type == TOKEN_EXPORT)
 		return(builtin_export(data->args));
 	if (data->type == TOKEN_UNSET)
@@ -179,13 +182,13 @@ int	execute_fork_command(t_command_part *data, t_vars *vars)
 	{
 		// if there is stdout pipe, closes the read side of this pipe
 		close(data->out_pipe[0]);
-		dup2(STDOUT_FILENO, data->out_pipe[1]);
+		dup2(data->out_pipe[1], STDOUT_FILENO);
 	}
 	if (data->in_pipe[0] != -1)
 	{
 		// if there is a stdin pipe, closes the write side of this pipe
 		close(data->in_pipe[1]);
-		dup2(STDIN_FILENO, data->in_pipe[0]);
+		dup2(data->in_pipe[0], STDIN_FILENO);
 	}
 	data->forked = true;
 	return (execute_command_part(data, vars));
@@ -265,14 +268,18 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 		envp = list_to_envp();
 		execve(data->cmd_path, data->args, envp);
 //		handle_exec_errors(data->cmd_path, data->args, data);
-	} 
+	}
 	else if (is_builtin_token(data->type) && data->forked)
 	{
+		data->args++;
 		exit_code = execute_builtin(data, vars);
 		free_minishell(vars);
 		exit(exit_code);
 	}
 	else if (is_builtin_token(data->type) && !data->forked)
+	{
+		data->args++;
 		return (execute_builtin(data, vars));
+	}
 	return (vars->state.status);
 }
