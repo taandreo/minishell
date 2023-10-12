@@ -65,27 +65,37 @@ void	copy_pipe(int src[2], int dst[2])
 	dst[1] = src[1];
 }
 
-int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
+
+void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 {
-	pid_t			pid;
+	pid_t	pid;
 
-	if (pipeline->type == TOKEN_NONE && is_builtin_token(pipeline->cmd_part->type))
-		return(execute_command_part(pipeline->cmd_part, vars));
-
-	if (pipeline->type == TOKEN_PIPE)
-	{
-		pipe(pipeline->cmd_part->out_pipe);
-		copy_pipe(pipeline->cmd_part->out_pipe, pipeline->next->cmd_part->in_pipe);
-	}
 	pid = fork();
-	pipeline->cmd_part->pid = pid;
-	if (pipeline->type == TOKEN_PIPE)
-		close_pipe(pipeline->cmd_part->out_pipe);
 	if (pid == -1)
 		free_and_perror(vars, EXIT_FAILURE);
 	if (pid == 0)
 		execute_fork_command(pipeline->cmd_part, vars);
-	return (wait_process(pipeline));
+	pipeline->cmd_part->pid = pid;
+}
+
+int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
+{
+	t_pipeline		*start;
+
+	start = pipeline;
+	if (is_builtin_token(pipeline->type) && pipeline->type == TOKEN_NONE)
+		return(execute_command_part(pipeline->cmd_part, vars));
+	while(pipeline->type == TOKEN_PIPE)
+	{ 
+		pipe(pipeline->cmd_part->out_pipe);
+		copy_pipe(pipeline->cmd_part->out_pipe, pipeline->next->cmd_part->in_pipe);
+		execute_fork(pipeline, vars);
+		close_pipe(pipeline->cmd_part->out_pipe);
+		pipeline = pipeline->next;
+	}	
+	execute_fork(pipeline, vars);
+	execute_fork_command(pipeline->cmd_part, vars);
+	return(wait_process(start));
 }
 
 
@@ -113,6 +123,7 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 // 	}
 // 	return (fd);
 // }
+
 
 char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 {

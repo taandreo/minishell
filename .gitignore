@@ -9,3 +9,5 @@ minishell.o
 ignore/
 tests/unit/tests
 compile_commands.json
+.cache/
+file.txt
