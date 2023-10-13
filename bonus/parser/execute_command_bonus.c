@@ -103,33 +103,6 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 	return(wait_process(start));
 }
 
-
-// int	output_redirection(t_redirections *files)
-// {
-// 	int		fd;
-// 	char	*file;
-
-// 	fd = 1;
-// 	while(files)
-// 	{
-// 		if (files->redirection->type == "TOKEN_REDIRECTION_OUTPUT" 
-// 			|| files->redirection->type == "TOKEN_REDIRECTION_APPEND")
-// 		{
-// 			if (fd != -2)
-// 				close(fd);
-// 			file = files->redirection->filename;
-// 			if (files->redirection->type == "TOKEN_REDIRECTION_OUTPUT")
-// 				fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-// 			if (files->redirection->type == "TOKEN_REDIRECTION_APPEND")
-// 				fd = open(file, O_WRONLY | O_APPEND, 0666);
-// 			if (fd == -1)
-// 				return (-1);
-// 		}
-// 	}
-// 	return (fd);
-// }
-
-
 char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 {
 	size_t		len;
@@ -256,15 +229,19 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 
 	if (update_cmd_part_values(data, vars) != SUCCESS)
 		return (vars->state.status);
+	if (set_redirections(data->redirections) == -1)
+	{
+		if (data->forked)
+			free_and_exit(vars, vars->state.status);
+		else
+			return (EXIT_FAILURE);
+	}
 	data->args = list_to_args(data->arguments, data);
 	if (data->type == TOKEN_COMMAND_NAME)
 	{
 		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value, vars);
 		if (!data->cmd_path)
-		{
-			free_minishell(vars);
-			exit(vars->state.status);
-		}
+			free_and_exit(vars, vars->state.status);
 		envp = list_to_envp();
 		execve(data->cmd_path, data->args, envp);
 //		handle_exec_errors(data->cmd_path, data->args, data);

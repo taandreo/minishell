@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/10 23:12:59 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/12 19:48:31 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -366,6 +366,7 @@ void			free_env(void *env);
 void			free_all_envs(void);
 
 // ERROR
+void			free_and_exit(t_vars *vars, int exit_code);
 void			free_and_perror(t_vars *vars, int exit_code);
 void			free_minishell(t_vars *vars);
 void			print_perror(char *cmd, char *msg);
@@ -399,5 +400,7 @@ void			*return_permission_denied(char *str, t_vars *vars);
 void			*return_cmd_not_found(char *str, t_vars *vars);
 // WAIT
 int				wait_process(t_pipeline *pipeline);
+// file_redirections_bonus.c
+int				set_redirections(t_redirections *files);
 
 #endif
