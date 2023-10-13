@@ -19,6 +19,8 @@ void	print_parse_tree(t_command *parse_tree, size_t indent);
 void	init_vars(t_vars *vars);
 
 t_list *g_env;
+int g_exit_status = 0;
+
 char *get_pwd(void)
 {
 	char	*pwd;
@@ -36,6 +38,18 @@ char *get_pwd(void)
 	prompt = join_1st_and_cleanup(&prompt, "\033[00m$ ");
 	return (prompt);
 }
+
+void parent_handler(int signum)
+{
+	(void)signum;
+}
+
+void child_handler(int signum)
+{
+	if (signum == SIGUSR1)
+		g_exit_status = 100;
+}
+
 int	main(void)
 {
 	char			*prompt;
@@ -43,7 +57,15 @@ int	main(void)
 	t_token_flags	flags;
 	t_token_list	*tokens;
 	t_command		*parse_tree;
+	struct sigaction sa_parent;
+	sa_parent.sa_handler = parent_handler;
+	sa_parent.sa_flags = 0;
+	sigemptyset(&sa_parent.sa_mask);
 
+	if (sigaction(SIGUSR1, &sa_parent, NULL) == -1) {
+		perror("Error setting up parent signal handler");
+		exit(EXIT_FAILURE);
+	}
 	extern char **environ;
 	init_env(environ);
 	vars.state.is_set = false;
@@ -89,6 +111,11 @@ int	main(void)
 			{
 //				printf("Parse Tree:\n");
 				execute_command(vars.parse_tree, &vars);
+				if (g_exit_status == 100)
+				{
+					free_minishell(&vars);
+					exit (vars.state.status);
+				}
 //				if (*vars.parse_tree)
 //					print_parse_tree(*vars.parse_tree, 2);
 			}
@@ -98,6 +125,8 @@ int	main(void)
 	exit (vars.state.status);
 	return (SUCCESS);
 }
+
+
 
 void	init_vars(t_vars *vars)
 {
@@ -116,6 +145,44 @@ void	init_vars(t_vars *vars)
 		vars->changed_stdout = false;
 	}
 	vars->nice_prompt = get_pwd();
+	vars->is_forked = false;
+	vars->saved_stdin = init_stdin_var(vars);
+	vars->saved_stdout = init_stdout_var(vars);
+}
+
+int	init_stdin_var(t_vars *vars)
+{
+	if (!vars->changed_stdin)
+	{
+		vars->saved_stdin = dup(STDIN_FILENO);
+		if (vars->saved_stdin == -1)
+		{
+			write(STDERR_FILENO, "minishell: dup2", ft_strlen("minishell: dup2"));
+			perror("");
+			vars->state.error = true;
+			vars->state.is_set = true;
+			vars->state.status = GENERAL_ERROR;
+		}
+	}
+	return (vars->saved_stdin);
+}
+
+int	init_stdout_var(t_vars *vars)
+{
+	if (!vars->changed_stdout)
+	{
+		vars->saved_stdout = dup(STDIN_FILENO);
+		if (vars->saved_stdin == -1)
+		{
+			write(STDERR_FILENO, "minishell: dup2",
+					ft_strlen("minishell: dup2"));
+			perror("");
+			vars->state.error = true;
+			vars->state.is_set = true;
+			vars->state.status = GENERAL_ERROR;
+		}
+	}
+	return (vars->saved_stdout);
 }
 
 

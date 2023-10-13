@@ -65,6 +65,7 @@ static char	*get_signal_description(int sig)
 	[SIGSEGV] = "Segmentation fault",
 	[SIGALRM] = "Alarm clock",
 	[SIGTERM] = "Terminated",
+	[SIGUSR1] = "",
 	};
 	return (descriptions[sig]);
 }

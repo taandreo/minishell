@@ -94,8 +94,20 @@ void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 	if (pid == -1)
 		free_and_perror(vars, EXIT_FAILURE);
 	if (pid == 0)
+	{
+		struct sigaction sa_child;
+		sa_child.sa_handler = child_handler;
+		sa_child.sa_flags = 0;
+		sigemptyset(&sa_child.sa_mask);
+		if (sigaction(SIGUSR1, &sa_child, NULL) == -1) {
+			perror("Error setting up parent signal handler");
+			exit(EXIT_FAILURE);
+		}
 		execute_fork_command(pipeline->cmd_part, vars);
+	}
 	pipeline->cmd_part->pid = pid;
+	if (pid != 0)
+		kill(pid, SIGUSR1);
 }
 
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
@@ -116,11 +128,13 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 			close_pipe(prev->cmd_part->out_pipe);
 		prev = pipeline;
 		pipeline = pipeline->next;
-	}	
+	}
 	execute_fork(pipeline, vars);
 	if (pipeline != prev)
 		close_pipe(prev->cmd_part->out_pipe);
-	return(wait_process(start));
+	if (pipeline->cmd_part->pid != 0)
+		return(wait_process(start));
+	return (vars->state.status);
 }
 
 
@@ -203,12 +217,14 @@ int	execute_fork_command(t_command_part *data, t_vars *vars)
 		// if there is stdout pipe, closes the read side of this pipe
 		close(data->out_pipe[0]);
 		dup2(data->out_pipe[1], STDOUT_FILENO);
+		vars->changed_stdout = true;
 	}
 	if (data->in_pipe[0] != -1)
 	{
 		// if there is a stdin pipe, closes the write side of this pipe
 		close(data->in_pipe[1]);
 		dup2(data->in_pipe[0], STDIN_FILENO);
+		vars->changed_stdin = true;
 	}
 	data->forked = true;
 	return (execute_command_part(data, vars));
@@ -271,7 +287,7 @@ char **list_to_envp()
 
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
-	size_t			exit_code;
+	int			exit_code;
 	char			**envp;
 
 	if (update_cmd_part_values(data, vars) != SUCCESS)
@@ -300,10 +316,7 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 //		handle_exec_errors(data->cmd_path, data->args, data);
 	}
 	else if (data->type == TOKEN_GROUP)
-	{
-		data->u_cmd.grouping->enclosed_cmd->pipeline->cmd_part->forked = true;
 		execute_command(&data->u_cmd.grouping->enclosed_cmd, vars);
-	}
 	else if (is_builtin_token(data->type) && data->forked)
 	{
 		data->args++;
@@ -314,7 +327,18 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 	else if (is_builtin_token(data->type) && !data->forked)
 	{
 		data->args++;
-		return (execute_builtin(data, vars));
+		exit_code = execute_builtin(data, vars);
+		if (vars->changed_stdin)
+		{
+			restore_stdin(vars->saved_stdin, vars);
+			vars->changed_stdin = false;
+		}
+		if (vars->changed_stdout)
+		{
+			restore_stdout(vars->saved_stdout, vars);
+			vars->changed_stdout = false;
+		}
+		return (exit_code);
 	}
 	return (vars->state.status);
 }

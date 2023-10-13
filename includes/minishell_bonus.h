@@ -36,6 +36,7 @@
 # define PATH_MAX	4096
 
 extern t_list *g_env;
+extern int g_exit_status;
 
 typedef enum e_token_type
 {
@@ -205,6 +206,7 @@ typedef struct s_vars
 	void			*args;
 	t_bool			changed_stdout;
 	t_bool			changed_stdin;
+	t_bool			is_forked;
 	int				saved_stdout;
 	int				saved_stdin;
 }	t_vars;
@@ -378,6 +380,9 @@ void			free_env(void *env);
 void			free_all_envs(void);
 void			execute_redirection_heredoc(t_redirections *redir);
 void			open_heredoc(t_redirections *redirections);
+void			child_handler(int signum);
+int				init_stdout_var(t_vars *vars);
+int				init_stdin_var(t_vars *vars);
 
 // ERROR
 void			free_and_perror(t_vars *vars, int exit_code);
