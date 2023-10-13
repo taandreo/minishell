@@ -272,6 +272,11 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 		execve(data->cmd_path, data->args, envp);
 //		handle_exec_errors(data->cmd_path, data->args, data);
 	}
+	else if (data->type == TOKEN_GROUP)
+	{
+		data->u_cmd.grouping->enclosed_cmd->pipeline->cmd_part->forked = true;
+		execute_command(&data->u_cmd.grouping->enclosed_cmd, vars);
+	}
 	else if (is_builtin_token(data->type) && data->forked)
 	{
 		data->args++;
