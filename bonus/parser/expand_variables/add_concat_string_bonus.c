@@ -37,6 +37,7 @@ void	update_builtin(t_command_part  *cmd_part, t_string *concat_str,
 		print_mem_alloc_error();
 		vars->state.status = MISUSE;
 		vars->state.error = true;
+		vars->state.is_set = true;
 		return ;
 	}
 	cmd_part->u_cmd.builtin_cmd->type = cmd_part->type;
@@ -47,6 +48,7 @@ void	update_builtin(t_command_part  *cmd_part, t_string *concat_str,
 		print_mem_alloc_error();
 		vars->state.status = MISUSE;
 		vars->state.error = true;
+		vars->state.is_set = true;
 		return ;
 	}
 	concat_str = delete_first_node(concat_str);
@@ -65,6 +67,7 @@ void	update_cmd_name(t_command_part  *cmd_part, t_string *concat_str,
 		print_mem_alloc_error();
 		vars->state.status = MISUSE;
 		vars->state.error = true;
+		vars->state.is_set = true;
 		return ;
 	}
 	concat_str = delete_first_node(concat_str);
@@ -87,6 +90,7 @@ void	update_redirections(t_command_part  *cmd_part, t_string *concat_str,
 		print_mem_alloc_error();
 		vars->state.status = MISUSE;
 		vars->state.error = true;
+		vars->state.is_set = true;
 		return ;
 	}
 	concat_str = delete_first_node(concat_str);

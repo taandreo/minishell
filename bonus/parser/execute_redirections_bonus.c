@@ -3,7 +3,6 @@
 void	execute_redirection_input(t_redirections *redir, t_vars *vars);
 void	execute_redirection_output(t_redirections *redir, t_vars *vars);
 void	execute_redirection_append(t_redirections *redir, t_vars *vars);
-void	execute_redirection_heredoc(t_redirections *redir, t_vars *vars);
 
 void	execute_redirections(t_command_part *data, t_vars *vars)
 {
@@ -21,7 +20,7 @@ void	execute_redirections(t_command_part *data, t_vars *vars)
 			else if (redir->redirection->type == TOKEN_REDIRECTION_APPEND)
 				execute_redirection_append(redir, vars);
 			else if (redir->redirection->type == TOKEN_REDIRECTION_HEREDOC)
-				execute_redirection_heredoc(redir, vars);
+				heredoc_to_stdin(vars);
 			if (vars->state.error == true)
 				return ;
 			redir = redir->next;
@@ -45,6 +44,7 @@ void	execute_redirection_input(t_redirections *redir, t_vars *vars)
 		write(STDERR_FILENO, ": ", ft_strlen(": "));
 		perror("");
 		vars->state.error = true;
+		vars->state.is_set = true;
 		vars->state.status = GENERAL_ERROR;
 		return ;
 	}
@@ -68,6 +68,7 @@ void	execute_redirection_output(t_redirections *redir, t_vars *vars)
 		write(STDERR_FILENO, ": ", ft_strlen(": "));
 		perror("");
 		vars->state.error = true;
+		vars->state.is_set = true;
 		vars->state.status = GENERAL_ERROR;
 		return ;
 	}
@@ -91,6 +92,7 @@ void	execute_redirection_append(t_redirections *redir, t_vars *vars)
 		write(STDERR_FILENO, ": ", ft_strlen(": "));
 		perror("");
 		vars->state.error = true;
+		vars->state.is_set = true;
 		vars->state.status = GENERAL_ERROR;
 		return ;
 	}
@@ -98,7 +100,7 @@ void	execute_redirection_append(t_redirections *redir, t_vars *vars)
 	close(append_file);
 }
 
-void	execute_redirection_heredoc(t_redirections *redir, t_vars *vars)
+void	execute_redirection_heredoc(t_redirections *redir)
 {
 	int		infile;
 	char	*line;
@@ -124,5 +126,5 @@ void	execute_redirection_heredoc(t_redirections *redir, t_vars *vars)
 		write(STDIN_FILENO, "> ", ft_strlen("> "));
 		line = get_next_line(STDIN_FILENO);
 	}
-	heredoc_to_stdin(infile, vars);
+	close(infile);
 }

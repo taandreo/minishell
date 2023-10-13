@@ -8,6 +8,7 @@ void restore_stdout(int saved_stdout, t_vars *vars)
 				ft_strlen("minishell: dup2"));
 		perror("");
 		vars->state.error = true;
+		vars->state.is_set = true;
 		vars->state.status = GENERAL_ERROR;
 	}
 }

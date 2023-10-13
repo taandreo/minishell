@@ -10,6 +10,7 @@ void	input_file_to_stdin(int infile, t_vars *vars)
 			write(STDERR_FILENO, "minishell: dup2", ft_strlen("minishell: dup2"));
 			perror("");
 			vars->state.error = true;
+			vars->state.is_set = true;
 			vars->state.status = GENERAL_ERROR;
 			return ;
 		}
@@ -20,6 +21,7 @@ void	input_file_to_stdin(int infile, t_vars *vars)
 		write(STDERR_FILENO, "minishell: dup2", ft_strlen("minishell: dup2"));
 		perror("");
 		vars->state.error = true;
+		vars->state.is_set = true;
 		vars->state.status = GENERAL_ERROR;
 	}
 }
@@ -35,6 +37,7 @@ void	output_file_to_stdout(int outfile, t_vars *vars)
 					ft_strlen("minishell: dup2"));
 			perror("");
 			vars->state.error = true;
+			vars->state.is_set = true;
 			vars->state.status = GENERAL_ERROR;
 			return ;
 		}
@@ -45,13 +48,15 @@ void	output_file_to_stdout(int outfile, t_vars *vars)
 		write(STDERR_FILENO, "minishell: dup2", ft_strlen("minishell: dup2"));
 		perror("");
 		vars->state.error = true;
+		vars->state.is_set = true;
 		vars->state.status = GENERAL_ERROR;
 	}
 }
 
-void	heredoc_to_stdin(int infile, t_vars *vars)
+void	heredoc_to_stdin(t_vars *vars)
 {
-	close(infile);
+	int infile;
+
 	infile = open(".temp_file.txt", O_RDONLY);
 	if (infile == -1)
 	{
@@ -59,6 +64,7 @@ void	heredoc_to_stdin(int infile, t_vars *vars)
 				ft_strlen("minishell: .temp_file.txt:"));
 		perror("");
 		vars->state.error = true;
+		vars->state.is_set = true;
 		vars->state.status = GENERAL_ERROR;
 	}
 	input_file_to_stdin(infile, vars);
@@ -79,4 +85,17 @@ int	open_tmp_file(void)
 		perror("");
 	}
 	return (infile);
+}
+
+void	open_heredoc(t_redirections *redirections)
+{
+	t_redirections	*current;
+
+	current = redirections;
+	while (current)
+	{
+		if (current->redirection->type == TOKEN_REDIRECTION_HEREDOC)
+			execute_redirection_heredoc(current);
+		current = current->next;
+	}
 }

@@ -33,6 +33,7 @@ int	cmd_name_routine(t_command_part *cmd_part, t_vars *vars)
 				print_mem_alloc_error();
 				vars->state.status = MISUSE;
 				vars->state.error = true;
+				vars->state.is_set = true;
 			}
 		}
 	}

@@ -19,6 +19,7 @@ int	execute_command(t_command **cmd, t_vars *vars)
 		{
 			free_command(*cmd);
 			*cmd = NULL;
+			vars->state.is_set = true;
 			return (vars->state.status);
 		}
 	}
@@ -29,6 +30,7 @@ int	execute_command(t_command **cmd, t_vars *vars)
 		{
 			free_command(*cmd);
 			*cmd = NULL;
+			vars->state.is_set = true;
 			return (vars->state.status);
 		}
 	}
@@ -68,11 +70,26 @@ void	copy_pipe(int src[2], int dst[2])
 	dst[1] = src[1];
 }
 
+t_bool has_heredoc(t_redirections *redir)
+{
+	t_redirections *current;
+
+	current = redir;
+	while (current)
+	{
+		if (current->redirection->type == TOKEN_REDIRECTION_HEREDOC)
+			return (true);
+		current = current->next;
+	}
+	return (false);
+}
 
 void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 {
 	pid_t	pid;
 
+	if (has_heredoc(pipeline->cmd_part->redirections))
+		open_heredoc(pipeline->cmd_part->redirections);
 	pid = fork();
 	if (pid == -1)
 		free_and_perror(vars, EXIT_FAILURE);
@@ -262,7 +279,14 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 	data->args = list_to_args(data->arguments, data);
 	execute_redirections(data, vars);
 	if (vars->state.error == true)
+	{
+		if (data->forked == true)
+		{
+			free_minishell(vars);
+			exit(vars->state.status);
+		}
 		return (vars->state.status);
+	}
 	if (data->type == TOKEN_COMMAND_NAME)
 	{
 		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value, vars);

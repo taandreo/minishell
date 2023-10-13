@@ -354,7 +354,7 @@ void			execute_redirections(t_command_part *data, t_vars *vars);
 void			input_file_to_stdin(int infile, t_vars *vars);
 void			output_file_to_stdout(int outfile, t_vars *vars);
 int				open_tmp_file(void);
-void			heredoc_to_stdin(int infile, t_vars *vars);
+void			heredoc_to_stdin(t_vars *vars);
 char			*cmd_path_routine(char *cmd, t_vars *vars);
 void			restore_stdout(int saved_stdout, t_vars *vars);
 void			restore_stdin(int saved_stdin, t_vars *vars);
@@ -376,6 +376,8 @@ void			remove_env(char *key);
 char			*get_env(char *key);
 void			free_env(void *env);
 void			free_all_envs(void);
+void			execute_redirection_heredoc(t_redirections *redir);
+void			open_heredoc(t_redirections *redirections);
 
 // ERROR
 void			free_and_perror(t_vars *vars, int exit_code);
