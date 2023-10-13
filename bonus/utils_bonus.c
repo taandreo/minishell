@@ -30,8 +30,6 @@ char	*join_1st_and_cleanup(char **malloced_str1, char *malloced_str2)
 	return (new_str);
 }
 
-
-
 int success_or_mem_error(int exit_status)
 {
 	if (exit_status == MISUSE)

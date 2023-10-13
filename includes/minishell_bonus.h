@@ -201,7 +201,12 @@ typedef struct s_vars
 	t_command		**parse_tree;
 	t_parser_state	state;
 	char			**prompt;
+	char			*nice_prompt;
 	void			*args;
+	t_bool			changed_stdout;
+	t_bool			changed_stdin;
+	int				saved_stdout;
+	int				saved_stdin;
 }	t_vars;
 
 typedef struct s_env
@@ -345,8 +350,14 @@ DIR				*open_dir_or_error(void);
 int				execute_builtin(t_command_part *data, t_vars *vars);
 int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
 					t_vars *vars);
-int				execute_redirections_only(t_redirections *redirs, t_vars *vars);
+void			execute_redirections(t_command_part *data, t_vars *vars);
+void			input_file_to_stdin(int infile, t_vars *vars);
+void			output_file_to_stdout(int outfile, t_vars *vars);
+int				open_tmp_file(void);
+void			heredoc_to_stdin(int infile, t_vars *vars);
 char			*cmd_path_routine(char *cmd, t_vars *vars);
+void			restore_stdout(int saved_stdout, t_vars *vars);
+void			restore_stdin(int saved_stdin, t_vars *vars);
 // BUILTIN
 int				builtin_echo(char **params);
 int				builtin_pwd(char **params);

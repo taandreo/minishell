@@ -18,4 +18,6 @@ void	free_minishell(t_vars *vars)
 		free(vars->args);
 		vars->args = NULL;
 	}
+	if (vars->nice_prompt)
+		free(vars->nice_prompt);
 }

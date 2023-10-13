@@ -19,7 +19,23 @@ void	print_parse_tree(t_command *parse_tree, size_t indent);
 void	init_vars(t_vars *vars);
 
 t_list *g_env;
+char *get_pwd(void)
+{
+	char	*pwd;
+	char	*blue;
+	char	*green;
+	char	*prompt;
 
+	pwd = get_env("PWD");
+	if (!pwd)
+		return ("~> ");
+	blue = "\033[01;34m";
+	green = "\033[01;00m(\033[01;31m minishell \033[01;00m) \033[00m:";
+	prompt = ft_strjoin(green, blue);
+	prompt = join_1st_and_cleanup(&prompt, pwd);
+	prompt = join_1st_and_cleanup(&prompt, "\033[00m$ ");
+	return (prompt);
+}
 int	main(void)
 {
 	char			*prompt;
@@ -30,13 +46,14 @@ int	main(void)
 
 	extern char **environ;
 	init_env(environ);
-
 	vars.state.is_set = false;
+	vars.changed_stdin = false;
+	vars.changed_stdout = false;
 	while (true)
 	{
-		prompt = readline("~> ");
-		add_history(prompt);
 		init_vars(&vars);
+		prompt = readline(vars.nice_prompt);
+		add_history(prompt);
 		vars.prompt = &prompt;
 		flags = init_token_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
@@ -88,6 +105,17 @@ void	init_vars(t_vars *vars)
 	vars->parse_tree = NULL;
 	vars->args = NULL;
 	vars->prompt = NULL;
+	if (vars->changed_stdin)
+	{
+		restore_stdin(vars->saved_stdin, vars);
+		vars->changed_stdin = false;
+	}
+	if (vars->changed_stdout)
+	{
+		restore_stdout(vars->saved_stdout, vars);
+		vars->changed_stdout = false;
+	}
+	vars->nice_prompt = get_pwd();
 }
 
 

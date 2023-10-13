@@ -70,7 +70,7 @@ int	redirections_routine(t_command_part *cmd_part, t_vars *vars)
 		while (current_redir)
 		{
 			current_redir->redirection->filename = concat_string(
-					cmd_part->redirections->redirection->filename, cmd_part,
+					current_redir->redirection->filename, cmd_part,
 					vars, TOKEN_FILENAME);
 			if (vars->state.status != SUCCESS && vars->state.error == true)
 				break;

@@ -254,12 +254,15 @@ char **list_to_envp()
 
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
-	size_t exit_code;
-	char	**envp;
+	size_t			exit_code;
+	char			**envp;
 
 	if (update_cmd_part_values(data, vars) != SUCCESS)
 		return (vars->state.status);
 	data->args = list_to_args(data->arguments, data);
+	execute_redirections(data, vars);
+	if (vars->state.error == true)
+		return (vars->state.status);
 	if (data->type == TOKEN_COMMAND_NAME)
 	{
 		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value, vars);
