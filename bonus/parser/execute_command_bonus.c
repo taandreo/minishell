@@ -105,9 +105,11 @@ void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 		}
 		execute_fork_command(pipeline->cmd_part, vars);
 	}
-	pipeline->cmd_part->pid = pid;
-	if (pid != 0)
+	else
+	{
+		pipeline->cmd_part->pid = pid;
 		kill(pid, SIGUSR1);
+	}
 }
 
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
