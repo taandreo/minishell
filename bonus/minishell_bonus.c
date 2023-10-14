@@ -38,16 +38,7 @@ char *get_pwd(void)
 	return (prompt);
 }
 
-void parent_handler(int signum)
-{
-	(void)signum;
-}
 
-void child_handler(int signum)
-{
-	if (signum == SIGUSR1)
-		g_vars.state.status = 100;
-}
 
 int	main(void)
 {
@@ -55,24 +46,24 @@ int	main(void)
 	t_token_flags	flags;
 	t_token_list	*tokens;
 	t_command		*parse_tree;
-	struct sigaction sa_parent;
-	sa_parent.sa_handler = parent_handler;
-	sa_parent.sa_flags = 0;
-	sigemptyset(&sa_parent.sa_mask);
-
-	if (sigaction(SIGUSR1, &sa_parent, NULL) == -1) {
-		perror("Error setting up parent signal handler");
-		exit(EXIT_FAILURE);
-	}
 	extern char **environ;
+
+	trigger_parent_sigusr();
 	init_env(environ);
 	g_vars.state.is_set = false;
 	g_vars.changed_stdin = false;
 	g_vars.changed_stdout = false;
 	while (true)
 	{
+		start_signals_parent();
 		init_vars(&g_vars);
 		prompt = readline(g_vars.nice_prompt);
+		if (!prompt)
+		{
+			free_minishell(&g_vars);
+			write(STDERR_FILENO, "exit\n", ft_strlen("exit\n"));
+			exit(g_vars.state.status);
+		}
 		add_history(prompt);
 		g_vars.prompt = &prompt;
 		flags = init_token_flags(ft_strlen(prompt));
@@ -143,7 +134,7 @@ void	init_vars(t_vars *vars)
 		vars->changed_stdout = false;
 	}
 	vars->nice_prompt = get_pwd();
-	vars->is_forked = false;
+	vars->close_heredoc = false;
 	vars->saved_stdin = init_stdin_var(vars);
 	vars->saved_stdout = init_stdout_var(vars);
 }

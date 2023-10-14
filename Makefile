@@ -83,6 +83,8 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
          	parser/execute_redirections_utils_bonus.c\
          	parser/restore_fd_bonus.c\
 			parser/wait_bonus.c\
+			signals/sigusr_bonus.c\
+			signals/sigint_bonus.c\
 		)
 
 OBJS = $(patsubst $(MANDATORY_DIR)%.c, $(OBJS_DIR)%.o, $(SRCS))

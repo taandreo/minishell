@@ -20,6 +20,7 @@ int	wait_process(t_pipeline *pipeline)
 	pid_t	pid;
 	int		status;
 
+
 	while(pipeline)
 	{
 		pid = pipeline->cmd_part->pid;
@@ -66,6 +67,7 @@ static char	*get_signal_description(int sig)
 	[SIGALRM] = "Alarm clock",
 	[SIGTERM] = "Terminated",
 	[SIGUSR1] = "",
+	[SIGINT] = "",
 	};
 	return (descriptions[sig]);
 }

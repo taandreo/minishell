@@ -60,15 +60,18 @@ int	open_tmp_file(void)
 	return (infile);
 }
 
-void	open_heredoc(t_redirections *redirections)
+void	open_heredoc(t_redirections *redirections, t_vars *vars)
 {
 	t_redirections	*current;
 
 	current = redirections;
+	start_signal_heredoc();
 	while (current)
 	{
 		if (current->redirection->type == TOKEN_REDIRECTION_HEREDOC)
-			execute_redirection_heredoc(current);
+			execute_redirection_heredoc(current, vars);
+		if (vars->close_heredoc)
+			break ;
 		current = current->next;
 	}
 }

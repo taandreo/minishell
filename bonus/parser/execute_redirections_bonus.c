@@ -100,7 +100,7 @@ void	execute_redirection_append(t_redirections *redir, t_vars *vars)
 	close(append_file);
 }
 
-void	execute_redirection_heredoc(t_redirections *redir)
+void	execute_redirection_heredoc(t_redirections *redir, t_vars *vars)
 {
 	int		infile;
 	char	*line;
@@ -111,8 +111,18 @@ void	execute_redirection_heredoc(t_redirections *redir)
 	limiter = redir->redirection->filename->value;
 	write(STDIN_FILENO, "> ", ft_strlen("> "));
 	line = get_next_line(STDIN_FILENO);
+	if (vars->close_heredoc)
+	{
+		free(line);
+		line = NULL;
+	}
 	while (line != NULL)
 	{
+		if (vars->close_heredoc)
+		{
+			free(line);
+			break ;
+		}
 		trim_line = ft_strtrim(line, "\n");
 		if (ft_strcmp(trim_line, limiter) == 0)
 		{

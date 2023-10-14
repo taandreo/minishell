@@ -2,7 +2,7 @@
 
 void	free_mini_line(t_vars *vars)
 {
-	if (vars->parse_tree)
+	if (vars->parse_tree && *vars->parse_tree)
 	{
 		free_command(*vars->parse_tree);
 		*vars->parse_tree = NULL;
@@ -19,7 +19,10 @@ void	free_mini_line(t_vars *vars)
 		vars->args = NULL;
 	}
 	if (vars->nice_prompt)
+	{
 		free(vars->nice_prompt);
+		vars->nice_prompt = NULL;
+	}
 }
 
 void	free_minishell(t_vars *vars)

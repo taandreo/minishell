@@ -84,25 +84,23 @@ t_bool has_heredoc(t_redirections *redir)
 	return (false);
 }
 
+
+
 void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 {
 	pid_t	pid;
 
 	if (has_heredoc(pipeline->cmd_part->redirections))
-		open_heredoc(pipeline->cmd_part->redirections);
+		open_heredoc(pipeline->cmd_part->redirections, vars);
+	if (vars->close_heredoc)
+		return ;
 	pid = fork();
 	if (pid == -1)
 		free_and_perror(vars, EXIT_FAILURE);
+	start_signal_forked(pid);
 	if (pid == 0)
 	{
-		struct sigaction sa_child;
-		sa_child.sa_handler = child_handler;
-		sa_child.sa_flags = 0;
-		sigemptyset(&sa_child.sa_mask);
-		if (sigaction(SIGUSR1, &sa_child, NULL) == -1) {
-			perror("Error setting up parent signal handler");
-			exit(EXIT_FAILURE);
-		}
+		trigger_child_sigusr(true);
 		execute_fork_command(pipeline->cmd_part, vars);
 	}
 	else
@@ -126,12 +124,16 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 		pipe(pipeline->cmd_part->out_pipe);
 		copy_pipe(pipeline->cmd_part->out_pipe, pipeline->next->cmd_part->in_pipe);
 		execute_fork(pipeline, vars);
+		if (vars->close_heredoc)
+			break ;
 		if (pipeline != prev)
 			close_pipe(prev->cmd_part->out_pipe);
 		prev = pipeline;
 		pipeline = pipeline->next;
 	}
 	execute_fork(pipeline, vars);
+	if (vars->close_heredoc)
+		return (vars->state.status) ;
 	if (pipeline != prev)
 		close_pipe(prev->cmd_part->out_pipe);
 	if (pipeline->cmd_part->pid != 0)
@@ -287,6 +289,13 @@ char **list_to_envp()
 	return (envp);
 }
 
+void	handle_exec_errors(t_vars *vars)
+{
+	write(STDERR_FILENO, "ferrouu\n", ft_strlen("ferrouu\n"));
+	free_minishell(vars);
+	exit(vars->state.status);
+}
+
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
 	int			exit_code;
@@ -315,7 +324,7 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 		}
 		envp = list_to_envp();
 		execve(data->cmd_path, data->args, envp);
-//		handle_exec_errors(data->cmd_path, data->args, data);
+		handle_exec_errors(vars);
 	}
 	else if (data->type == TOKEN_GROUP)
 		execute_command(&data->u_cmd.grouping->enclosed_cmd, vars);
@@ -340,6 +349,7 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 			restore_stdout(vars->saved_stdout, vars);
 			vars->changed_stdout = false;
 		}
+		trigger_child_sigusr(false);
 		return (exit_code);
 	}
 	return (vars->state.status);

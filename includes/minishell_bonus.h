@@ -210,7 +210,7 @@ typedef struct s_vars
 	void			*args;
 	t_bool			changed_stdout;
 	t_bool			changed_stdin;
-	t_bool			is_forked;
+	t_bool			close_heredoc;
 	int				saved_stdout;
 	int				saved_stdin;
 	t_list			*env;
@@ -379,9 +379,16 @@ void			remove_env(char *key);
 char			*get_env(char *key);
 void			free_env(void *env);
 void			free_all_envs(void);
-void			execute_redirection_heredoc(t_redirections *redir);
-void			open_heredoc(t_redirections *redirections);
-void			child_handler(int signum);
+void			execute_redirection_heredoc(t_redirections *redir,
+					t_vars *vars);
+void			open_heredoc(t_redirections *redirections, t_vars *vars);
+void			child_sigusr_handler(int signum);
+void			parent_sigusr_handler(int signum);
+void			trigger_child_sigusr(t_bool ignore);
+void			start_signal_forked(pid_t pid);
+void			start_signals_parent(void);
+void			start_signal_heredoc(void);
+void			trigger_parent_sigusr(void);
 int				init_stdout_var(t_vars *vars);
 int				init_stdin_var(t_vars *vars);
 
