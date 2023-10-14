@@ -1,6 +1,6 @@
 #include "minishell_bonus.h"
 
-void	free_minishell(t_vars *vars)
+void	free_mini_line(t_vars *vars)
 {
 	if (vars->parse_tree)
 	{
@@ -20,4 +20,10 @@ void	free_minishell(t_vars *vars)
 	}
 	if (vars->nice_prompt)
 		free(vars->nice_prompt);
+}
+
+void	free_minishell(t_vars *vars)
+{
+	free_mini_line(vars);
+	free_all_envs();
 }

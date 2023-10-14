@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 16:09:55 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 22:24:26 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/13 21:42:24 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ t_list	*search_env(char *key)
 	t_list	*node;
 	t_env	*env;
 
-	node = g_env;
+	node = g_vars.env;
 	while (node)
 	{
 		env = node->content;
@@ -45,7 +45,7 @@ void	add_env(char *key, char *value)
 		env = ft_calloc(1, sizeof(t_env));
 		env->key = ft_strdup(key);
 		node = ft_lstnew(env);
-		ft_lstadd_back(&g_env, node);
+		ft_lstadd_back(&g_vars.env, node);
 	}
 	if (value != NULL)
 		env->value = ft_strdup(value);
@@ -71,15 +71,15 @@ void	remove_env(char *key)
 	t_list	*prev;
 	t_env	*env;
 
-	node = g_env;
+	node = g_vars.env;
 	prev = NULL;
 	while (node)
 	{
 		env = node->content;
 		if (ft_strcmp(env->key, key) == 0)
 		{
-			if (node == g_env)
-				g_env = node->next;
+			if (node == g_vars.env)
+				g_vars.env = node->next;
 			else
 				prev->next = node->next;
 			ft_lstdelone(node, free_env);
@@ -96,7 +96,7 @@ void	init_env(char **envp)
 	char	*key;
 
 	i = 0;
-	g_env = NULL;
+	g_vars.env = NULL;
 	while (envp[i])
 	{
 		value = ft_strchr(envp[i], '=');

@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 22:44:45 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/04 21:50:00 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/13 21:41:39 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,6 @@ void	print_env_node(void *node)
 int	builtin_env(char **params)
 {
 	if (params != NULL)
-		ft_lstiter(g_env, print_env_node);
+		ft_lstiter(g_vars.env, print_env_node);
 	return (EXIT_SUCCESS);
 }

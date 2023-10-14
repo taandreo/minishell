@@ -238,7 +238,7 @@ size_t get_env_size()
 	t_list	*current;
 
 	i = 0;
-	current = g_env;
+	current = g_vars.env;
 	while (current)
 	{
 		i++;
@@ -272,7 +272,7 @@ char **list_to_envp()
 	size_t	i;
 
 	i = 0;
-	current = g_env;
+	current = g_vars.env;
 	len = get_env_size();
 	envp = ft_calloc((len + 1),sizeof(char *));
 	while (current)

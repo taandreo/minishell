@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:28:51 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/10 19:26:46 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/13 22:13:02 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,7 @@ void	print_command(t_command *cmd, size_t indent);
 void	print_parse_tree(t_command *parse_tree, size_t indent);
 void	init_vars(t_vars *vars);
 
-t_list *g_env;
-int g_exit_status = 0;
+t_vars	g_vars;
 
 char *get_pwd(void)
 {
@@ -47,13 +46,12 @@ void parent_handler(int signum)
 void child_handler(int signum)
 {
 	if (signum == SIGUSR1)
-		g_exit_status = 100;
+		g_vars.state.status = 100;
 }
 
 int	main(void)
 {
 	char			*prompt;
-	t_vars			vars;
 	t_token_flags	flags;
 	t_token_list	*tokens;
 	t_command		*parse_tree;
@@ -68,61 +66,61 @@ int	main(void)
 	}
 	extern char **environ;
 	init_env(environ);
-	vars.state.is_set = false;
-	vars.changed_stdin = false;
-	vars.changed_stdout = false;
+	g_vars.state.is_set = false;
+	g_vars.changed_stdin = false;
+	g_vars.changed_stdout = false;
 	while (true)
 	{
-		init_vars(&vars);
-		prompt = readline(vars.nice_prompt);
+		init_vars(&g_vars);
+		prompt = readline(g_vars.nice_prompt);
 		add_history(prompt);
-		vars.prompt = &prompt;
+		g_vars.prompt = &prompt;
 		flags = init_token_flags(ft_strlen(prompt));
 		tokens = tokenizer(prompt, &flags);
-		vars.tokens = &tokens;
+		g_vars.tokens = &tokens;
 
 //		printf("Tokens:\n");
 //		print_tokens(*vars.tokens);
 //		printf("\n");
 		if (flags.status != SUCCESS)
 		{
-			free_minishell(&vars);
-			vars.state.is_set = true;
-			vars.state.status = flags.status;
+			free_mini_line(&g_vars);
+			g_vars.state.is_set = true;
+			g_vars.state.status = flags.status;
 			continue ;
 		}
 		// Print Tokens
-		if (vars.tokens)
+		if (g_vars.tokens)
 		{
 			if (tokens->head == tokens->tail)
 			{
 				if (tokens->head->token.type == TOKEN_END)
 				{
-					free_minishell(&vars);
+					free_mini_line(&g_vars);
 					continue ;
 				}
 			}
 			tokens->current = tokens->head;
-			parse_tree = parse(*vars.tokens, &vars.state);
-			vars.parse_tree = &parse_tree;
-			vars.args = NULL;
+			parse_tree = parse(*g_vars.tokens, &g_vars.state);
+			g_vars.parse_tree = &parse_tree;
+			g_vars.args = NULL;
 			// Print parse_tree
-			if (*vars.parse_tree)
+			if (*g_vars.parse_tree)
 			{
 //				printf("Parse Tree:\n");
-				execute_command(vars.parse_tree, &vars);
-				if (g_exit_status == 100)
+				execute_command(g_vars.parse_tree, &g_vars);
+				if (g_vars.state.status == 100)
 				{
-					free_minishell(&vars);
-					exit (vars.state.status);
+					free_mini_line(&g_vars);
+					exit (g_vars.state.status);
 				}
 //				if (*vars.parse_tree)
 //					print_parse_tree(*vars.parse_tree, 2);
 			}
 		}
-		free_minishell(&vars);
+		free_mini_line(&g_vars);
 	}
-	exit (vars.state.status);
+	exit (g_vars.state.status);
 	return (SUCCESS);
 }
 

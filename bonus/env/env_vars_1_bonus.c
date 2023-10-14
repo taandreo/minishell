@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 20:11:22 by tairribe          #+#    #+#             */
-/*   Updated: 2023/09/25 22:23:19 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/13 21:42:31 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,5 +25,5 @@ void	free_env(void *env)
 
 void	free_all_envs(void)
 {
-	ft_lstclear(&g_env, free_env);
+	ft_lstclear(&g_vars.env, free_env);
 }

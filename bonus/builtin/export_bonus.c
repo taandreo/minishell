@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 22:50:25 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/04 21:50:17 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/13 21:34:46 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ int	builtin_export(char **params)
 
 	error = EXIT_SUCCESS;
 	if (!*params)
-		ft_lstiter(g_env, print_export_node);
+		ft_lstiter(g_vars.env, print_export_node);
 	while (*params)
 	{
 		get_export_variable(*params, &error);

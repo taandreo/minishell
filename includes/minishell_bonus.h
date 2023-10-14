@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/10 23:12:59 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/13 22:12:27 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <signal.h>
 # include <fcntl.h>
 
 # define NBR_BUILTINS 7
@@ -34,9 +35,6 @@
 # define MISUSE 2
 # define EXIT_OFFSET 128
 # define PATH_MAX	4096
-
-extern t_list *g_env;
-extern int g_exit_status;
 
 typedef enum e_token_type
 {
@@ -196,6 +194,12 @@ typedef struct s_command
 	t_conjunctions	*conjunctions;
 }	t_command;
 
+typedef struct s_env
+{
+	char	*key;
+	char	*value;
+}			t_env;
+
 typedef struct s_vars
 {
 	t_token_list	**tokens;
@@ -209,13 +213,10 @@ typedef struct s_vars
 	t_bool			is_forked;
 	int				saved_stdout;
 	int				saved_stdin;
+	t_list			*env;
 }	t_vars;
 
-typedef struct s_env
-{
-	char	*key;
-	char	*value;
-}			t_env;
+extern t_vars g_vars;
 
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(char **input, size_t *position,
@@ -387,6 +388,7 @@ int				init_stdin_var(t_vars *vars);
 // ERROR
 void			free_and_perror(t_vars *vars, int exit_code);
 void			free_minishell(t_vars *vars);
+void			free_mini_line(t_vars *vars);
 void			print_perror(char *cmd, char *msg);
 int				success_or_mem_error(int exit_status);
 void			print_mem_alloc_error(void);
