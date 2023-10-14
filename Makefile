@@ -13,10 +13,13 @@ INC_DIR := includes
 CFLAGS = -Wall -Wextra -Werror -g3
 UNAME := $(shell uname)
 LIBS := -lft -lreadline
+LIB_DIRS := $(LIBFT_DIR)
 
-# ifeq ($(UNAME), Darwin)
-#  	CFLAGS += -arch x86_64
-# endif
+ifeq ($(UNAME), Darwin)
+ 	# CFLAGS += -arch x86_64
+	INC_DIR += -I /opt/homebrew/opt/readline/include
+	LIB_DIRS += -L /opt/homebrew/opt/readline/lib
+endif
 
 SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
 			tokenizer/tokenizer.c\
@@ -101,7 +104,7 @@ $(NAME): $(OBJS) | libft
       		rm -rf $(BONUS_OBJS_DIR); \
       		rm -f $(NAME); \
     fi
-	@$(CC) $(CFLAGS) $(OBJS) -o $@ -L$(LIBFT_DIR) $(LIBS)
+	@$(CC) $(CFLAGS) $(OBJS) -o $@ -L$(LIB_DIRS) $(LIBS)
 	@echo ________________________
 	@echo Minishell binary created
 	@echo ________________________
@@ -111,7 +114,7 @@ $(NAME_BONUS): $(BONUS_OBJS) | libft
       		rm -rf $(OBJS_DIR); \
       		rm -f $(NAME); \
     fi
-	@$(CC) $(CFLAGS) $(BONUS_OBJS) -o minishell -L$(LIBFT_DIR) $(LIBS)
+	@$(CC) $(CFLAGS) $(BONUS_OBJS) -o minishell -L$(LIB_DIRS) $(LIBS)
 	@touch $@
 	@echo ______________________________
 	@echo Minishell bonus binary created
