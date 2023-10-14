@@ -38,3 +38,14 @@ void	*null_and_maybe_print_misuse(t_redirections *redir,
 		return (NULL);
 	return (print_misuse_state_error(state));
 }
+
+t_bool	is_redirection_or_string(t_token_type token)
+{
+	if ((token >= TOKEN_REDIRECTION_INPUT && token <= TOKEN_REDIRECTION_HEREDOC)
+			|| token == TOKEN_STRING
+			|| token == TOKEN_EXIT_CODE
+			|| token == TOKEN_WILDCARD
+			|| token == TOKEN_SPACE)
+		return (true);
+	return (false);
+}

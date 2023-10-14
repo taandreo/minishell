@@ -273,6 +273,7 @@ void			free_redirection(t_redirection *redir);
 void			free_arguments(t_arguments *args);
 void			free_string(t_string *str);
 void			init_command_part_fields(t_command_part *command_part);
+t_bool			is_redirection_or_string(t_token_type token);
 void			subsequent_redirections(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);

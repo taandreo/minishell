@@ -104,7 +104,7 @@ int	main(void)
 					execute_command(g_vars.parse_tree, &g_vars);
 					if (g_vars.state.status == 100)
 					{
-						free_mini_line(&g_vars);
+						free_minishell(&g_vars);
 						exit(g_vars.state.status);
 					}
 				}
