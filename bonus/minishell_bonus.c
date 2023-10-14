@@ -145,7 +145,6 @@ void	init_vars(t_vars *vars)
 		vars->changed_stdout = false;
 	}
 	vars->nice_prompt = get_pwd();
-	vars->is_forked = false;
 	vars->saved_stdin = init_stdin_var(vars);
 	vars->saved_stdout = init_stdout_var(vars);
 }

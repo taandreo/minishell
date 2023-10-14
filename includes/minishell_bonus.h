@@ -24,6 +24,7 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <sys/wait.h>
+# include <signal.h>
 # include <fcntl.h>
 
 # define NBR_BUILTINS 7
@@ -206,7 +207,6 @@ typedef struct s_vars
 	void			*args;
 	t_bool			changed_stdout;
 	t_bool			changed_stdin;
-	t_bool			is_forked;
 	int				saved_stdout;
 	int				saved_stdin;
 }	t_vars;
