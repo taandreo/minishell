@@ -99,14 +99,21 @@ int	main(void)
 			if (*g_vars.parse_tree)
 			{
 //				printf("Parse Tree:\n");
-				execute_command(g_vars.parse_tree, &g_vars);
-				if (g_vars.state.status == 100)
+				if (isatty(STDIN_FILENO))
 				{
-					free_mini_line(&g_vars);
-					exit (g_vars.state.status);
+					execute_command(g_vars.parse_tree, &g_vars);
+					if (g_vars.state.status == 100)
+					{
+						free_mini_line(&g_vars);
+						exit(g_vars.state.status);
+					}
 				}
-//				if (*vars.parse_tree)
-//					print_parse_tree(*vars.parse_tree, 2);
+				else
+				{
+					execute_command(g_vars.parse_tree, &g_vars);
+					free_minishell(&g_vars);
+					exit(g_vars.state.status);
+				}
 			}
 		}
 		free_mini_line(&g_vars);
