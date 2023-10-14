@@ -26,8 +26,8 @@ int	builtin_unset(char **params)
 		else
 		{
 			error = EXIT_FAILURE;
-			dprintf(2, "minishell: unset: `%s': not a valid identifier\n"\
-			, *params);
+			ft_dprintf(2, "minishell: unset: `%s': not a valid identifier\n",
+					*params);
 		}
 		params++;
 	}
