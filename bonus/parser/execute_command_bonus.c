@@ -294,7 +294,6 @@ void	handle_exec_errors(t_vars *vars, char **envp)
 
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
-	int			exit_code;
 	char			**envp;
 
 	if (update_cmd_part_values(data, vars) != SUCCESS)
@@ -327,13 +326,13 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 		execute_command(&data->u_cmd.grouping->enclosed_cmd, vars);
 	else if (is_builtin_token(data->type) && data->forked)
 	{
-		exit_code = execute_builtin(data, data->args, vars);
+		vars->state.status = execute_builtin(data, data->args, vars);
 		free_minishell(vars);
-		exit(exit_code);
+		exit(vars->state.status);
 	}
 	else if (is_builtin_token(data->type) && !data->forked)
 	{
-		exit_code = execute_builtin(data, data->args, vars);
+		vars->state.status = execute_builtin(data, data->args, vars);
 		if (vars->changed_stdin)
 		{
 			restore_stdin(vars->saved_stdin, vars);
@@ -345,7 +344,7 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 			vars->changed_stdout = false;
 		}
 //		trigger_child_sigusr(false);
-		return (exit_code);
+		return (vars->state.status);
 	}
 	return (vars->state.status);
 }
