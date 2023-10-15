@@ -12,3 +12,5 @@ compile_commands.json
 .cache/
 file.txt
 lucas_kuhn_tester
+thallard_tester/
+chdir_test.c
