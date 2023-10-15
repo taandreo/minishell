@@ -102,7 +102,7 @@ t_command_part	*parse_command_part(t_token_list *tokens, t_parser_state *state)
 	}
 	while (is_redirection_or_string(current_token_type(tokens)))
 	{
-		subsequent_redirections(command_part, initial_redirections, tokens, state);
+		next_redirections(command_part, initial_redirections, tokens, state);
 		if (!state->has_paren || (state->has_paren && state->paren_count > 0))
 			subsequent_arguments(command_part, tokens, state);
 		initial_redirections = command_part->redirections;

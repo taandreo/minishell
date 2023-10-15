@@ -29,15 +29,14 @@ void	*free_and_return_null(void *ptr)
 	return (NULL);
 }
 
-void	*free_2_and_return_null(void *ptr1, void *ptr2)
+void	*free_nullify_and_return_mem_error(char **ptr)
 {
-	if (ptr1)
-		free(ptr1);
-	if (ptr2)
-		free(ptr2);
-	ptr1 = NULL;
-	ptr2 = NULL;
-	return (NULL);
+	if (ptr && *ptr)
+	{
+		free(*ptr);
+		*ptr = NULL;
+	}
+	return (return_mem_alloc_error());
 }
 
 void	*free_nullify_and_return_null(char **ptr)

@@ -59,6 +59,15 @@ char	*process_quotes(char **input, size_t *pos, t_token_list **tokens,
 	return (tmp);
 }
 
+char	*join_flags_string(char **flags_string, char **buffer)
+{
+	if (*flags_string)
+		*flags_string = join_and_cleanup(flags_string, buffer);
+	else
+		*flags_string = join_1st_and_cleanup(buffer, "");
+	return (*flags_string);
+}
+
 t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 			t_token_flags *flags)
 {
@@ -79,14 +88,8 @@ t_bool	handle_character(char **input, size_t *pos, t_token_list **tokens,
 	}
 	buffer = ft_strndup((*input) + *pos, 1);
 	if (!buffer)
-	{
-		free_str_and_nullify(&flags->string);
-		return (return_mem_alloc_error() != NULL);
-	}
-	if (flags->string)
-		flags->string = join_and_cleanup(&flags->string, &buffer);
-	else
-		flags->string = join_1st_and_cleanup(&buffer, "");
+		return (free_nullify_and_return_mem_error(&flags->string) != NULL);
+	flags->string = join_flags_string(&flags->string, &buffer);
 	if (!flags->string)
 		return (return_mem_alloc_error() != NULL);
 	(*pos)++;

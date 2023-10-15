@@ -40,6 +40,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/add_string_token_helper.c\
 			tokenizer/variable_expansion_bonus.c\
 			tokenizer/handle_variable_expansion_bonus.c\
+			tokenizer/add_cmd_name_token_bonus.c\
 			tokenizer/add_token_helper_bonus.c\
 			parse_tree/parser_bonus.c\
 			parse_tree/parse_command_bonus.c\
@@ -50,6 +51,8 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parse_tree/free/free_parse_tree1_bonus.c\
 			parse_tree/free/free_parse_tree2_bonus.c\
 			parse_tree/init/init_structures_bonus.c\
+			parse_tree/parser_state_error_bonus.c\
+            parse_tree/parser_utils_bonus.c\
 			builtin/echo_bonus.c\
 			builtin/pwd_bonus.c\
 			builtin/export_bonus.c\
@@ -63,8 +66,6 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			error/free_minishell_bonus.c\
 			error/free_utils_bonus.c\
 			error/free_utils2_bonus.c\
-			parse_tree/parser_state_error.c\
-			parse_tree/parser_utils_bonus.c\
 			error/return_errors_helper_bonus.c\
             error/misuse_or_unclosed_error_bonus.c\
             error/file_access_errors_bonus.c\

@@ -32,7 +32,7 @@ t_bool	decrease_len(t_token_flags *flags)
 	return (true);
 }
 
-t_bool is_token_cmd_name(t_token_type token)
+t_bool	is_token_cmd_name(t_token_type token)
 {
 	if (token == TOKEN_COMMAND_NAME_UNQUOTES
 		|| token == TOKEN_COMMAND_NAME_QUOTES)

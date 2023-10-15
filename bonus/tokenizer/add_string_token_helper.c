@@ -30,12 +30,13 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 		else
 		{
 			if (ft_strlen(string) != 0)
-				exit_status = add_token(tokens, TOKEN_COMMAND_NAME_UNQUOTES, string);
+				exit_status = add_token(tokens, TOKEN_COMMAND_NAME_UNQUOTES,
+						string);
 		}
 	}
 	if (!next || next == ' ')
 	{
-		if ((string && ft_strlen(string) != 0) || !string ||  ((*tokens)->tail && (*tokens)->tail->token.type == TOKEN_COMMAND_NAME_QUOTES))
+		if (check_if_is_cmd_true(string, tokens))
 		{
 			flags->is_command = false;
 			flags->has_command = true;
