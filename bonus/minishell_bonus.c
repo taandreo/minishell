@@ -203,7 +203,8 @@ const char *token_names[] =
 				"TOKEN_REDIRECTION_APPEND",
 				"TOKEN_REDIRECTION_HEREDOC",
 				"TOKEN_ERROR",
-				"TOKEN_COMMAND_NAME",
+				"TOKEN_COMMAND_NAME_QUOTES",
+				"TOKEN_COMMAND_NAME_UNQUOTES",
 				"TOKEN_FILENAME",
 				"TOKEN_WILDCARD",
 				"TOKEN_STRING",
@@ -307,7 +308,8 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 		t_string *cmd_name = pipeline->cmd_part->u_cmd.cmd_name;
 		switch (pipeline->cmd_part->type)
 		{
-			case TOKEN_COMMAND_NAME:
+			case TOKEN_COMMAND_NAME_QUOTES:
+			case TOKEN_COMMAND_NAME_UNQUOTES:
 				print_indent(indent + 2);
 				printf("%s(\n", token_type_to_string(pipeline->cmd_part->type));
 				print_indent(indent + 4);

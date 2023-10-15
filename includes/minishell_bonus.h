@@ -57,7 +57,8 @@ typedef enum e_token_type
 	TOKEN_REDIRECTION_APPEND,
 	TOKEN_REDIRECTION_HEREDOC,
 	TOKEN_ERROR,
-	TOKEN_COMMAND_NAME,
+	TOKEN_COMMAND_NAME_QUOTES,
+	TOKEN_COMMAND_NAME_UNQUOTES,
 	TOKEN_FILENAME,
 	TOKEN_WILDCARD,
 	TOKEN_STRING,
@@ -354,12 +355,13 @@ DIR				*open_dir_or_error(void);
 int				execute_builtin(t_command_part *data, t_vars *vars);
 int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
 					t_vars *vars);
+t_bool			is_token_cmd_name(t_token_type token);
 void			execute_redirections(t_command_part *data, t_vars *vars);
 void			input_file_to_stdin(int infile, t_vars *vars);
 void			output_file_to_stdout(int outfile, t_vars *vars);
 int				open_tmp_file(void);
 void			heredoc_to_stdin(t_vars *vars);
-char			*cmd_path_routine(char *cmd, t_vars *vars);
+char			*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars);
 void			restore_stdout(int saved_stdout, t_vars *vars);
 void			restore_stdin(int saved_stdin, t_vars *vars);
 // BUILTIN

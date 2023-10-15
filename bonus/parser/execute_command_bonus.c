@@ -291,7 +291,6 @@ char **list_to_envp()
 
 void	handle_exec_errors(t_vars *vars)
 {
-	write(STDERR_FILENO, "ferrouu\n", ft_strlen("ferrouu\n"));
 	free_minishell(vars);
 	exit(vars->state.status);
 }
@@ -314,9 +313,10 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 		}
 		return (vars->state.status);
 	}
-	if (data->type == TOKEN_COMMAND_NAME)
+	if (is_token_cmd_name(data->type))
 	{
-		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value, vars);
+		data->cmd_path = cmd_path_routine(data->u_cmd.cmd_name->value,
+				data->type, vars);
 		if (!data->cmd_path)
 		{
 			free_minishell(vars);

@@ -16,7 +16,7 @@ void	free_command_part(t_command_part *cmd_part)
 {
 	if (!cmd_part)
 		return ;
-	if (cmd_part->type == TOKEN_COMMAND_NAME)
+	if (is_token_cmd_name(cmd_part->type))
 		free_string(cmd_part->u_cmd.cmd_name);
 	else if (cmd_part->type == TOKEN_GROUP)
 		free_grouping(cmd_part->u_cmd.grouping);

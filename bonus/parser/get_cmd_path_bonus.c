@@ -42,13 +42,15 @@ char *get_cmd_path(char *cmd)
 	return (cmd_path);
 }
 
-char	*cmd_path_routine(char *cmd, t_vars *vars)
+char	*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars)
 {
 	char		*cmd_path;
 	struct stat	file_info;
 
-	if (ft_strlen(cmd) == 0)
+	if (ft_strlen(cmd) == 0 && token == TOKEN_COMMAND_NAME_QUOTES)
 		return (return_cmd_not_found(cmd, vars));
+	else if (ft_strlen(cmd) == 0 && token == TOKEN_COMMAND_NAME_UNQUOTES)
+		return (NULL);
 	if (ft_strchr(cmd, '/'))
 	{
 		if (access(cmd, F_OK) == 0)
