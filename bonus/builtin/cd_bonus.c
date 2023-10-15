@@ -17,6 +17,7 @@ int	builtin_cd(char **param)
 	char	*dir;
 	char	*pwd;
 	char	*old_pwd;
+	int		i;
 
 	if (ft_lenmt((void **) param) > 1)
 	{
@@ -27,6 +28,18 @@ int	builtin_cd(char **param)
 		dir = get_env("HOME");
 	else
 		dir = param[0];
+	if (dir[0] == '/')
+	{
+		i = 0;
+		while (dir[i] == '/')
+			i++;
+		i--;
+		if (chdir(&dir[i]) != 0)
+		{
+			print_perror("cd", dir);
+			return (1);
+		}
+	}
 	if (chdir(dir) != 0)
 	{
 		print_perror("cd", dir);
