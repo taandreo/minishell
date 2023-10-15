@@ -15,28 +15,36 @@
 int	builtin_echo(char **params)
 {
 	int		i;
+	int		j;
 	char	*str;
 	int		newline;
 
 	i = 0;
+	j = 0;
 	if (params[0] && ft_strncmp(params[0], "-n", 2) == 0)
 	{
-		i = 1;
-		str = &params[0][2];
-		while (*str)
+		while (params[j] && ft_strncmp(params[j], "-n", 2) == 0)
 		{
-			if (*str++ != 'n')
-				i = 0;
+			i = 1;
+			str = &params[j][2];
+			while (*str)
+			{
+				if (*str++ != 'n')
+					i = 0;
+			}
+			if (i == 0)
+				break ;
+			j++;
 		}
 	}
 	newline = i;
-	while (params[i])
+	while (params[j])
 	{
-		printf("%s", params[i++]);
+		printf("%s", params[j++]);
 		if (params[i] != NULL)
 			printf(" ");
 	}
-	if (newline == 0)
+	if (newline == 0 && j > 0)
 		printf("\n");
 	return (0);
 }
