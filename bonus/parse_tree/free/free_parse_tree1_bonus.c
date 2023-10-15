@@ -23,6 +23,11 @@ void	free_command_part(t_command_part *cmd_part)
 	else if (cmd_part->type >= TOKEN_ECHO && cmd_part->type <= TOKEN_EXIT)
 		free_builtin_command(cmd_part->u_cmd.builtin_cmd);
 	free_arguments(cmd_part->arguments);
+	if (cmd_part->args)
+	{
+		free(cmd_part->args);
+		cmd_part->args = NULL;
+	}
 	free_redirections(cmd_part->redirections);
 	free(cmd_part);
 }

@@ -44,6 +44,7 @@ void	add_env(char *key, char *value)
 	{
 		env = ft_calloc(1, sizeof(t_env));
 		env->key = ft_strdup(key);
+		free(key);
 		node = ft_lstnew(env);
 		ft_lstadd_back(&g_vars.env, node);
 	}

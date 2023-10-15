@@ -13,9 +13,9 @@
 #include "minishell_bonus.h"
 //#include "ft_printf.h"
 
+void	print_parse_tree(t_command *parse_tree, size_t indent);
 void	print_tokens(t_token_list *tokens);
 void	print_command(t_command *cmd, size_t indent);
-void	print_parse_tree(t_command *parse_tree, size_t indent);
 void	init_vars(t_vars *vars);
 
 t_vars	g_vars;
@@ -38,21 +38,76 @@ char *get_pwd(void)
 	return (prompt);
 }
 
-
-
-int	main(void)
+int	launch_minishell(char *prompt)
 {
-	char			*prompt;
 	t_token_flags	flags;
 	t_token_list	*tokens;
 	t_command		*parse_tree;
+
+	flags = init_token_flags(ft_strlen(prompt));
+	tokens = tokenizer(prompt, &flags);
+	g_vars.tokens = &tokens;
+	if (flags.status != SUCCESS)
+	{
+		free_mini_line(&g_vars);
+		g_vars.state.is_set = true;
+		g_vars.state.status = flags.status;
+		return g_vars.state.status;
+	}
+	if (g_vars.tokens)
+	{
+		if (tokens->head == tokens->tail)
+		{
+			if (tokens->head->token.type == TOKEN_END)
+			{
+				free_mini_line(&g_vars);
+				return g_vars.state.status ;
+			}
+		}
+		tokens->current = tokens->head;
+		parse_tree = parse(*g_vars.tokens, &g_vars.state);
+		g_vars.parse_tree = &parse_tree;
+		g_vars.args = NULL;
+		if (*g_vars.parse_tree)
+		{
+			if (isatty(STDIN_FILENO))
+			{
+				execute_command(g_vars.parse_tree, &g_vars);
+				if (g_vars.state.kill_child == 1)
+				{
+					free_minishell(&g_vars);
+					exit(g_vars.state.status);
+				}
+			}
+			else
+			{
+				execute_command(g_vars.parse_tree, &g_vars);
+				free_minishell(&g_vars);
+				exit(g_vars.state.status);
+			}
+		}
+	}
+	free_mini_line(&g_vars);
+	return g_vars.state.status;
+}
+
+int	main(int argc, char **argv)
+{
+	char			*prompt;
+
 	extern char **environ;
+
 
 	trigger_parent_sigusr();
 	init_env(environ);
 	g_vars.state.is_set = false;
 	g_vars.changed_stdin = false;
 	g_vars.changed_stdout = false;
+	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
+	{
+		int exit_status = launch_minishell(argv[2]);
+		exit(exit_status);
+	}
 	while (true)
 	{
 		start_signals_parent();
@@ -69,63 +124,10 @@ int	main(void)
 		}
 		add_history(prompt);
 		g_vars.prompt = &prompt;
-		flags = init_token_flags(ft_strlen(prompt));
-		tokens = tokenizer(prompt, &flags);
-		g_vars.tokens = &tokens;
-
-//		printf("Tokens:\n");
-//		print_tokens(*vars.tokens);
-//		printf("\n");
-		if (flags.status != SUCCESS)
-		{
-			free_mini_line(&g_vars);
-			g_vars.state.is_set = true;
-			g_vars.state.status = flags.status;
-			continue ;
-		}
-		// Print Tokens
-		if (g_vars.tokens)
-		{
-			if (tokens->head == tokens->tail)
-			{
-				if (tokens->head->token.type == TOKEN_END)
-				{
-					free_mini_line(&g_vars);
-					continue ;
-				}
-			}
-			tokens->current = tokens->head;
-			parse_tree = parse(*g_vars.tokens, &g_vars.state);
-			g_vars.parse_tree = &parse_tree;
-			g_vars.args = NULL;
-			// Print parse_tree
-			if (*g_vars.parse_tree)
-			{
-//				printf("Parse Tree:\n");
-				if (isatty(STDIN_FILENO))
-				{
-					execute_command(g_vars.parse_tree, &g_vars);
-					if (g_vars.state.status == 100)
-					{
-						free_minishell(&g_vars);
-						exit(g_vars.state.status);
-					}
-				}
-				else
-				{
-					execute_command(g_vars.parse_tree, &g_vars);
-					free_minishell(&g_vars);
-					exit(g_vars.state.status);
-				}
-			}
-		}
-		free_mini_line(&g_vars);
+		launch_minishell(prompt);
 	}
-	exit (g_vars.state.status);
-	return (SUCCESS);
+	return (g_vars.state.status);
 }
-
-
 
 void	init_vars(t_vars *vars)
 {
@@ -146,6 +148,7 @@ void	init_vars(t_vars *vars)
 	vars->nice_prompt = get_pwd();
 	vars->close_heredoc = false;
 	vars->is_forked = false;
+	vars->state.kill_child = 0;
 	vars->saved_stdin = init_stdin_var(vars);
 	vars->saved_stdout = init_stdout_var(vars);
 }

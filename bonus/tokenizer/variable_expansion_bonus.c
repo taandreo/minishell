@@ -68,7 +68,14 @@ char	*advance_position(char *input, size_t *pos, t_token_flags *flags)
 	dollar = *pos;
 	flags->init_var = true;
 	while (is_string_start(input[*pos], flags))
+	{
 		(*pos)++;
+		if (input[*pos] && (input[*pos]) == flags->quote_type)
+		{
+			(*pos)--;
+			break;
+		}
+	}
 	if (input[*pos] == '\0' && flags->inside_quotes)
 		(*pos)--;
 	var = ft_strndup(input + dollar, *pos - dollar);

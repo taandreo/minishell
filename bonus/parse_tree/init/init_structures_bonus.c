@@ -19,8 +19,10 @@ void	init_command_part_fields(t_command_part *command_part)
 	command_part->u_cmd.cmd_name = NULL;
 	command_part->u_cmd.grouping = NULL;
 	command_part->arguments = NULL;
+	command_part->args = NULL;
 	command_part->redirections = NULL;
 	command_part->cmd_path = NULL;
+	command_part->pid = -1;
 	command_part->forked = false;
 	command_part->in_pipe[0] = -1;
 	command_part->in_pipe[1] = -1;

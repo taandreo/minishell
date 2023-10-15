@@ -112,6 +112,7 @@ typedef struct s_parser_state
 {
 	int		paren_count;
 	int		status;
+	int		kill_child;
 	t_bool	error;
 	t_bool	is_set;
 	t_bool	has_paren;
@@ -353,7 +354,7 @@ void			*free_resources_and_return_null(DIR *dir,
 t_string		*add_new_node(char *filename, t_vars *vars,	t_token_type type);
 void			sorted_insert(t_string **head_ref, t_string *new_node);
 DIR				*open_dir_or_error(void);
-int				execute_builtin(t_command_part *data, t_vars *vars);
+int				execute_builtin(t_command_part *data, char **args, t_vars *vars);
 int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
 					t_vars *vars);
 t_bool			is_token_cmd_name(t_token_type token);

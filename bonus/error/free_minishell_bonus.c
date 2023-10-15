@@ -6,12 +6,14 @@ void	free_mini_line(t_vars *vars)
 	{
 		free_command(*vars->parse_tree);
 		*vars->parse_tree = NULL;
+		vars->parse_tree = NULL;
 	}
 	free_token_list(vars->tokens);
 	if (vars->prompt && *vars->prompt)
 	{
 		free(*vars->prompt);
 		*vars->prompt = NULL;
+		vars->prompt = NULL;
 	}
 	if (vars->args)
 	{

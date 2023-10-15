@@ -7,15 +7,16 @@ void parent_sigusr_handler(int signum)
 
 void child_sigusr_handler(int signum)
 {
-	if (signum == SIGUSR1)
-		g_vars.state.status = 100;
+	if (signum == SIGUSR1) {
+		g_vars.state.kill_child = 1;
+	}
 }
 
 void	trigger_child_sigusr(t_bool ignore)
 {
 	struct sigaction sa_ign;
 
-	if (ignore)
+	if (ignore == true)
 		sa_ign.sa_handler = SIG_IGN;
 	else
 		sa_ign.sa_handler = child_sigusr_handler;

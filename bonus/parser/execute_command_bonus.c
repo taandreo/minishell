@@ -14,7 +14,7 @@ int	execute_command(t_command **cmd, t_vars *vars)
 	}
 	if ((*cmd)->pipeline)
 	{
-		vars->state.status = execute_pipeline((*cmd)->pipeline, vars);
+		execute_pipeline((*cmd)->pipeline, vars);
 		if (vars->state.status != SUCCESS)
 		{
 			free_command(*cmd);
@@ -25,7 +25,7 @@ int	execute_command(t_command **cmd, t_vars *vars)
 	}
 	if ((*cmd)->conjunctions)
 	{
-		vars->state.status = execute_conjunctions((*cmd)->conjunctions, vars);
+		execute_conjunctions((*cmd)->conjunctions, vars);
 		if (vars->state.status != SUCCESS)
 		{
 			free_command(*cmd);
@@ -45,13 +45,13 @@ int	execute_conjunctions(t_conjunctions *conj, t_vars *vars)
 		{
 			if (vars->state.status != SUCCESS)
 				return (vars->state.status);
-			vars->state.status = execute_pipeline(conj->pipeline, vars);
+			execute_pipeline(conj->pipeline, vars);
 		}
 		else
 		{
 			if (vars->state.status == SUCCESS)
 				return (vars->state.status);
-			vars->state.status = execute_pipeline(conj->pipeline, vars);
+			execute_pipeline(conj->pipeline, vars);
 		}
 		conj = conj->next;
 	}
@@ -89,7 +89,14 @@ t_bool has_heredoc(t_redirections *redir)
 void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 {
 	pid_t	pid;
+	int		sync_pipe[2];
+	char	wait_signal;
 
+	if (pipe(sync_pipe) == -1)
+	{
+		perror("minishell: ");
+		exit(EXIT_FAILURE);
+	}
 	if (has_heredoc(pipeline->cmd_part->redirections))
 		open_heredoc(pipeline->cmd_part->redirections, vars);
 	if (vars->close_heredoc)
@@ -101,12 +108,19 @@ void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 	start_signal_forked(pid);
 	if (pid == 0)
 	{
-		trigger_child_sigusr(true);
+		trigger_child_sigusr(false);
+		close(sync_pipe[0]);
+		wait_signal = 'a';
+		write(sync_pipe[1], &wait_signal, 1);
+		close(sync_pipe[1]);
 		execute_fork_command(pipeline->cmd_part, vars);
 	}
 	else
 	{
 		pipeline->cmd_part->pid = pid;
+		close(sync_pipe[1]);
+		read(sync_pipe[0], &wait_signal, 1);
+		close(sync_pipe[0]);
 		kill(pid, SIGUSR1);
 	}
 }
@@ -134,40 +148,13 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 	}
 	execute_fork(pipeline, vars);
 	if (vars->close_heredoc)
-		return (vars->state.status) ;
+		return (vars->state.status);
 	if (pipeline != prev)
 		close_pipe(prev->cmd_part->out_pipe);
-	if (pipeline->cmd_part->pid != 0)
+	if (pipeline->cmd_part->pid != 0 && pipeline->cmd_part->pid != -1)
 		return(wait_process(start));
 	return (vars->state.status);
 }
-
-
-// int	output_redirection(t_redirections *files)
-// {
-// 	int		fd;
-// 	char	*file;
-
-// 	fd = 1;
-// 	while(files)
-// 	{
-// 		if (files->redirection->type == "TOKEN_REDIRECTION_OUTPUT" 
-// 			|| files->redirection->type == "TOKEN_REDIRECTION_APPEND")
-// 		{
-// 			if (fd != -2)
-// 				close(fd);
-// 			file = files->redirection->filename;
-// 			if (files->redirection->type == "TOKEN_REDIRECTION_OUTPUT")
-// 				fd = open(file, O_WRONLY | O_CREAT | O_TRUNC, 0666);
-// 			if (files->redirection->type == "TOKEN_REDIRECTION_APPEND")
-// 				fd = open(file, O_WRONLY | O_APPEND, 0666);
-// 			if (fd == -1)
-// 				return (-1);
-// 		}
-// 	}
-// 	return (fd);
-// }
-
 
 char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 {
@@ -184,7 +171,10 @@ char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 		list = list->next;
 	}
 	args = ft_calloc(len + 2, sizeof(char *));
-	args[0] = cmd_part->u_cmd.cmd_name->value;
+	if (is_token_cmd_name(cmd_part->type))
+		args[0] = cmd_part->u_cmd.cmd_name->value;
+	else if (is_builtin_token(cmd_part->type))
+		args[0] = cmd_part->u_cmd.builtin_cmd->value;
 	i = 1;
 	while (start)
 	{
@@ -196,22 +186,23 @@ char	**list_to_args(t_arguments *list, t_command_part *cmd_part)
 	return (args);
 }
 
-int	execute_builtin(t_command_part *data, t_vars *vars)
+int	execute_builtin(t_command_part *data, char **args, t_vars *vars)
 {
+	args++;
 	if (data->type == TOKEN_PWD)
-		return(builtin_pwd(data->args));
+		return(builtin_pwd(args));
 	if (data->type == TOKEN_CD)
-		return(builtin_cd(data->args));
+		return(builtin_cd(args));
 	if (data->type == TOKEN_ECHO)
-		return(builtin_echo(data->args));
+		return(builtin_echo(args));
 	if (data->type == TOKEN_ENV)
-		return(builtin_env(data->args));
+		return(builtin_env(args));
 	if (data->type == TOKEN_EXPORT)
-		return(builtin_export(data->args));
+		return(builtin_export(args));
 	if (data->type == TOKEN_UNSET)
-		return(builtin_unset(data->args));
+		return(builtin_unset(args));
 	if (data->type == TOKEN_EXIT)
-		return(builtin_exit(data->args, vars));
+		return(builtin_exit(args, vars));
 	return (0);
 }
 
@@ -290,9 +281,14 @@ char **list_to_envp()
 	return (envp);
 }
 
-void	handle_exec_errors(t_vars *vars)
+void	handle_exec_errors(t_vars *vars, char **envp)
 {
 	free_minishell(vars);
+	if (envp)
+	{
+		ft_freemt((void **)envp);
+		envp = NULL;
+	}
 	exit(vars->state.status);
 }
 
@@ -325,21 +321,19 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 		}
 		envp = list_to_envp();
 		execve(data->cmd_path, data->args, envp);
-		handle_exec_errors(vars);
+		handle_exec_errors(vars, envp);
 	}
 	else if (data->type == TOKEN_GROUP)
 		execute_command(&data->u_cmd.grouping->enclosed_cmd, vars);
 	else if (is_builtin_token(data->type) && data->forked)
 	{
-		data->args++;
-		exit_code = execute_builtin(data, vars);
+		exit_code = execute_builtin(data, data->args, vars);
 		free_minishell(vars);
 		exit(exit_code);
 	}
 	else if (is_builtin_token(data->type) && !data->forked)
 	{
-		data->args++;
-		exit_code = execute_builtin(data, vars);
+		exit_code = execute_builtin(data, data->args, vars);
 		if (vars->changed_stdin)
 		{
 			restore_stdin(vars->saved_stdin, vars);
@@ -350,7 +344,7 @@ int	execute_command_part(t_command_part *data, t_vars *vars)
 			restore_stdout(vars->saved_stdout, vars);
 			vars->changed_stdout = false;
 		}
-		trigger_child_sigusr(false);
+//		trigger_child_sigusr(false);
 		return (exit_code);
 	}
 	return (vars->state.status);
