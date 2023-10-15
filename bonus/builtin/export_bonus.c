@@ -59,7 +59,6 @@ void	get_export_variable(char *param, size_t *error)
 		*error = GENERAL_ERROR;
 		dprintf(2, "minishell: export: `%s': not a valid identifier\n", param);
 	}
-	free(key);
 }
 
 int	builtin_export(char **params)
