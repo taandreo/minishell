@@ -61,8 +61,11 @@ int	main(void)
 		if (!prompt)
 		{
 			free_minishell(&g_vars);
-			write(STDERR_FILENO, "exit\n", ft_strlen("exit\n"));
-			exit(g_vars.state.status);
+			if (isatty(STDIN_FILENO))
+				write(STDERR_FILENO, "exit\n", ft_strlen("exit\n"));
+			else
+				write(STDERR_FILENO, "\n", 1);
+			break ;
 		}
 		add_history(prompt);
 		g_vars.prompt = &prompt;
@@ -142,6 +145,7 @@ void	init_vars(t_vars *vars)
 	}
 	vars->nice_prompt = get_pwd();
 	vars->close_heredoc = false;
+	vars->is_forked = false;
 	vars->saved_stdin = init_stdin_var(vars);
 	vars->saved_stdout = init_stdout_var(vars);
 }

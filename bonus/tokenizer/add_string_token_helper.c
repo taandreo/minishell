@@ -28,12 +28,18 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 		else if (flags->inside_quotes && flags->quote_type == '\"')
 			exit_status = add_token(tokens, TOKEN_COMMAND_NAME_QUOTES, string);
 		else
-			exit_status = add_token(tokens, TOKEN_COMMAND_NAME_UNQUOTES, string);
+		{
+			if (ft_strlen(string) != 0)
+				exit_status = add_token(tokens, TOKEN_COMMAND_NAME_UNQUOTES, string);
+		}
 	}
 	if (!next || next == ' ')
 	{
-		flags->is_command = false;
-		flags->has_command = true;
+		if (ft_strlen(string) != 0 || ((*tokens)->tail && (*tokens)->tail->token.type == TOKEN_COMMAND_NAME_QUOTES))
+		{
+			flags->is_command = false;
+			flags->has_command = true;
+		}
 	}
 	return (exit_status);
 }

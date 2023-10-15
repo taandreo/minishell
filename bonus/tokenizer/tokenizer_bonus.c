@@ -64,7 +64,7 @@ void	advance_space(char *input, size_t *pos, t_token_list **tokens,
 			size_t input_len)
 {
 	if (!ft_strchr("><|&() ", peek_next(input, *pos, input_len))
-		&& !((*tokens)->tail->token.type >= TOKEN_AND
+		&& (*tokens)->tail && !((*tokens)->tail->token.type >= TOKEN_AND
 			&& (*tokens)->tail->token.type <= TOKEN_REDIRECTION_HEREDOC))
 	{
 		if (add_token(tokens, TOKEN_SPACE, " ") != SUCCESS)

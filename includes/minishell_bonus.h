@@ -212,6 +212,7 @@ typedef struct s_vars
 	t_bool			changed_stdout;
 	t_bool			changed_stdin;
 	t_bool			close_heredoc;
+	t_bool			is_forked;
 	int				saved_stdout;
 	int				saved_stdin;
 	t_list			*env;

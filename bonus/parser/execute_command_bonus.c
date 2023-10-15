@@ -94,6 +94,7 @@ void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 		open_heredoc(pipeline->cmd_part->redirections, vars);
 	if (vars->close_heredoc)
 		return ;
+	vars->is_forked = true;
 	pid = fork();
 	if (pid == -1)
 		free_and_perror(vars, EXIT_FAILURE);

@@ -24,7 +24,8 @@ int	builtin_exit(char **params, t_vars *vars)
 {
 	unsigned char	nb;
 
-	ft_dprintf(2, "exit\n");
+	if (isatty(STDIN_FILENO) && !vars->is_forked)
+		ft_dprintf(2, "exit\n");
 	if (!*params)
 	{
 		nb = vars->state.status;
