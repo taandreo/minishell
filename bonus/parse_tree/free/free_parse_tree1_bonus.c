@@ -28,6 +28,11 @@ void	free_command_part(t_command_part *cmd_part)
 		free(cmd_part->args);
 		cmd_part->args = NULL;
 	}
+	if (cmd_part->cmd_path)
+	{
+		free(cmd_part->cmd_path);
+		cmd_part->cmd_path = NULL;
+	}
 	free_redirections(cmd_part->redirections);
 	free(cmd_part);
 }

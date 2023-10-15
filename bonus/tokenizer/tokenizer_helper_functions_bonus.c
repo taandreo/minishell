@@ -46,6 +46,7 @@ t_token_flags	init_token_flags(size_t input_len)
 	flags.paren_count = 0;
 	flags.is_redirection = false;
 	flags.is_command = true;
+	flags.status = SUCCESS;
 	flags.has_command = false;
 	flags.has_heredoc = false;
 	flags.inside_quotes = false;
