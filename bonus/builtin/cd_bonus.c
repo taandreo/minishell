@@ -6,18 +6,31 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/19 20:50:05 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/14 23:17:19 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 23:25:22 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
+void	cd_set_envs(void)
+{
+	char	*pwd;
+	char	*old_pwd;
+
+	old_pwd = get_env("PWD");
+	if (old_pwd && *old_pwd)
+		add_env("OLDPWD", old_pwd);
+	pwd = getcwd(NULL, 0);
+	if (pwd && *pwd)
+	{
+		add_env("PWD", pwd);
+		free(pwd);
+	}
+}
+
 int	builtin_cd(char **param)
 {
 	char	*dir;
-	char	*pwd;
-	char	*old_pwd;
-	int		i;
 
 	if (ft_lenmt((void **) param) > 1)
 	{
@@ -28,31 +41,11 @@ int	builtin_cd(char **param)
 		dir = get_env("HOME");
 	else
 		dir = param[0];
-	if (dir[0] == '/')
-	{
-		i = 0;
-		while (dir[i] == '/')
-			i++;
-		i--;
-		if (chdir(&dir[i]) != 0)
-		{
-			print_perror("cd", dir);
-			return (1);
-		}
-	}
 	if (chdir(dir) != 0)
 	{
 		print_perror("cd", dir);
 		return (1);
 	}
-	old_pwd = get_env("PWD");
-	if (old_pwd && *old_pwd)
-		add_env("OLDPWD", old_pwd);
-	pwd = getcwd(NULL, 0);
-	if (pwd && *pwd)
-	{
-		add_env("PWD", pwd);
-		free(pwd);
-	}
+	cd_set_envs();
 	return (EXIT_SUCCESS);
 }

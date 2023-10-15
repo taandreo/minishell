@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 13:42:03 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/04 21:50:27 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 23:12:55 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	builtin_unset(char **params)
 		{
 			error = EXIT_FAILURE;
 			ft_dprintf(2, "minishell: unset: `%s': not a valid identifier\n",
-					*params);
+				*params);
 		}
 		params++;
 	}
