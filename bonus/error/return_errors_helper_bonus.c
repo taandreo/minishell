@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 15:33:04 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/09/19 22:20:24 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 23:31:36 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,5 +32,3 @@ void	*return_syntax_error(const char *value)
 	write(STDERR_FILENO, "'\n", ft_strlen("'\n"));
 	return (NULL);
 }
-
-
