@@ -73,7 +73,7 @@ char	*advance_position(char *input, size_t *pos, t_token_flags *flags)
 		if (input[*pos] && (input[*pos]) == flags->quote_type)
 		{
 			(*pos)--;
-			break;
+			break ;
 		}
 	}
 	if (input[*pos] == '\0' && flags->inside_quotes)

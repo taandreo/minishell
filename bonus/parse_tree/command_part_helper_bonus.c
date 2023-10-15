@@ -12,7 +12,7 @@
 
 #include "minishell_bonus.h"
 
-void	subsequent_redirections(t_command_part *command_part,
+void	next_redirections(t_command_part *command_part,
 			t_redirections *initial_redirections, t_token_list *tokens,
 			t_parser_state *state)
 {

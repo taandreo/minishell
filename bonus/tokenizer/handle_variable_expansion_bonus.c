@@ -46,16 +46,8 @@ t_bool	add_command_or_string(t_token_list **tokens, t_token_flags *flags,
 {
 	if (flags->is_command)
 	{
-		if (flags->inside_quotes && flags->quote_type == '\"')
-		{
-			if (add_token(tokens, TOKEN_COMMAND_NAME_QUOTES, flags->string) != SUCCESS)
-				return (free_nullify_and_return_null(&flags->string) != NULL);
-		}
-		else
-		{
-			if (add_token(tokens, TOKEN_COMMAND_NAME_UNQUOTES, flags->string) != SUCCESS)
-				return (free_nullify_and_return_null(&flags->string) != NULL);
-		}
+		if (!add_both_cmd_name(flags, tokens, &flags->string))
+			return (false);
 		if (*pos + 1 < ft_strlen(input))
 			set_flags_variables(input, pos, flags);
 	}

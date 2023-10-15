@@ -277,7 +277,7 @@ void			free_arguments(t_arguments *args);
 void			free_string(t_string *str);
 void			init_command_part_fields(t_command_part *command_part);
 t_bool			is_redirection_or_string(t_token_type token);
-void			subsequent_redirections(t_command_part *command_part,
+void			next_redirections(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);
 t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
@@ -366,6 +366,11 @@ void			heredoc_to_stdin(t_vars *vars);
 char			*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars);
 void			restore_stdout(int saved_stdout, t_vars *vars);
 void			restore_stdin(int saved_stdin, t_vars *vars);
+t_bool			add_both_cmd_name(t_token_flags *flags, t_token_list **tokens,
+					char **string);
+t_bool			add_cmd_name_unquotes(char **string, t_token_list **tokens);
+t_bool			add_cmd_name_quotes(char **string, t_token_list **tokens);
+t_bool			check_if_is_cmd_true(char *string, t_token_list **tokens);
 // BUILTIN
 int				builtin_echo(char **params);
 int				builtin_pwd(char **params);
@@ -398,6 +403,7 @@ int				init_stdout_var(t_vars *vars);
 int				init_stdin_var(t_vars *vars);
 
 // ERROR
+void			*free_nullify_and_return_mem_error(char **ptr);
 void			free_and_perror(t_vars *vars, int exit_code);
 void			free_minishell(t_vars *vars);
 void			free_mini_line(t_vars *vars);
