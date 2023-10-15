@@ -29,4 +29,5 @@ void	free_minishell(t_vars *vars)
 {
 	free_mini_line(vars);
 	free_all_envs();
+	rl_clear_history();
 }
