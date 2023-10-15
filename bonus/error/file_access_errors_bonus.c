@@ -20,7 +20,7 @@ void	*return_no_such_cmd(char *str, t_vars *vars)
 		  ft_strlen(str));
 	write(STDERR_FILENO, ": No such file or directory\n",
 		  ft_strlen(": No such file or directory\n"));
-	vars->state.status = NOTEXEC;
+	vars->state.status = CMDNFND;
 	return (NULL);
 }
 

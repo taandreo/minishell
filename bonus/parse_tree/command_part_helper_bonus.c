@@ -58,7 +58,9 @@ t_builtin_cmd	*handle_builtin_tokens(t_command_part *command_part,
 t_string	*handle_command_name_tokens(t_command_part *command_part,
 					t_token_list *tokens, t_parser_state *state)
 {
-	if (current_token_type(tokens) == TOKEN_COMMAND_NAME_UNQUOTES)
+	if (current_token_type(tokens) == TOKEN_COMMAND_NAME_UNQUOTES
+		|| current_token_type(tokens) == TOKEN_WILDCARD
+		|| current_token_type(tokens) == TOKEN_EXIT_CODE)
 		command_part->type = TOKEN_COMMAND_NAME_UNQUOTES;
 	else if (current_token_type(tokens) == TOKEN_COMMAND_NAME_QUOTES)
 		command_part->type = TOKEN_COMMAND_NAME_QUOTES;
