@@ -12,7 +12,7 @@ void	update_arguments(t_command_part  *cmd_part, t_string *concat_str,
 void	add_concat_string(t_command_part *cmd_part, t_string *concat_str,
 		t_vars *vars, t_token_type type)
 {
-	if (type == TOKEN_COMMAND_NAME)
+	if (is_token_cmd_name(type))
 	{
 		if (is_builtin(concat_str->value))
 			update_builtin(cmd_part, concat_str, vars);

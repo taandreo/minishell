@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:14 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/15 01:24:52 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 02:07:09 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ int	builtin_exit(char **params, t_vars *vars)
 {
 	unsigned char	nb;
 
-	if (isatty(STDIN_FILENO))
-		ft_dprintf(STDERR_FILENO, "exit\n");
+	if (isatty(STDIN_FILENO) && !vars->is_forked)
+		ft_dprintf(2, "exit\n");
 	if (!*params)
 	{
 		nb = vars->state.status;

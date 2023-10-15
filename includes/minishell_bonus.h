@@ -57,7 +57,8 @@ typedef enum e_token_type
 	TOKEN_REDIRECTION_APPEND,
 	TOKEN_REDIRECTION_HEREDOC,
 	TOKEN_ERROR,
-	TOKEN_COMMAND_NAME,
+	TOKEN_COMMAND_NAME_QUOTES,
+	TOKEN_COMMAND_NAME_UNQUOTES,
 	TOKEN_FILENAME,
 	TOKEN_WILDCARD,
 	TOKEN_STRING,
@@ -211,6 +212,7 @@ typedef struct s_vars
 	t_bool			changed_stdout;
 	t_bool			changed_stdin;
 	t_bool			close_heredoc;
+	t_bool			is_forked;
 	int				saved_stdout;
 	int				saved_stdin;
 	t_list			*env;
@@ -273,6 +275,7 @@ void			free_redirection(t_redirection *redir);
 void			free_arguments(t_arguments *args);
 void			free_string(t_string *str);
 void			init_command_part_fields(t_command_part *command_part);
+t_bool			is_redirection_or_string(t_token_type token);
 void			subsequent_redirections(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);
@@ -353,12 +356,13 @@ DIR				*open_dir_or_error(void);
 int				execute_builtin(t_command_part *data, t_vars *vars);
 int				execute_cmd_name(char *cmd_name, t_command_part *cmd_part,
 					t_vars *vars);
+t_bool			is_token_cmd_name(t_token_type token);
 void			execute_redirections(t_command_part *data, t_vars *vars);
 void			input_file_to_stdin(int infile, t_vars *vars);
 void			output_file_to_stdout(int outfile, t_vars *vars);
 int				open_tmp_file(void);
 void			heredoc_to_stdin(t_vars *vars);
-char			*cmd_path_routine(char *cmd, t_vars *vars);
+char			*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars);
 void			restore_stdout(int saved_stdout, t_vars *vars);
 void			restore_stdin(int saved_stdin, t_vars *vars);
 // BUILTIN

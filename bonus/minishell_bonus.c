@@ -61,8 +61,11 @@ int	main(void)
 		if (!prompt)
 		{
 			free_minishell(&g_vars);
-			write(STDERR_FILENO, "exit\n", ft_strlen("exit\n"));
-			exit(g_vars.state.status);
+			if (isatty(STDIN_FILENO))
+				write(STDERR_FILENO, "exit\n", ft_strlen("exit\n"));
+			else
+				write(STDERR_FILENO, "\n", 1);
+			break ;
 		}
 		add_history(prompt);
 		g_vars.prompt = &prompt;
@@ -104,7 +107,7 @@ int	main(void)
 					execute_command(g_vars.parse_tree, &g_vars);
 					if (g_vars.state.status == 100)
 					{
-						free_mini_line(&g_vars);
+						free_minishell(&g_vars);
 						exit(g_vars.state.status);
 					}
 				}
@@ -142,6 +145,7 @@ void	init_vars(t_vars *vars)
 	}
 	vars->nice_prompt = get_pwd();
 	vars->close_heredoc = false;
+	vars->is_forked = false;
 	vars->saved_stdin = init_stdin_var(vars);
 	vars->saved_stdout = init_stdout_var(vars);
 }
@@ -203,7 +207,8 @@ const char *token_names[] =
 				"TOKEN_REDIRECTION_APPEND",
 				"TOKEN_REDIRECTION_HEREDOC",
 				"TOKEN_ERROR",
-				"TOKEN_COMMAND_NAME",
+				"TOKEN_COMMAND_NAME_QUOTES",
+				"TOKEN_COMMAND_NAME_UNQUOTES",
 				"TOKEN_FILENAME",
 				"TOKEN_WILDCARD",
 				"TOKEN_STRING",
@@ -307,7 +312,8 @@ void print_pipeline(t_pipeline *pipeline, size_t indent)
 		t_string *cmd_name = pipeline->cmd_part->u_cmd.cmd_name;
 		switch (pipeline->cmd_part->type)
 		{
-			case TOKEN_COMMAND_NAME:
+			case TOKEN_COMMAND_NAME_QUOTES:
+			case TOKEN_COMMAND_NAME_UNQUOTES:
 				print_indent(indent + 2);
 				printf("%s(\n", token_type_to_string(pipeline->cmd_part->type));
 				print_indent(indent + 4);

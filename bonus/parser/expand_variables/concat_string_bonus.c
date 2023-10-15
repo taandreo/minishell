@@ -15,7 +15,7 @@ t_string *concat_string(t_string *string, t_command_part  *cmd_part,
 	string = concat_exit_code(string, vars, type);
 	if (!string)
 		return (NULL);
-	if (cmd_part->type == TOKEN_COMMAND_NAME
+	if (is_token_cmd_name(cmd_part->type)
 		|| (cmd_part->arguments && cmd_part->arguments->type == TOKEN_STRING)
 		|| (cmd_part->redirections && cmd_part->redirections->redirection))
 	{
