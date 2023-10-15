@@ -41,7 +41,7 @@ int	builtin_echo(char **params)
 	while (params[j])
 	{
 		printf("%s", params[j++]);
-		if (params[i] != NULL)
+		if (params[j] != NULL)
 			printf(" ");
 	}
 	if (newline == 0 && j > 0)
