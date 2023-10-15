@@ -19,6 +19,7 @@ char *get_cmd_path(char *cmd)
 	char	*cmd_path;
 	char	*path;
 	char	**dir;
+	struct stat	file_info;
 	int		i;
 
 	path = get_env("PATH");
@@ -29,8 +30,21 @@ char *get_cmd_path(char *cmd)
 		cmd_path = join_path(dir[i], cmd);
 		if (!cmd_path)
 			break ;
-		if (access(cmd_path, X_OK) == 0)
-			break ;
+		if (access(cmd_path, F_OK) == 0)
+		{
+			if (stat(cmd_path, &file_info) == 0)
+			{
+				if (!S_ISDIR(file_info.st_mode) && access(cmd_path, X_OK) == 0)
+					break ;
+			}
+			else
+			{
+				perror("");
+				free(cmd_path);
+				cmd_path = NULL;
+				break ;
+			}
+		}
 		free(cmd_path);
 		cmd_path = NULL;
 		i++;

@@ -283,12 +283,14 @@ char **list_to_envp()
 
 void	handle_exec_errors(t_vars *vars, char **envp)
 {
+	perror("minishell: ");
 	free_minishell(vars);
 	if (envp)
 	{
 		ft_freemt((void **)envp);
 		envp = NULL;
 	}
+	vars->state.status = EXIT_FAILURE;
 	exit(vars->state.status);
 }
 
