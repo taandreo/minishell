@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/24 16:09:14 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/10 20:49:30 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 01:24:52 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int	builtin_exit(char **params, t_vars *vars)
 	{
 		ft_dprintf(STDERR_FILENO, \
 		"minishell: exit: %s: numeric argument required\n", *params);
-		exit_minishell(255, vars);
+		exit_minishell(2, vars);
 	}
 	if (ft_lenmt((void **) params) > 1)
 	{

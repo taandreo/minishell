@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 16:09:55 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/13 21:42:24 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/14 23:05:50 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,7 @@ void	remove_env(char *key)
 			else
 				prev->next = node->next;
 			ft_lstdelone(node, free_env);
+			return ;
 		}
 		prev = node;
 		node = node->next;
