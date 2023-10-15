@@ -35,7 +35,7 @@ int	add_builtin_or_command(char *string, t_token_list **tokens,
 	}
 	if (!next || next == ' ')
 	{
-		if (ft_strlen(string) != 0 || ((*tokens)->tail && (*tokens)->tail->token.type == TOKEN_COMMAND_NAME_QUOTES))
+		if ((string && ft_strlen(string) != 0) || !string ||  ((*tokens)->tail && (*tokens)->tail->token.type == TOKEN_COMMAND_NAME_QUOTES))
 		{
 			flags->is_command = false;
 			flags->has_command = true;
