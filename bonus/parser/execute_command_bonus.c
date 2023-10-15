@@ -14,7 +14,7 @@ int	execute_command(t_command **cmd, t_vars *vars)
 	}
 	if ((*cmd)->pipeline)
 	{
-		execute_pipeline((*cmd)->pipeline, vars);
+		vars->state.status = execute_pipeline((*cmd)->pipeline, vars);
 		if (vars->state.status != SUCCESS)
 		{
 			free_command(*cmd);
@@ -25,7 +25,7 @@ int	execute_command(t_command **cmd, t_vars *vars)
 	}
 	if ((*cmd)->conjunctions)
 	{
-		execute_conjunctions((*cmd)->conjunctions, vars);
+		vars->state.status = execute_conjunctions((*cmd)->conjunctions, vars);
 		if (vars->state.status != SUCCESS)
 		{
 			free_command(*cmd);
@@ -152,7 +152,7 @@ int	execute_pipeline(t_pipeline *pipeline, t_vars *vars)
 	if (pipeline != prev)
 		close_pipe(prev->cmd_part->out_pipe);
 	if (pipeline->cmd_part->pid != 0 && pipeline->cmd_part->pid != -1)
-		return(wait_process(start));
+		return (wait_process(start));
 	return (vars->state.status);
 }
 
