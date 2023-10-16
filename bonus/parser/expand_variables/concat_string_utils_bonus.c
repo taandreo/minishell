@@ -1,7 +1,20 @@
-#include "minishell_bonus.h"
-char		*concat_wildcards(t_string *string, t_vars *vars);
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   concat_string_utils_bonus.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 23:45:15 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/15 23:46:08 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-char *builtin_type_to_value(t_token_type  type)
+#include "minishell_bonus.h"
+
+char	*concat_wildcards(t_string *string, t_vars *vars);
+
+char	*builtin_type_to_value(t_token_type type)
 {
 	if (type == TOKEN_ECHO)
 		return ("echo");
@@ -36,11 +49,11 @@ void	*general_error_ambiguous_redirect(t_vars *vars, t_string *string)
 
 	variable = concat_wildcards(string, vars);
 	write(STDERR_FILENO, "minishell: ",
-			ft_strlen("minishell: "));
+		ft_strlen("minishell: "));
 	write(STDERR_FILENO, variable,
-			ft_strlen(variable));
+		ft_strlen(variable));
 	write(STDERR_FILENO, ": ambiguous redirect\n",
-			ft_strlen(": ambiguous redirect\n"));
+		ft_strlen(": ambiguous redirect\n"));
 	vars->state.status = GENERAL_ERROR;
 	free(variable);
 	return (NULL);

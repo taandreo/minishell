@@ -1,6 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_and_concat_exit_code_bonus.c                :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 23:54:17 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/15 23:55:13 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
-t_string	*expand_exit_code(t_string	*string, t_vars *vars, t_token_type type)
+t_string	*expand_exit_code(t_string	*string,
+	t_vars *vars, t_token_type type)
 {
 	t_string	*str;
 
@@ -54,7 +67,7 @@ t_string	*concat_exit_code(t_string *string, t_vars *vars, t_token_type type)
 	return (string);
 }
 
-t_string		*clean_next_token(t_string *string)
+t_string	*clean_next_token(t_string *string)
 {
 	t_string	*next;
 

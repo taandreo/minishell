@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   update_command_part_bonus.c                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 23:46:38 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/15 23:49:34 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
-int			cmd_name_quotes_routine(t_command_part *cmd_part, t_vars *vars);
-int			cmd_name_unquotes_routine(t_command_part *cmd_part, t_vars *vars);
-int			args_routine(t_command_part *cmd_part, t_vars *vars);
-int			redirections_routine(t_command_part *cmd_part, t_vars *vars);
+int	cmd_name_quotes_routine(t_command_part *cmd_part, t_vars *vars);
+int	cmd_name_unquotes_routine(t_command_part *cmd_part, t_vars *vars);
+int	args_routine(t_command_part *cmd_part, t_vars *vars);
+int	redirections_routine(t_command_part *cmd_part, t_vars *vars);
 
 int	update_cmd_part_values(t_command_part *cmd_part, t_vars *vars)
 {
@@ -22,7 +34,8 @@ int	cmd_name_quotes_routine(t_command_part *cmd_part, t_vars *vars)
 		return (vars->state.status);
 	if (cmd_part->type == TOKEN_COMMAND_NAME_QUOTES)
 	{
-		cmd_part->u_cmd.cmd_name = concat_string(cmd_part->u_cmd.cmd_name, cmd_part, vars,
+		cmd_part->u_cmd.cmd_name = concat_string(
+				cmd_part->u_cmd.cmd_name, cmd_part, vars,
 				TOKEN_COMMAND_NAME_QUOTES);
 		if (!cmd_part->u_cmd.cmd_name && vars->state.error == false)
 		{
@@ -48,7 +61,8 @@ int	cmd_name_unquotes_routine(t_command_part *cmd_part, t_vars *vars)
 		return (vars->state.status);
 	if (cmd_part->type == TOKEN_COMMAND_NAME_UNQUOTES)
 	{
-		cmd_part->u_cmd.cmd_name = concat_string(cmd_part->u_cmd.cmd_name, cmd_part, vars,
+		cmd_part->u_cmd.cmd_name = concat_string(
+				cmd_part->u_cmd.cmd_name, cmd_part, vars,
 				TOKEN_COMMAND_NAME_UNQUOTES);
 		if (!cmd_part->u_cmd.cmd_name && vars->state.error == false)
 		{
@@ -81,7 +95,7 @@ int	args_routine(t_command_part *cmd_part, t_vars *vars)
 		current_args->string = concat_string(current_args->string,
 				cmd_part, vars, TOKEN_STRING);
 		if (vars->state.status != SUCCESS && vars->state.error == true)
-			break;
+			break ;
 		current_args = current_args->next;
 	}
 	return (vars->state.status);
@@ -102,7 +116,7 @@ int	redirections_routine(t_command_part *cmd_part, t_vars *vars)
 					current_redir->redirection->filename, cmd_part,
 					vars, TOKEN_FILENAME);
 			if (vars->state.status != SUCCESS && vars->state.error == true)
-				break;
+				break ;
 			current_redir = current_redir->next;
 		}
 	}
