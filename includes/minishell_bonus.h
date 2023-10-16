@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/16 00:00:59 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/16 02:10:02 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -353,8 +353,9 @@ void			*free_resources_and_return_null(DIR *dir,
 t_string		*add_new_node(char *filename, t_vars *vars,	t_token_type type);
 void			sorted_insert(t_string **head_ref, t_string *new_node);
 DIR				*open_dir_or_error(void);
-int				execute_builtin(t_command_part *data, char **args,
+int				execute_builtin_command(t_command_part *data, char **args,
 					t_vars *vars);
+void			execute_builtin(t_command_part *data, t_vars *vars);
 t_bool			is_token_cmd_name(t_token_type token);
 void			execute_redirections(t_command_part *data, t_vars *vars);
 void			input_file_to_stdin(int infile, t_vars *vars);
@@ -386,8 +387,15 @@ void			remove_env(char *key);
 char			*get_env(char *key);
 void			free_env(void *env);
 void			free_all_envs(void);
+// args_and_envp_bonus.c
+char			**list_to_args(t_arguments *list, t_command_part *cmd_part);
+char 			**list_to_envp();
+// execute_command_part.c
+int				execute_command_part(t_command_part *data, t_vars *vars);
 void			execute_redirection_heredoc(t_redirections *redir,
 					t_vars *vars);
+// execute_fork_bonus.c
+void			execute_fork(t_pipeline *pipeline, t_vars *vars);
 void			open_heredoc(t_redirections *redirections, t_vars *vars);
 void			child_sigusr_handler(int signum);
 void			parent_sigusr_handler(int signum);

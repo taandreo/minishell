@@ -103,6 +103,9 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			error/return_errors_helper_bonus.c\
             error/misuse_or_unclosed_error_bonus.c\
             error/file_access_errors_bonus.c\
+			parser/args_and_envp_bonus.c\
+			parser/execute_fork_bonus.c\
+			parser/execute_pipeline_bonus.c\
             parser/execute_command_bonus.c\
             parser/execute_builtin_bonus.c\
             parser/execute_cmd_name_bonus.c\
