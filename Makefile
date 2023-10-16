@@ -85,6 +85,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
             parser/expand_variables/expand_wildcard_utils_bonus.c\
          	parser/execute_redirections_bonus.c\
          	parser/execute_redirections_utils_bonus.c\
+			parser/heredoc_bonus.c\
          	parser/restore_fd_bonus.c\
 			parser/wait_bonus.c\
 			signals/sigusr_bonus.c\

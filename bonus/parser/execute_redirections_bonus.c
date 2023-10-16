@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_redirections_bonus.c                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/16 00:18:45 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/16 01:12:19 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 void	execute_redirection_input(t_redirections *redir, t_vars *vars);
@@ -37,15 +49,7 @@ void	execute_redirection_input(t_redirections *redir, t_vars *vars)
 	infile = open(redirection->filename->value, O_RDONLY);
 	if (infile == -1)
 	{
-		write(STDERR_FILENO, "minishell: ",
-				ft_strlen("minishell: "));
-		write(STDERR_FILENO, redirection->filename->value,
-				ft_strlen(redirection->filename->value));
-		write(STDERR_FILENO, ": ", ft_strlen(": "));
-		perror("");
-		vars->state.error = true;
-		vars->state.is_set = true;
-		vars->state.status = GENERAL_ERROR;
+		error_open_file(redirection->filename->value, vars)
 		return ;
 	}
 	input_file_to_stdin(infile, vars);
@@ -62,14 +66,7 @@ void	execute_redirection_output(t_redirections *redir, t_vars *vars)
 			O_CREAT | O_TRUNC | O_WRONLY, 0666);
 	if (outfile == -1)
 	{
-		write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
-		write(STDERR_FILENO, redirection->filename->value,
-				ft_strlen(redirection->filename->value));
-		write(STDERR_FILENO, ": ", ft_strlen(": "));
-		perror("");
-		vars->state.error = true;
-		vars->state.is_set = true;
-		vars->state.status = GENERAL_ERROR;
+		error_open_file(redirection->filename->value, vars)
 		return ;
 	}
 	output_file_to_stdout(outfile, vars);
@@ -86,55 +83,9 @@ void	execute_redirection_append(t_redirections *redir, t_vars *vars)
 			O_CREAT | O_APPEND | O_WRONLY, 0666);
 	if (append_file == -1)
 	{
-		write(STDERR_FILENO, "minishell: ", ft_strlen("minishell: "));
-		write(STDERR_FILENO, redirection->filename->value,
-				ft_strlen(redirection->filename->value));
-		write(STDERR_FILENO, ": ", ft_strlen(": "));
-		perror("");
-		vars->state.error = true;
-		vars->state.is_set = true;
-		vars->state.status = GENERAL_ERROR;
+		error_open_file(redirection->filename->value, vars)
 		return ;
 	}
 	output_file_to_stdout(append_file, vars);
 	close(append_file);
-}
-
-void	execute_redirection_heredoc(t_redirections *redir, t_vars *vars)
-{
-	int		infile;
-	char	*line;
-	char	*trim_line;
-	char	*limiter;
-
-	infile = open_tmp_file();
-	limiter = redir->redirection->filename->value;
-	write(STDIN_FILENO, "> ", ft_strlen("> "));
-	line = get_next_line(STDIN_FILENO);
-	if (vars->close_heredoc)
-	{
-		free(line);
-		line = NULL;
-	}
-	while (line != NULL)
-	{
-		if (vars->close_heredoc)
-		{
-			free(line);
-			break ;
-		}
-		trim_line = ft_strtrim(line, "\n");
-		if (ft_strcmp(trim_line, limiter) == 0)
-		{
-			free(line);
-			free(trim_line);
-			break ;
-		}
-		write(infile, line, ft_strlen(line));
-		free(line);
-		free(trim_line);
-		write(STDIN_FILENO, "> ", ft_strlen("> "));
-		line = get_next_line(STDIN_FILENO);
-	}
-	close(infile);
 }
