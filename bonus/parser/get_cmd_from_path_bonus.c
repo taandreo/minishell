@@ -82,6 +82,8 @@ char	*get_cmd_path(char *cmd)
 	int			i;
 
 	path = get_env("PATH");
+	if (!path)
+		return (NULL);
 	dir = ft_split(path, ':');
 	i = 0;
 	cmd_path = find_path(dir, cmd);
