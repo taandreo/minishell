@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/07/09 16:32:36 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/16 01:15:30 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/16 00:00:59 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -401,10 +401,10 @@ void			start_signal_heredoc(void);
 void			trigger_parent_sigusr(void);
 int				init_stdout_var(t_vars *vars);
 int				init_stdin_var(t_vars *vars);
-
+char			*get_cmd_path(char *cmd);
 // ERROR
 void			mem_alloc_set_error(t_vars *vars);
-void			error_open_file(char *file, t_vars vars);
+void			error_open_file(char *file, t_vars *vars);
 void			*free_nullify_and_return_mem_error(char **ptr);
 void			free_and_perror(t_vars *vars, int exit_code);
 void			free_minishell(t_vars *vars);

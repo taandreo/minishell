@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 01:11:24 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/16 01:19:36 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 22:28:32 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	open_tmp_file(void)
 	return (infile);
 }
 
-int write_heredoc_line(int infile, char *line, char *limiter, t_vars *vars)
+int	write_heredoc_line(int infile, char *line, char *limiter, t_vars *vars)
 {
 	char	*trim_line;
 
@@ -49,7 +49,7 @@ int write_heredoc_line(int infile, char *line, char *limiter, t_vars *vars)
 	return (0);
 }
 
-void    execute_redirection_heredoc(t_redirections *redir, t_vars *vars)
+void	execute_redirection_heredoc(t_redirections *redir, t_vars *vars)
 {
 	int		infile;
 	char	*line;

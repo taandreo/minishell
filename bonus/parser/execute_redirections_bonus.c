@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 00:18:45 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/16 01:12:19 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 22:31:22 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	execute_redirection_input(t_redirections *redir, t_vars *vars)
 	infile = open(redirection->filename->value, O_RDONLY);
 	if (infile == -1)
 	{
-		error_open_file(redirection->filename->value, vars)
+		error_open_file(redirection->filename->value, vars);
 		return ;
 	}
 	input_file_to_stdin(infile, vars);
@@ -66,7 +66,7 @@ void	execute_redirection_output(t_redirections *redir, t_vars *vars)
 			O_CREAT | O_TRUNC | O_WRONLY, 0666);
 	if (outfile == -1)
 	{
-		error_open_file(redirection->filename->value, vars)
+		error_open_file(redirection->filename->value, vars);
 		return ;
 	}
 	output_file_to_stdout(outfile, vars);
@@ -83,7 +83,7 @@ void	execute_redirection_append(t_redirections *redir, t_vars *vars)
 			O_CREAT | O_APPEND | O_WRONLY, 0666);
 	if (append_file == -1)
 	{
-		error_open_file(redirection->filename->value, vars)
+		error_open_file(redirection->filename->value, vars);
 		return ;
 	}
 	output_file_to_stdout(append_file, vars);

@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 15:33:04 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/10/16 00:43:30 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 22:29:51 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	mem_alloc_set_error(t_vars *vars)
 	vars->state.is_set = true;		
 }
 
-void	error_open_file(char *file, t_vars vars)
+void	error_open_file(char *file, t_vars *vars)
 {
 	write(STDERR_FILENO, "minishell: ",
 		ft_strlen("minishell: "));
