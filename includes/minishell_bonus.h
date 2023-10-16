@@ -203,7 +203,7 @@ typedef struct s_env
 typedef struct s_vars
 {
 	t_token_list			**tokens;
-	t_command				**parse_tree;
+	t_command				*parse_tree;
 	t_parser_state			state;
 	char					**prompt;
 	char					*nice_prompt;

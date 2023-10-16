@@ -20,39 +20,43 @@ void	init_vars(t_vars *vars);
 
 t_vars	g_vars;
 
-int	launch_minishell(char *prompt)
+int	launch_minishell(char *prompt, t_vars *vars, t_bool without_loop)
 {
 	t_token_flags	flags;
 	t_token_list	*tokens;
 
+	if (without_loop)
+		init_vars(vars);
 	flags = init_token_flags(ft_strlen(prompt));
 	tokens = tokenizer(prompt, &flags);
-	g_vars.tokens = &tokens;
+	vars->tokens = &tokens;
 	if (flags.status != SUCCESS)
 	{
 		free_mini_line(&g_vars);
-		g_vars.state.is_set = true;
-		g_vars.state.status = flags.status;
-		return (g_vars.state.status);
+		vars->state.is_set = true;
+		vars->state.status = flags.status;
+		return (vars->state.status);
 	}
-	if (g_vars.tokens)
+	if (vars->tokens && *vars->tokens)
 	{
 		if (empty_token_list(tokens))
-			return (g_vars.state.status);
+			return (vars->state.status);
 		tokens->current = tokens->head;
-		init_parse_tree_and_execute_cmd(&g_vars);
+		init_parse_tree_and_execute_cmd(vars);
 	}
-	free_mini_line(&g_vars);
-	return (g_vars.state.status);
+	free_mini_line(vars);
+	return (vars->state.status);
 }
 
-void	run_without_loop(int argc, char **argv)
+void	run_without_loop(int argc, char **argv, t_vars *vars)
 {
-	int	exit_status;
+	int		exit_status;
+	t_bool	without_loop;
 
 	if (argc >= 3 && !ft_strncmp(argv[1], "-c", 3))
 	{
-		exit_status = launch_minishell(argv[2]);
+		without_loop = true;
+		exit_status = launch_minishell(argv[2], vars, without_loop);
 		exit(exit_status);
 	}
 }
@@ -65,10 +69,10 @@ int	main(int argc, char **argv)
 	trigger_parent_sigusr();
 	init_env(environ);
 	init_fixed_vars(&g_vars);
-	run_without_loop(argc, argv);
+	start_signals_parent();
+	run_without_loop(argc, argv, &g_vars);
 	while (true)
 	{
-		start_signals_parent();
 		init_vars(&g_vars);
 		prompt = readline(g_vars.nice_prompt);
 		if (!prompt)
@@ -79,7 +83,7 @@ int	main(int argc, char **argv)
 		}
 		add_history(prompt);
 		g_vars.prompt = &prompt;
-		launch_minishell(prompt);
+		launch_minishell(prompt, &g_vars, false);
 	}
 	return (g_vars.state.status);
 }

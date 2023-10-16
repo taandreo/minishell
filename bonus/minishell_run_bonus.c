@@ -17,13 +17,13 @@ void	init_parse_tree_and_execute_cmd(t_vars *vars)
 	t_command		*parse_tree;
 
 	parse_tree = parse(*vars->tokens, &vars->state);
-	vars->parse_tree = &parse_tree;
+	vars->parse_tree = parse_tree;
 	vars->args = NULL;
-	if (*vars->parse_tree)
+	if (vars->parse_tree)
 	{
 		if (isatty(STDIN_FILENO))
 		{
-			execute_command(vars->parse_tree, vars);
+			execute_command(&vars->parse_tree, vars);
 			if (vars->state.kill_child == 1)
 			{
 				free_minishell(&g_vars);
@@ -32,7 +32,7 @@ void	init_parse_tree_and_execute_cmd(t_vars *vars)
 		}
 		else
 		{
-			execute_command(vars->parse_tree, vars);
+			execute_command(&vars->parse_tree, vars);
 			free_minishell(vars);
 			exit(vars->state.status);
 		}
