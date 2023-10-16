@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 01:39:08 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/16 01:58:39 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/16 02:13:39 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,8 +87,6 @@ void	exec_external_command(t_command_part *data, t_vars *vars)
 
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
-	char			**envp;
-
 	if (update_cmd_part_values(data, vars) != SUCCESS)
 		return (vars->state.status);
 	data->args = list_to_args(data->arguments, data);

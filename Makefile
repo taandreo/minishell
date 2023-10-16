@@ -107,6 +107,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/execute_fork_bonus.c\
 			parser/execute_pipeline_bonus.c\
             parser/execute_command_bonus.c\
+			parser/execute_command_part_bonus.c\
             parser/execute_builtin_bonus.c\
             parser/execute_cmd_name_bonus.c\
             parser/get_cmd_path_bonus.c\
