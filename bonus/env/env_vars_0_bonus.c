@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/21 16:09:55 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/14 23:05:50 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/15 22:58:31 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,6 @@ void	add_env(char *key, char *value)
 	{
 		env = ft_calloc(1, sizeof(t_env));
 		env->key = ft_strdup(key);
-		free(key);
 		node = ft_lstnew(env);
 		ft_lstadd_back(&g_vars.env, node);
 	}
@@ -105,6 +104,7 @@ void	init_env(char **envp)
 		value++;
 		key = ft_strndup(envp[i], value - envp[i] - 1);
 		add_env(key, value);
+		free(key);
 		i++;
 	}
 }

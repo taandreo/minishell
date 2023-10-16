@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add_args_list_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 23:50:10 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/15 23:51:13 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
-t_arguments *init_args(t_string *str, t_token_type type)
+t_arguments	*init_args(t_string *str, t_token_type type)
 {
-	t_arguments *args;
+	t_arguments	*args;
 
 	args = malloc(sizeof(t_arguments));
 	if (!args)
@@ -21,9 +33,9 @@ t_arguments *init_args(t_string *str, t_token_type type)
 t_arguments	*add_first_args(t_string *str_list, t_arguments *args,
 				t_vars *vars, t_token_type type)
 {
-	t_arguments *first_args;
-	t_arguments *last_args;
-	t_arguments *c_args;
+	t_arguments	*first_args;
+	t_arguments	*last_args;
+	t_arguments	*c_args;
 
 	first_args = NULL;
 	c_args = NULL;
@@ -50,8 +62,8 @@ t_arguments	*add_first_args(t_string *str_list, t_arguments *args,
 t_arguments	*add_last_arg_list(t_string *str_list, t_arguments *args,
 				t_vars *vars, t_token_type type)
 {
-	t_arguments *new_arg;
-	t_arguments *last_args;
+	t_arguments	*new_arg;
+	t_arguments	*last_args;
 
 	new_arg = NULL;
 	last_args = args;
@@ -80,7 +92,7 @@ t_arguments	*add_last_arg_list(t_string *str_list, t_arguments *args,
 t_bool	add_middle_into_args(t_arguments *current_args,
 			t_arguments *new_args_list, t_arguments *prev_args)
 {
-	t_arguments *post_args;
+	t_arguments	*post_args;
 
 	post_args = NULL;
 	if (current_args->next)
@@ -100,10 +112,10 @@ t_bool	add_middle_into_args(t_arguments *current_args,
 t_arguments	*add_middle_args(t_string *str_list, t_arguments *args,
 		t_vars *vars, t_token_type type)
 {
-	t_arguments *current_args;
-	t_arguments *prev_args;
-	t_arguments *new_args_list;
-	t_arguments *to_be_added;
+	t_arguments	*current_args;
+	t_arguments	*prev_args;
+	t_arguments	*new_args_list;
+	t_arguments	*to_be_added;
 
 	new_args_list = NULL;
 	while (str_list)

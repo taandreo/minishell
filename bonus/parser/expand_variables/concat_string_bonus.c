@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   concat_string_bonus.c                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 23:55:23 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/15 23:56:07 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 t_string	*concat_str_routine(t_string *string, t_command_part *cmd_part,
@@ -6,7 +18,7 @@ t_string	*concat_unmatched_string(t_string *string, t_vars *vars);
 t_string	*check_if_is_builtin(t_string *string, t_string *concat_str,
 				t_command_part *cmd_part);
 
-t_string *concat_string(t_string *string, t_command_part  *cmd_part,
+t_string	*concat_string(t_string *string, t_command_part *cmd_part,
 		t_vars *vars, t_token_type type)
 {
 	string = expand_exit_code(string, vars, type);

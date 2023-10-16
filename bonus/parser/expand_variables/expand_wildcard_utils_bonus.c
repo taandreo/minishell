@@ -1,14 +1,28 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   expand_wildcard_utils_bonus.c                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 23:43:19 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/15 23:44:21 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 void	sorted_insert(t_string **head_ref, t_string *new_node)
 {
 	t_string	*current;
 
-	if (*head_ref == NULL || ft_strcasecmp((*head_ref)->value, new_node->value) >= 0)
+	if (*head_ref == NULL
+		|| ft_strcasecmp((*head_ref)->value, new_node->value) >= 0)
 	{
 		new_node->next = *head_ref;
 		*head_ref = new_node;
-	} else
+	}
+	else
 	{
 		current = *head_ref;
 		while (current->next != NULL
@@ -21,7 +35,7 @@ void	sorted_insert(t_string **head_ref, t_string *new_node)
 
 t_string	*add_new_node(char *filename, t_vars *vars,	t_token_type type)
 {
-	t_string *new_node;
+	t_string	*new_node;
 
 	new_node = malloc(sizeof(t_string));
 	if (!new_node)
@@ -41,7 +55,7 @@ t_string	*add_new_node(char *filename, t_vars *vars,	t_token_type type)
 
 DIR	*open_dir_or_error(void)
 {
-	DIR *dir;
+	DIR	*dir;
 
 	dir = opendir(".");
 	if (!dir)

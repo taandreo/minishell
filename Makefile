@@ -107,6 +107,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
             parser/execute_builtin_bonus.c\
             parser/execute_cmd_name_bonus.c\
             parser/get_cmd_path_bonus.c\
+			parser/get_cmd_from_path_bonus.c\
             parser/execute_redirections_only_bonus.c\
             parser/expand_variables/update_command_part_bonus.c\
             parser/expand_variables/expand_and_concat_exit_code_bonus.c\
@@ -119,6 +120,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
             parser/expand_variables/expand_wildcard_utils_bonus.c\
          	parser/execute_redirections_bonus.c\
          	parser/execute_redirections_utils_bonus.c\
+			parser/heredoc_bonus.c\
          	parser/restore_fd_bonus.c\
 			parser/wait_bonus.c\
 			signals/sigusr_bonus.c\

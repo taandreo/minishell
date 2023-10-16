@@ -1,13 +1,25 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   add_concat_string_bonus.c                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/15 23:44:46 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/16 00:18:00 by tairribe         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
-void	update_builtin(t_command_part  *cmd_part, t_string *concat_str,
+void	update_builtin(t_command_part *cmd_part, t_string *concat_str,
 			t_vars *vars);
-void	update_cmd_name(t_command_part  *cmd_part, t_string *concat_str,
-		t_vars *vars);
-void	update_redirections(t_command_part  *cmd_part, t_string *concat_str,
-		t_vars *vars);
-void	update_arguments(t_command_part  *cmd_part, t_string *concat_str,
-		t_vars *vars);
+void	update_cmd_name(t_command_part *cmd_part, t_string *concat_str,
+			t_vars *vars);
+void	update_redirections(t_command_part *cmd_part, t_string *concat_str,
+			t_vars *vars);
+void	update_arguments(t_command_part *cmd_part, t_string *concat_str,
+			t_vars *vars);
 
 void	add_concat_string(t_command_part *cmd_part, t_string *concat_str,
 		t_vars *vars, t_token_type type)
@@ -25,7 +37,7 @@ void	add_concat_string(t_command_part *cmd_part, t_string *concat_str,
 		update_redirections(cmd_part, concat_str, vars);
 }
 
-void	update_builtin(t_command_part  *cmd_part, t_string *concat_str,
+void	update_builtin(t_command_part *cmd_part, t_string *concat_str,
 			t_vars *vars)
 {
 	free_string(cmd_part->u_cmd.cmd_name);
@@ -34,10 +46,7 @@ void	update_builtin(t_command_part  *cmd_part, t_string *concat_str,
 	cmd_part->u_cmd.builtin_cmd = malloc(sizeof(t_builtin_cmd));
 	if (!cmd_part->u_cmd.builtin_cmd)
 	{
-		print_mem_alloc_error();
-		vars->state.status = MISUSE;
-		vars->state.error = true;
-		vars->state.is_set = true;
+		mem_alloc_set_error(vars);
 		return ;
 	}
 	cmd_part->u_cmd.builtin_cmd->type = cmd_part->type;
@@ -45,10 +54,7 @@ void	update_builtin(t_command_part  *cmd_part, t_string *concat_str,
 			builtin_type_to_value(cmd_part->type));
 	if (!cmd_part->u_cmd.builtin_cmd->value)
 	{
-		print_mem_alloc_error();
-		vars->state.status = MISUSE;
-		vars->state.error = true;
-		vars->state.is_set = true;
+		mem_alloc_set_error(vars);
 		return ;
 	}
 	concat_str = delete_first_node(concat_str);
@@ -56,7 +62,7 @@ void	update_builtin(t_command_part  *cmd_part, t_string *concat_str,
 			vars, TOKEN_STRING);
 }
 
-void	update_cmd_name(t_command_part  *cmd_part, t_string *concat_str,
+void	update_cmd_name(t_command_part *cmd_part, t_string *concat_str,
 		t_vars *vars)
 {
 	free_string(cmd_part->u_cmd.cmd_name->next);
@@ -64,10 +70,7 @@ void	update_cmd_name(t_command_part  *cmd_part, t_string *concat_str,
 	cmd_part->u_cmd.cmd_name->value = ft_strdup(concat_str->value);
 	if (!cmd_part->u_cmd.cmd_name->value)
 	{
-		print_mem_alloc_error();
-		vars->state.status = MISUSE;
-		vars->state.error = true;
-		vars->state.is_set = true;
+		mem_alloc_set_error(vars);
 		return ;
 	}
 	concat_str = delete_first_node(concat_str);
@@ -75,7 +78,7 @@ void	update_cmd_name(t_command_part  *cmd_part, t_string *concat_str,
 			TOKEN_STRING);
 }
 
-void	update_redirections(t_command_part  *cmd_part, t_string *concat_str,
+void	update_redirections(t_command_part *cmd_part, t_string *concat_str,
 		t_vars *vars)
 {
 	t_redirection	*redir;
@@ -87,10 +90,7 @@ void	update_redirections(t_command_part  *cmd_part, t_string *concat_str,
 	redir->filename->value = ft_strdup(concat_str->value);
 	if (!redir->filename->value)
 	{
-		print_mem_alloc_error();
-		vars->state.status = MISUSE;
-		vars->state.error = true;
-		vars->state.is_set = true;
+		mem_alloc_set_error(vars);
 		return ;
 	}
 	concat_str = delete_first_node(concat_str);
@@ -98,7 +98,7 @@ void	update_redirections(t_command_part  *cmd_part, t_string *concat_str,
 			vars, TOKEN_STRING);
 }
 
-void	update_arguments(t_command_part  *cmd_part, t_string *concat_str,
+void	update_arguments(t_command_part *cmd_part, t_string *concat_str,
 		t_vars *vars)
 {
 	t_arguments	*current_args;
