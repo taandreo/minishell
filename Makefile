@@ -52,6 +52,45 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
             parse_tree/init/init_structures.c\
             parse_tree/parser_state_error.c\
 			parse_tree/parser_utils.c\
+			builtin/echo.c\
+            builtin/pwd.c\
+            builtin/export.c\
+            builtin/env.c\
+            builtin/unset.c\
+            builtin/cd.c\
+            builtin/exit.c\
+            env/env_vars_0.c\
+            env/env_vars_1.c\
+            error/errors.c\
+            error/free_minishell.c\
+            error/free_utils.c\
+            error/free_utils2.c\
+            error/return_errors_helper.c\
+            error/misuse_or_unclosed_error.c\
+            error/file_access_errors.c\
+            parser/args_and_envp.c\
+            parser/execute_fork.c\
+            parser/execute_pipeline.c\
+            parser/execute_command.c\
+            parser/execute_command_part.c\
+            parser/execute_builtin.c\
+            parser/execute_cmd_name.c\
+            parser/get_cmd_path.c\
+            parser/get_cmd_from_path.c\
+            parser/expand_variables/update_command_part.c\
+            parser/expand_variables/expand_and_concat_exit_code.c\
+            parser/expand_variables/add_concat_string.c\
+            parser/expand_variables/concat_string_utils.c\
+            parser/expand_variables/expand_wildcard.c\
+            parser/expand_variables/concat_string.c\
+            parser/expand_variables/add_args_list.c\
+            parser/expand_variables/add_args_utils.c\
+            parser/expand_variables/expand_wildcard_utils.c\
+            parser/execute_redirections.c\
+			parser/execute_redirections_utils.c\
+            parser/heredoc.c\
+            parser/restore_fd.c\
+            parser/wait.c\
             signals/sigusr.c\
             signals/sigint.c\
 		)
@@ -195,7 +234,7 @@ log:
 
 # builtin TESTER
 BUILTIN_TEST_BIN  = builtin_test
-BUILTIN_TEST_DIR  = tests/builtin
+BUILTIN_TEST_DIR  = ignore/tests/builtin
 BUILTIN_TEST_SRCS = $(wildcard $(BUILTIN_TEST_DIR)/*.c) $(subst $(BONUS_DIR)/minishell_bonus.c,,$(BONUS))
 BUILTIN_TEST_OBJS = $(subst $(BONUS_DIR)/, $(BONUS_OBJS_DIR)/, $(patsubst %.c, %.o, $(BUILTIN_TEST_SRCS)))
 BUILTIN_TEST_LIBS = -lcmocka

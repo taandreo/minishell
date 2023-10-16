@@ -1,29 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors_bonus.c                                     :+:      :+:    :+:   */
+/*   unset_bonus.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 22:07:29 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/15 23:31:23 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/24 13:42:03 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/15 23:12:55 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	print_perror(char *cmd, char *msg)
+int	builtin_unset(char **params)
 {
-	if (cmd != NULL)
-		ft_dprintf(STDERR_FILENO, "minishell: %s: ", cmd);
-	else
-		ft_dprintf(STDERR_FILENO, "minishell: ");
-	perror(msg);
-}
+	size_t	error;
 
-void	free_and_perror(t_vars *vars, int exit_code)
-{
-	perror("minishell: ");
-	free_minishell(vars);
-	exit(exit_code);
+	error = EXIT_SUCCESS;
+	if (!*params)
+		return (EXIT_SUCCESS);
+	while (*params)
+	{
+		if (is_valid_env(*params))
+			remove_env(*params);
+		else
+		{
+			error = EXIT_FAILURE;
+			ft_dprintf(2, "minishell: unset: `%s': not a valid identifier\n",
+				*params);
+		}
+		params++;
+	}
+	return (error);
 }

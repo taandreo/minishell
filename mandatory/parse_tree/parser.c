@@ -35,6 +35,7 @@ t_command	*parse(t_token_list *tokens, t_parser_state *state)
 			free_command(parse_tree);
 			parse_tree = NULL;
 		}
+		state->is_set = true;
 		state->status = MISUSE;
 	}
 	return (parse_tree);

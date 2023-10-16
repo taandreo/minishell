@@ -28,7 +28,7 @@ t_arguments	*parse_arguments(t_token_list *tokens, t_parser_state *state)
 			return (print_misuse_state_error(state));
 		args->type = current_token_type(tokens);
 		args->string = parse_string(tokens, state);
-		if (state->status == MISUSE)
+		if (state->status == MISUSE && state->error)
 		{
 			free_arguments(args);
 			return (print_misuse_state_error(state));

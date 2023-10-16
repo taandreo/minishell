@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors_bonus.c                                     :+:      :+:    :+:   */
+/*   env_vars_1_bonus.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 22:07:29 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/15 23:31:23 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/25 20:11:22 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/13 21:42:31 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	print_perror(char *cmd, char *msg)
+void	free_env(void *env)
 {
-	if (cmd != NULL)
-		ft_dprintf(STDERR_FILENO, "minishell: %s: ", cmd);
-	else
-		ft_dprintf(STDERR_FILENO, "minishell: ");
-	perror(msg);
+	t_env	*var;
+
+	var = env;
+	free(var->key);
+	if (var->value != NULL)
+		free(var->value);
+	free(var);
 }
 
-void	free_and_perror(t_vars *vars, int exit_code)
+void	free_all_envs(void)
 {
-	perror("minishell: ");
-	free_minishell(vars);
-	exit(exit_code);
+	ft_lstclear(&g_vars.env, free_env);
 }

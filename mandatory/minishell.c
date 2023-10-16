@@ -66,13 +66,13 @@ int	main(int argc, char **argv)
 	char		*prompt;
 	extern char	**environ;
 
-	trigger_parent_sigusr();
 	init_env(environ);
 	init_fixed_vars(&g_vars);
-	start_signals_parent();
 	run_without_loop(argc, argv, &g_vars);
 	while (true)
 	{
+		start_signals_parent();
+		trigger_parent_sigusr();
 		init_vars(&g_vars);
 		prompt = readline(g_vars.nice_prompt);
 		if (!prompt)
@@ -83,7 +83,8 @@ int	main(int argc, char **argv)
 		}
 		add_history(prompt);
 		g_vars.prompt = &prompt;
-		launch_minishell(prompt, &g_vars, false);
+		g_vars.state.status = launch_minishell(prompt, &g_vars,
+				false);
 	}
 	return (g_vars.state.status);
 }

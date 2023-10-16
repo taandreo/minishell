@@ -1,29 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors_bonus.c                                     :+:      :+:    :+:   */
+/*   env_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 22:07:29 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/15 23:31:23 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/21 22:44:45 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/13 21:41:39 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	print_perror(char *cmd, char *msg)
+void	print_env_node(void *node)
 {
-	if (cmd != NULL)
-		ft_dprintf(STDERR_FILENO, "minishell: %s: ", cmd);
-	else
-		ft_dprintf(STDERR_FILENO, "minishell: ");
-	perror(msg);
+	t_env	*env;
+
+	env = (t_env *) node;
+	if (env->value != NULL)
+		printf("%s=%s\n", env->key, env->value);
 }
 
-void	free_and_perror(t_vars *vars, int exit_code)
+int	builtin_env(char **params)
 {
-	perror("minishell: ");
-	free_minishell(vars);
-	exit(exit_code);
+	if (params != NULL)
+		ft_lstiter(g_vars.env, print_env_node);
+	return (EXIT_SUCCESS);
 }

@@ -1,29 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   errors_bonus.c                                     :+:      :+:    :+:   */
+/*   pwd_bonus.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/19 22:07:29 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/15 23:31:23 by tairribe         ###   ########.fr       */
+/*   Created: 2023/09/19 18:53:19 by tairribe          #+#    #+#             */
+/*   Updated: 2023/10/04 21:50:22 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell_bonus.h"
 
-void	print_perror(char *cmd, char *msg)
+int	builtin_pwd(char **params)
 {
-	if (cmd != NULL)
-		ft_dprintf(STDERR_FILENO, "minishell: %s: ", cmd);
-	else
-		ft_dprintf(STDERR_FILENO, "minishell: ");
-	perror(msg);
-}
+	char	*pwd;
 
-void	free_and_perror(t_vars *vars, int exit_code)
-{
-	perror("minishell: ");
-	free_minishell(vars);
-	exit(exit_code);
+	if (params == NULL)
+		return (EXIT_FAILURE);
+	pwd = getcwd(NULL, 0);
+	if (pwd != NULL)
+	{
+		printf("%s\n", pwd);
+		free(pwd);
+	}
+	else
+		return (EXIT_FAILURE);
+	return (EXIT_SUCCESS);
 }
