@@ -22,14 +22,48 @@ ifeq ($(UNAME), Darwin)
 endif
 
 SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
-			tokenizer/tokenizer.c\
+			minishell_run.c\
+			init_main_vars.c\
+			utils_1.c\
+			utils_2.c\
+			tokenizer/tokenize_by_category.c\
+            tokenizer/tokenize_functions.c\
+            tokenizer/tokenize_wildcard.c\
+            tokenizer/init_var_string.c\
+            tokenizer/tokenize_utils.c\
+            tokenizer/tokenizer.c\
+            tokenizer/token_list_creation.c\
+            tokenizer/tokenizer_helper_functions.c\
+            tokenizer/handle_quotes.c\
+            tokenizer/strings_tokenizer_helper.c\
+            tokenizer/add_string_token_helper.c\
+            tokenizer/variable_expansion.c\
+            tokenizer/handle_variable_expansion.c\
+            tokenizer/add_cmd_name_token.c\
+            tokenizer/add_token_helper.c\
+            parse_tree/parser.c\
+            parse_tree/parse_command.c\
+            parse_tree/parse_redirections.c\
+            parse_tree/parse_arguments.c\
+            parse_tree/parser_helper_functions.c\
+            parse_tree/command_part_helper.c\
+            parse_tree/free/free_parse_tree1.c\
+            parse_tree/free/free_parse_tree2.c\
+            parse_tree/init/init_structures.c\
+            parse_tree/parser_state_error.c\
+			parse_tree/parser_utils.c\
+            signals/sigusr.c\
+            signals/sigint.c\
 		)
 
 BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
+			minishell_run_bonus.c\
+			init_main_vars_bonus.c\
 			utils_bonus.c\
+			utils_2_bonus.c\
 			tokenizer/tokenize_by_category_bonus.c\
-			tokenizer/tokenize_functions.c\
-			tokenizer/tokenize_wildcard.c\
+			tokenizer/tokenize_functions_bonus.c\
+			tokenizer/tokenize_wildcard_bonus.c\
 			tokenizer/init_var_string_bonus.c\
 			tokenizer/tokenize_utils_bonus.c\
 			tokenizer/tokenizer_bonus.c\
@@ -37,7 +71,7 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			tokenizer/tokenizer_helper_functions_bonus.c\
 			tokenizer/handle_quotes_bonus.c\
 			tokenizer/strings_tokenizer_helper_bonus.c\
-			tokenizer/add_string_token_helper.c\
+			tokenizer/add_string_token_helper_bonus.c\
 			tokenizer/variable_expansion_bonus.c\
 			tokenizer/handle_variable_expansion_bonus.c\
 			tokenizer/add_cmd_name_token_bonus.c\
