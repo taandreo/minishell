@@ -14,10 +14,9 @@
 
 void	free_mini_line(t_vars *vars)
 {
-	if (vars->parse_tree && *vars->parse_tree)
+	if (vars->parse_tree)
 	{
-		free_command(*vars->parse_tree);
-		*vars->parse_tree = NULL;
+		free_command(vars->parse_tree);
 		vars->parse_tree = NULL;
 	}
 	free_token_list(vars->tokens);
