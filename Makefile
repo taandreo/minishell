@@ -234,7 +234,7 @@ log:
 
 # builtin TESTER
 BUILTIN_TEST_BIN  = builtin_test
-BUILTIN_TEST_DIR  = ignore/tests/builtin
+BUILTIN_TEST_DIR  = tests/builtin
 BUILTIN_TEST_SRCS = $(wildcard $(BUILTIN_TEST_DIR)/*.c) $(subst $(BONUS_DIR)/minishell_bonus.c,,$(BONUS))
 BUILTIN_TEST_OBJS = $(subst $(BONUS_DIR)/, $(BONUS_OBJS_DIR)/, $(patsubst %.c, %.o, $(BUILTIN_TEST_SRCS)))
 BUILTIN_TEST_LIBS = -lcmocka
