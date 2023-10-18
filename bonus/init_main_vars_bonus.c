@@ -46,7 +46,6 @@ void	init_vars(t_vars *vars)
 		restore_stdout(vars->saved_stdout, vars);
 		vars->changed_stdout = false;
 	}
-	vars->got_cmd_path = false;
 	vars->nice_prompt = get_pwd();
 	vars->close_heredoc = false;
 	vars->is_forked = false;

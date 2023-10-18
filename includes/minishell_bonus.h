@@ -208,7 +208,6 @@ typedef struct s_vars
 	char					**prompt;
 	char					*nice_prompt;
 	void					*args;
-	t_bool					got_cmd_path;
 	t_bool					changed_stdout;
 	t_bool					changed_stdin;
 	t_bool					close_heredoc;
