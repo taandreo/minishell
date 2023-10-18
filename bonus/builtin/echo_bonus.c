@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 20:20:04 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/15 22:51:31 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/18 22:40:29 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	builtin_echo(char **params)
 		if (params[i] != NULL)
 			printf(" ");
 	}
-	if (nl && i > 0)
+	if (nl)
 		printf("\n");
 	return (0);
 }
