@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   execute_command_bonus.c                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/10/18 00:32:05 by ebezerra          #+#    #+#             */
+/*   Updated: 2023/10/18 00:32:09 by ebezerra         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "minishell_bonus.h"
 
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars);

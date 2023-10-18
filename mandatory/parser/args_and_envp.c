@@ -14,7 +14,7 @@
 
 int	arg_len(t_arguments *list)
 {
-	int len;
+	int	len;
 
 	len = 0;
 	while (list)

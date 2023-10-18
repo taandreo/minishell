@@ -203,7 +203,7 @@ typedef struct s_env
 typedef struct s_vars
 {
 	t_token_list			**tokens;
-	t_command				**parse_tree;
+	t_command				*parse_tree;
 	t_parser_state			state;
 	char					**prompt;
 	char					*nice_prompt;
@@ -273,6 +273,9 @@ void			free_arguments(t_arguments *args);
 void			free_string(t_string *str);
 void			init_command_part_fields(t_command_part *command_part);
 t_bool			is_redirection_or_string(t_token_type token);
+t_bool			next_redirection_and_arguments(t_command_part *command_part,
+					t_redirections *initial_redirections,
+					t_token_list *tokens, t_parser_state *state);
 void			next_redirections(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);
@@ -353,8 +356,9 @@ void			*free_resources_and_return_null(DIR *dir,
 t_string		*add_new_node(char *filename, t_vars *vars,	t_token_type type);
 void			sorted_insert(t_string **head_ref, t_string *new_node);
 DIR				*open_dir_or_error(void);
-int				execute_builtin(t_command_part *data, char **args,
+int				execute_builtin_command(t_command_part *data, char **args,
 					t_vars *vars);
+void			execute_builtin(t_command_part *data, t_vars *vars);
 t_bool			is_token_cmd_name(t_token_type token);
 void			execute_redirections(t_command_part *data, t_vars *vars);
 void			input_file_to_stdin(int infile, t_vars *vars);
@@ -386,8 +390,15 @@ void			remove_env(char *key);
 char			*get_env(char *key);
 void			free_env(void *env);
 void			free_all_envs(void);
+// args_and_envp_bonus.c
+char			**list_to_args(t_arguments *list, t_command_part *cmd_part);
+char			**list_to_envp(void);
+// execute_command_part.c
+int				execute_command_part(t_command_part *data, t_vars *vars);
 void			execute_redirection_heredoc(t_redirections *redir,
 					t_vars *vars);
+// execute_fork_bonus.c
+void			execute_fork(t_pipeline *pipeline, t_vars *vars);
 void			open_heredoc(t_redirections *redirections, t_vars *vars);
 void			child_sigusr_handler(int signum);
 void			parent_sigusr_handler(int signum);

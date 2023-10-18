@@ -73,8 +73,6 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
             parser/execute_pipeline.c\
             parser/execute_command.c\
             parser/execute_command_part.c\
-            parser/execute_builtin.c\
-            parser/execute_cmd_name.c\
             parser/get_cmd_path.c\
             parser/get_cmd_from_path.c\
             parser/expand_variables/update_command_part.c\
@@ -147,8 +145,6 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/execute_pipeline_bonus.c\
             parser/execute_command_bonus.c\
 			parser/execute_command_part_bonus.c\
-            parser/execute_builtin_bonus.c\
-            parser/execute_cmd_name_bonus.c\
             parser/get_cmd_path_bonus.c\
 			parser/get_cmd_from_path_bonus.c\
             parser/expand_variables/update_command_part_bonus.c\

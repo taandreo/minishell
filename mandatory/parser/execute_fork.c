@@ -30,9 +30,9 @@ int	execute_fork_command(t_command_part *data, t_vars *vars)
 	return (execute_command_part(data, vars));
 }
 
-t_bool has_heredoc(t_redirections *redir)
+t_bool	has_heredoc(t_redirections *redir)
 {
-	t_redirections *current;
+	t_redirections	*current;
 
 	current = redir;
 	while (current)

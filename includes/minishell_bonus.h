@@ -273,6 +273,9 @@ void			free_arguments(t_arguments *args);
 void			free_string(t_string *str);
 void			init_command_part_fields(t_command_part *command_part);
 t_bool			is_redirection_or_string(t_token_type token);
+t_bool			next_redirection_and_arguments(t_command_part *command_part,
+					t_redirections *initial_redirections,
+					t_token_list *tokens, t_parser_state *state);
 void			next_redirections(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);
@@ -389,7 +392,7 @@ void			free_env(void *env);
 void			free_all_envs(void);
 // args_and_envp_bonus.c
 char			**list_to_args(t_arguments *list, t_command_part *cmd_part);
-char 			**list_to_envp();
+char			**list_to_envp(void);
 // execute_command_part.c
 int				execute_command_part(t_command_part *data, t_vars *vars);
 void			execute_redirection_heredoc(t_redirections *redir,

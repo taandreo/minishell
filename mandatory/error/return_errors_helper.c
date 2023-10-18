@@ -23,7 +23,7 @@ void	mem_alloc_set_error(t_vars *vars)
 	print_mem_alloc_error();
 	vars->state.status = MISUSE;
 	vars->state.error = true;
-	vars->state.is_set = true;		
+	vars->state.is_set = true;
 }
 
 void	error_open_file(char *file, t_vars *vars)
