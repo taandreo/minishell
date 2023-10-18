@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 void	*null_free_args_misuse(t_arguments *args, t_arguments *curr_args,
 			t_string *str_list, t_vars *vars)

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 char	*check_local_cmd(char *cmd, t_vars *vars)
 {
@@ -45,7 +45,11 @@ char	*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars)
 	else if (ft_strlen(cmd) == 0 && token == TOKEN_COMMAND_NAME_UNQUOTES)
 		return (NULL);
 	if (ft_strchr(cmd, '/'))
+	{
 		cmd_path = check_local_cmd(cmd, vars);
+		if (!cmd_path)
+			return (NULL);
+	}
 	else
 		cmd_path = get_cmd_path(cmd);
 	if (!cmd_path)

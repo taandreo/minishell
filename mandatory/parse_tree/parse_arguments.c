@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 t_arguments	*parse_arguments(t_token_list *tokens, t_parser_state *state)
 {

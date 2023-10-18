@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 static char	*get_signal_description(int sig);
 static int	check_for_sign(int status);

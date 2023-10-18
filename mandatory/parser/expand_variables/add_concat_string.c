@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 void	update_builtin(t_command_part *cmd_part, t_string *concat_str,
 			t_vars *vars);

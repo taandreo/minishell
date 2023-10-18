@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 int	cmd_name_quotes_routine(t_command_part *cmd_part, t_vars *vars);
 int	cmd_name_unquotes_routine(t_command_part *cmd_part, t_vars *vars);

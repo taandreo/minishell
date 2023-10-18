@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 void	*initialize_var_string(char *input, size_t pos,
 			t_token_flags *flags, const char *start)

@@ -10,12 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
-//#include "ft_printf.h"
+#include "minishell.h"
 
-void	print_parse_tree(t_command *parse_tree, size_t indent);
-void	print_tokens(t_token_list *tokens);
-void	print_command(t_command *cmd, size_t indent);
 void	init_vars(t_vars *vars);
 
 t_vars	g_vars;

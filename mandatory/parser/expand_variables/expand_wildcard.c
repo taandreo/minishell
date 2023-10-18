@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 t_bool	current_token_match(char **position, t_string *current, int *match);
 t_bool	next_tokens_match(char **position, t_string *current, int *match);

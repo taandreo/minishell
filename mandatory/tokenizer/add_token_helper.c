@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 int	add_token_1_pos(size_t *pos, t_token_list **tokens,
 		t_token_type type, t_token_flags *flags)

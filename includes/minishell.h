@@ -219,6 +219,8 @@ typedef struct s_vars
 
 extern t_vars				g_vars;
 
+char			*get_var_value(char *input, size_t *pos, size_t dollar,
+					t_token_flags *flags);
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
 char			*handle_quotes(char **input, size_t *position,
 					t_token_list **tokens, t_token_flags *flags);

@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 char	*join_and_cleanup(char **malloced_str1, char **malloced_str2)
 {

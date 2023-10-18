@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 t_bool	is_valid_var_name(char c);
 char	*lookup_variable(char *var);
@@ -78,7 +78,7 @@ char	*advance_position(char *input, size_t *pos, t_token_flags *flags)
 	}
 	if (input[*pos] == '\0' && flags->inside_quotes)
 		(*pos)--;
-	var = ft_strndup(input + dollar, *pos - dollar);
+	var = get_var_value(input, pos, dollar, flags);
 	flags->init_var = false;
 	if (!var)
 		return (NULL);

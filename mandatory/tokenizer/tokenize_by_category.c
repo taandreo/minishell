@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 int	tokenize_by_category(char **input, size_t *position,
 		t_token_list **tokens, t_token_flags *flags)

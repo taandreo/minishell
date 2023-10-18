@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 t_string	*concat_str_routine(t_string *string, t_command_part *cmd_part,
 				t_vars *vars, t_token_type type);

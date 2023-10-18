@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 int	add_hdoc_filename_or_error(char *string, t_token_list **tokens,
 		t_token_flags *flags);

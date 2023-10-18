@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 void	execute_redirection_input(t_redirections *redir, t_vars *vars);
 void	execute_redirection_output(t_redirections *redir, t_vars *vars);

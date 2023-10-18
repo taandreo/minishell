@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 int	execute_pipeline(t_pipeline *pipeline, t_vars *vars);
 int	execute_conjunctions(t_conjunctions *conj, t_vars *vars);

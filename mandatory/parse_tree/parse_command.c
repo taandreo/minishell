@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 t_pipeline		*parse_pipeline(t_token_list *tokens, t_parser_state *state);
 t_conjunctions	*parse_conjuctions(t_token_list *tokens, t_parser_state *state);

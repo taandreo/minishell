@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell_bonus.h"
+#include "minishell.h"
 
 t_bool	is_builtin(char *token)
 {
@@ -38,4 +38,20 @@ t_bool	is_token_cmd_name(t_token_type token)
 		|| token == TOKEN_COMMAND_NAME_QUOTES)
 		return (true);
 	return (false);
+}
+
+char	*get_var_value(char *input, size_t *pos, size_t dollar,
+		t_token_flags *flags)
+{
+	char	*var;
+
+	if (*pos == dollar && input[*pos + 1]
+		&& input[*pos + 1] == flags->quote_type)
+	{
+		var = ft_strndup(input + dollar, *pos + 1 - dollar);
+		(*pos)++;
+	}
+	else
+		var = ft_strndup(input + dollar, *pos - dollar);
+	return (var);
 }
