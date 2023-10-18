@@ -36,6 +36,24 @@ char	*check_local_cmd(char *cmd, t_vars *vars)
 	return (return_no_such_cmd(cmd, vars));
 }
 
+char	*check_relative_path(char *cmd, t_vars *vars)
+{
+	char		*cmd_path;
+
+	if (access(cmd, F_OK) == 0)
+	{
+		cmd_path = check_local_cmd(cmd, vars);
+		if (!cmd_path)
+			return (NULL);
+	}
+	else
+	{
+		cmd_path = get_cmd_path(cmd);
+		vars->got_cmd_path = true;
+	}
+	return (cmd_path);
+}
+
 char	*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars)
 {
 	char		*cmd_path;
@@ -51,7 +69,11 @@ char	*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars)
 			return (NULL);
 	}
 	else
-		cmd_path = get_cmd_path(cmd);
+	{
+		cmd_path = check_relative_path(cmd, vars);
+		if (!cmd_path && !vars->got_cmd_path)
+			return (NULL);
+	}
 	if (!cmd_path)
 		return (return_cmd_not_found(cmd, vars));
 	return (cmd_path);
