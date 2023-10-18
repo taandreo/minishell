@@ -26,7 +26,7 @@ char	*join_path(char *dir, char *cmd)
 	return (cmd_path);
 }
 
-static t_bool	cmd_exist(char *cmd_path, t_bool *error)
+static t_bool	cmd_exist(char *cmd_path, t_bool *error, t_vars *vars)
 {
 	struct stat	file_info;
 
@@ -37,6 +37,13 @@ static t_bool	cmd_exist(char *cmd_path, t_bool *error)
 		{
 			if (!S_ISDIR(file_info.st_mode) && access(cmd_path, X_OK) == 0)
 				return (true);
+			else if (!S_ISDIR(file_info.st_mode)
+				&& access(cmd_path, X_OK) == -1)
+			{
+				return_permission_denied(cmd_path, vars);
+				*error = true;
+				vars->got_cmd_path = true;
+			}
 		}
 		else
 		{
@@ -47,7 +54,7 @@ static t_bool	cmd_exist(char *cmd_path, t_bool *error)
 	return (false);
 }
 
-static char	*find_path(char **dir, char *cmd)
+static char	*find_path(char **dir, char *cmd, t_vars *vars)
 {
 	char	*cmd_path;
 	int		i;
@@ -60,7 +67,7 @@ static char	*find_path(char **dir, char *cmd)
 		cmd_path = join_path(dir[i], cmd);
 		if (!cmd_path)
 			break ;
-		if (cmd_exist(cmd_path, &error))
+		if (cmd_exist(cmd_path, &error, vars))
 			break ;
 		else
 		{
@@ -74,7 +81,7 @@ static char	*find_path(char **dir, char *cmd)
 	return (cmd_path);
 }
 
-char	*get_cmd_path(char *cmd)
+char	*get_cmd_path(char *cmd, t_vars *vars)
 {
 	char		*cmd_path;
 	char		*path;
@@ -86,7 +93,7 @@ char	*get_cmd_path(char *cmd)
 		return (NULL);
 	dir = ft_split(path, ':');
 	i = 0;
-	cmd_path = find_path(dir, cmd);
+	cmd_path = find_path(dir, cmd, vars);
 	while (dir[i])
 		free(dir[i++]);
 	free(dir);

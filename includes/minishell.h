@@ -208,6 +208,7 @@ typedef struct s_vars
 	char					**prompt;
 	char					*nice_prompt;
 	void					*args;
+	t_bool					got_cmd_path;
 	t_bool					changed_stdout;
 	t_bool					changed_stdin;
 	t_bool					close_heredoc;
@@ -411,7 +412,7 @@ void			start_signal_heredoc(void);
 void			trigger_parent_sigusr(void);
 int				init_stdout_var(t_vars *vars);
 int				init_stdin_var(t_vars *vars);
-char			*get_cmd_path(char *cmd);
+char			*get_cmd_path(char *cmd, t_vars *vars);
 // ERROR
 void			mem_alloc_set_error(t_vars *vars);
 void			error_open_file(char *file, t_vars *vars);

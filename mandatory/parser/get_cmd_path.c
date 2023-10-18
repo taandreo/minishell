@@ -51,8 +51,8 @@ char	*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars)
 			return (NULL);
 	}
 	else
-		cmd_path = get_cmd_path(cmd);
-	if (!cmd_path)
+		cmd_path = get_cmd_path(cmd, vars);
+	if (!cmd_path && !vars->got_cmd_path)
 		return (return_cmd_not_found(cmd, vars));
 	return (cmd_path);
 }
