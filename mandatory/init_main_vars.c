@@ -12,21 +12,21 @@
 
 #include "minishell.h"
 
-char	*get_pwd(void)
+char	*get_pwd(t_vars *vars)
 {
 	char	*pwd;
-	char	*blue;
-	char	*green;
 	char	*prompt;
 
 	pwd = get_env("PWD");
 	if (!pwd)
+	{
+		vars->pwd_malloced = false;
 		return ("~> ");
-	blue = "\033[01;34m";
-	green = "\033[01;00m(\033[01;31m minishell \033[01;00m) \033[00m:";
-	prompt = ft_strjoin(green, blue);
-	prompt = join_1st_and_cleanup(&prompt, pwd);
-	prompt = join_1st_and_cleanup(&prompt, "\033[00m$ ");
+	}
+	prompt = "( minishell ):";
+	prompt = ft_strjoin(prompt, pwd);
+	prompt = join_1st_and_cleanup(&prompt, "$ ");
+	vars->pwd_malloced = true;
 	return (prompt);
 }
 

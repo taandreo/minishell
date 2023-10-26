@@ -77,7 +77,8 @@ int	main(int argc, char **argv)
 			write_proper_msg();
 			break ;
 		}
-		add_history(prompt);
+		if (ft_strlen(prompt) != 0 && !ft_is_space(*prompt))
+			add_history(prompt);
 		g_vars.prompt = &prompt;
 		g_vars.state.status = launch_minishell(prompt, &g_vars,
 				false);
