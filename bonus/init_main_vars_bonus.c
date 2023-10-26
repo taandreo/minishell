@@ -14,19 +14,19 @@
 
 char	*get_pwd(t_vars *vars)
 {
-	char	*pwd;
+	char	*cwd;
 	char	*prompt;
 
-	pwd = get_env("PWD");
-	if (!pwd)
+	cwd = getcwd(NULL, 0);
+	if (!cwd)
 	{
-		vars->pwd_malloced = false;
-		return ("~> ");
+		perror("minishell: getcwd: ");
+		free_minishell(vars);
+		exit(EXIT_FAILURE);
 	}
-	prompt = "( minishell ):";
-	prompt = ft_strjoin(prompt, pwd);
+	prompt = ft_strdup("( minishell ):");
+	prompt = join_and_cleanup(&prompt, &cwd);
 	prompt = join_1st_and_cleanup(&prompt, "$ ");
-	vars->pwd_malloced = true;
 	return (prompt);
 }
 
