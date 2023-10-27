@@ -41,6 +41,35 @@ t_redirections	*parse_redirections(t_token_list *tokens, t_parser_state *state)
 	return (redir);
 }
 
+t_bool	next_redirection_and_arguments(t_command_part *command_part,
+			t_redirections *initial_redirections, t_token_list *tokens,
+			t_parser_state *state)
+{
+	next_redirections(command_part, initial_redirections, tokens, state);
+	if (state->error)
+	{
+		free_command_part(command_part);
+		return (false);
+	}
+	if (!state->has_paren || (state->has_paren && state->paren_count > 0))
+		subsequent_arguments(command_part, tokens, state);
+	return (true);
+}
+
+t_bool	parse_next_redirections(t_command_part *command_part,
+		t_redirections *initial_redirections, t_token_list *tokens,
+		t_parser_state *state)
+{
+	while (is_redirection_or_string(current_token_type(tokens)))
+	{
+		if (!next_redirection_and_arguments(command_part, initial_redirections,
+				tokens, state))
+			return (false);
+		initial_redirections = command_part->redirections;
+	}
+	return (true);
+}
+
 void	*null_and_maybe_print_misuse(t_redirections *redir,
 			t_parser_state *state)
 {

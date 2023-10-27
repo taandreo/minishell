@@ -100,13 +100,12 @@ t_command_part	*parse_command_part(t_token_list *tokens, t_parser_state *state)
 		free_command_part(command_part);
 		return (NULL);
 	}
-	while (is_redirection_or_string(current_token_type(tokens)))
-	{
-		if (!next_redirection_and_arguments(command_part, initial_redirections,
-				tokens, state))
-			return (NULL);
-		initial_redirections = command_part->redirections;
-	}
+	if (is_redirection_or_string(current_token_type(tokens) &&
+			!parse_next_redirections(command_part, initial_redirections,
+					tokens,state)))
+		return (NULL);
+	else
+		command_part->redirections = initial_redirections;
 	return (command_part);
 }
 

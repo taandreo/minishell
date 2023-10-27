@@ -220,6 +220,9 @@ typedef struct s_vars
 
 extern t_vars				g_vars;
 
+t_bool			parse_next_redirections(t_command_part *command_part,
+					t_redirections *initial_redirections, t_token_list *tokens,
+					t_parser_state *state);
 char			*get_var_value(char *input, size_t *pos, size_t dollar,
 					t_token_flags *flags);
 t_token_list	*tokenizer(char *input, t_token_flags *flags);
