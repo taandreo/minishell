@@ -222,7 +222,7 @@ typedef struct s_vars
 
 extern t_vars				g_vars;
 
-t_bool			parse_next_redir(t_command_part *command_part,
+t_bool			parse_next_red(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);
 char			*get_var_value(char *input, size_t *pos, size_t dollar,
@@ -371,7 +371,7 @@ t_bool			is_token_cmd_name(t_token_type token);
 void			execute_redirections(t_command_part *data, t_vars *vars);
 void			input_file_to_stdin(int infile, t_vars *vars);
 void			output_file_to_stdout(int outfile, t_vars *vars);
-int				open_tmp_file(void);
+int				open_tmp_file(t_vars *vars);
 void			heredoc_to_stdin(t_vars *vars);
 char			*cmd_path_routine(char *cmd, t_token_type token, t_vars *vars);
 void			restore_stdout(int saved_stdout, t_vars *vars);

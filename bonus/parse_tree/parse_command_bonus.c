@@ -102,8 +102,8 @@ t_command_part	*parse_command_part(t_token_list *tokens, t_parser_state *state)
 	}
 	if (is_redirection_or_string(current_token_type(tokens)))
 	{
-		if (!parse_next_redir(command_part, initial_redirections, tokens,state))
-		return (NULL);
+		if (!parse_next_red(command_part, initial_redirections, tokens, state))
+			return (NULL);
 	}
 	else
 		command_part->redirections = initial_redirections;

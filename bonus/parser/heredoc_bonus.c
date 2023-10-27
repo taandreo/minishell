@@ -30,7 +30,7 @@ int	open_tmp_file(t_vars *vars)
 			ft_strlen("minishell: "));
 		write(STDERR_FILENO, tmp_file, ft_strlen(tmp_file));
 		write(STDERR_FILENO, ": ",
-				ft_strlen(": "));
+			ft_strlen(": "));
 		perror("");
 	}
 	vars->tmp_file_number++;
@@ -98,10 +98,10 @@ void	heredoc_to_stdin(t_vars *vars)
 	if (infile == -1)
 	{
 		write(STDERR_FILENO, "minishell: ",
-				ft_strlen("minishell: "));
+			ft_strlen("minishell: "));
 		write(STDERR_FILENO, tmp_file, ft_strlen(tmp_file));
 		write(STDERR_FILENO, ": ",
-				ft_strlen(": "));
+			ft_strlen(": "));
 		perror("");
 		vars->state.error = true;
 		vars->state.is_set = true;
