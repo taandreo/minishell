@@ -20,7 +20,6 @@ void	parent_quit_handler(int signum)
 		g_vars.state.is_set = true;
 		if (g_vars.heredoc_open)
 			g_vars.close_heredoc = true;
-		g_vars.sigint_received = true;
 		free_mini_line(&g_vars);
 		write(STDERR_FILENO, "\n", 1);
 		rl_replace_line("", false);

@@ -214,7 +214,6 @@ typedef struct s_vars
 	t_bool					close_heredoc;
 	t_bool					heredoc_open;
 	t_bool					is_forked;
-	t_bool					sigint_received;
 	int						saved_stdout;
 	int						saved_stdin;
 	t_list					*env;
