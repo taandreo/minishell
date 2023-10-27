@@ -56,7 +56,7 @@ t_bool	next_redirection_and_arguments(t_command_part *command_part,
 	return (true);
 }
 
-t_bool	parse_next_redirections(t_command_part *command_part,
+t_bool	parse_next_redir(t_command_part *command_part,
 			t_redirections *initial_redirections, t_token_list *tokens,
 			t_parser_state *state)
 {
