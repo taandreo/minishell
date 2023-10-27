@@ -49,6 +49,8 @@ void	init_vars(t_vars *vars)
 	vars->got_cmd_path = false;
 	vars->nice_prompt = get_pwd(vars);
 	vars->close_heredoc = false;
+	vars->heredoc_open = false;
+	vars->sigint_received = false;
 	vars->is_forked = false;
 	vars->state.kill_child = 0;
 	vars->saved_stdin = init_stdin_var(vars);

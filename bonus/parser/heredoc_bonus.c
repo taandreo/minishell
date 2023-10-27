@@ -102,9 +102,13 @@ void	open_heredoc(t_redirections *redirections, t_vars *vars)
 	while (current)
 	{
 		if (current->redirection->type == TOKEN_REDIRECTION_HEREDOC)
+		{
+			vars->heredoc_open = true;
 			execute_redirection_heredoc(current, vars);
+		}
 		if (vars->close_heredoc)
 			break ;
 		current = current->next;
 	}
+	vars->heredoc_open = false;
 }
