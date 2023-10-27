@@ -114,6 +114,7 @@ typedef struct s_parser_state
 	t_bool	error;
 	t_bool	is_set;
 	t_bool	has_paren;
+	t_bool	syntax_error;
 }	t_parser_state;
 
 typedef struct s_string

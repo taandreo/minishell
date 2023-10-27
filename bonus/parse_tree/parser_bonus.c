@@ -24,7 +24,7 @@ t_command	*parse(t_token_list *tokens, t_parser_state *state)
 	parse_tree = parse_command(tokens, state);
 	if (!parse_tree || current_token_type(tokens) != TOKEN_END)
 	{
-		if (state->status != MISUSE)
+		if (state->status != MISUSE || state->syntax_error)
 		{
 			if (current_token_type(tokens) == TOKEN_SPACE)
 				advance_token(tokens);

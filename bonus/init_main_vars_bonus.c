@@ -51,6 +51,7 @@ void	init_vars(t_vars *vars)
 	vars->close_heredoc = false;
 	vars->heredoc_open = false;
 	vars->is_forked = false;
+	vars->state.syntax_error = false;
 	vars->state.kill_child = 0;
 	vars->tmp_file_number = 0;
 	vars->saved_stdin = init_stdin_var(vars);

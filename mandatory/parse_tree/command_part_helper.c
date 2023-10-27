@@ -104,6 +104,7 @@ t_bool	add_command_union(t_command_part *command_part,
 	{
 		free_command_part(command_part);
 		state->error = true;
+		state->syntax_error = true;
 		return (false);
 	}
 	return (true);
