@@ -213,6 +213,7 @@ typedef struct s_vars
 	t_bool					changed_stdin;
 	t_bool					close_heredoc;
 	t_bool					heredoc_open;
+	int						tmp_file_number;
 	t_bool					is_forked;
 	int						saved_stdout;
 	int						saved_stdin;

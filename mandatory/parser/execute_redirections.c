@@ -23,6 +23,7 @@ void	execute_redirections(t_command_part *data, t_vars *vars)
 	if (data->redirections && data->redirections->redirection)
 	{
 		redir = data->redirections;
+		vars->tmp_file_number = 0;
 		while (redir)
 		{
 			if (redir->redirection->type == TOKEN_REDIRECTION_INPUT)
