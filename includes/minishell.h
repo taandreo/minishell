@@ -223,6 +223,7 @@ typedef struct s_vars
 
 extern t_vars				g_vars;
 
+t_bool			is_empty_quotes_cmd(char *string, t_token_flags *flags);
 t_bool			parse_next_red(t_command_part *command_part,
 					t_redirections *initial_redirections, t_token_list *tokens,
 					t_parser_state *state);
