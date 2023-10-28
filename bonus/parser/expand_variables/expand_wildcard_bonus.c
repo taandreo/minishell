@@ -15,8 +15,8 @@
 t_bool	current_token_match(char **position, t_string *current, int *match);
 t_bool	next_tokens_match(char **position, t_string *current, int *match);
 t_bool	match_logic(char *position, t_string *string);
-t_bool	filename_is_relative_dirs(char *filename, struct dirent **entry,
-			DIR *dir);
+t_bool	filename_is_relative_dirs_or_hidden(char *filename,
+			struct dirent **entry, DIR *dir);
 
 t_string	*expand_wildcard(t_string *string, t_vars *vars, t_token_type type)
 {
@@ -32,7 +32,7 @@ t_string	*expand_wildcard(t_string *string, t_vars *vars, t_token_type type)
 	entry = readdir(dir);
 	while (entry != NULL)
 	{
-		if (filename_is_relative_dirs(entry->d_name, &entry, dir))
+		if (filename_is_relative_dirs_or_hidden(entry->d_name, &entry, dir))
 			continue ;
 		if (match_logic(entry->d_name, string))
 		{
@@ -114,10 +114,11 @@ t_bool	next_tokens_match(char **position, t_string *current, int *match)
 	return (true);
 }
 
-t_bool	filename_is_relative_dirs(char *filename, struct dirent **entry,
-			DIR *dir)
+t_bool	filename_is_relative_dirs_or_hidden(char *filename,
+			struct dirent **entry, DIR *dir)
 {
-	if (ft_strcmp(filename, ".") == 0 || ft_strcmp(filename, "..") == 0)
+	if (ft_strcmp(filename, ".") == 0 || ft_strcmp(filename, "..") == 0
+		|| ft_strncmp(filename, ".", 1) == 0)
 	{
 		*entry = readdir(dir);
 		return (true);
