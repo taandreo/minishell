@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 00:56:23 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/16 02:06:23 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/28 16:57:02 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,6 +78,15 @@ size_t	get_env_size(void)
 	return (i);
 }
 
+void	print_envp(char *envp[]){
+    int i = 0;
+    while(envp[i])
+    {
+        printf("%s\n", envp[i]);
+        i++;
+    }
+}
+
 char	**list_to_envp(void)
 {
 	size_t	len;
@@ -93,10 +102,13 @@ char	**list_to_envp(void)
 	while (current)
 	{
 		tmp = current->content;
-		envp[i] = join_tmp_key_value(tmp);
-		if (!envp[i])
-			return (NULL);
-		current = current->next;
+		if (tmp->value)
+		{
+			envp[i] = join_tmp_key_value(tmp);
+			if (!envp[i])
+				return (NULL);
+			current = current->next;
+		}
 		i++;
 	}
 	return (envp);

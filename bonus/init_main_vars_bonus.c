@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   init_main_vars_bonus.c                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 21:03:36 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/10/15 21:03:38 by ebezerra         ###   ########.fr       */
+/*   Updated: 2023/10/28 15:39:49 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ char	*get_pwd(t_vars *vars)
 		free_minishell(vars);
 		exit(EXIT_FAILURE);
 	}
-	prompt = ft_strdup("( minishell ):");
+	prompt = ft_strdup("(minishell):");
 	prompt = join_and_cleanup(&prompt, &cwd);
 	prompt = join_1st_and_cleanup(&prompt, "$ ");
 	return (prompt);
