@@ -46,7 +46,7 @@ t_bool	is_token_command_name(t_token_type type)
 t_bool	is_empty_quotes_cmd(char *string, t_token_flags *flags)
 {
 	if ((flags->quote_type == '\"' || flags->quote_type == '\'')
-			&& ft_strlen(string) == 0)
+		&& ft_strlen(string) == 0)
 		return (true);
 	return (false);
 }
