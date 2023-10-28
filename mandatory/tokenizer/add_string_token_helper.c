@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   add_string_token_helper.c                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 15:30:49 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/09/15 15:31:25 by ebezerra         ###   ########.fr       */
+/*   Updated: 2023/10/28 21:43:29 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

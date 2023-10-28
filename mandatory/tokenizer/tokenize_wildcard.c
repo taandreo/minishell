@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokenize_wildcard.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/15 15:32:04 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/09/15 15:32:05 by ebezerra         ###   ########.fr       */
+/*   Updated: 2023/10/28 21:43:52 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
