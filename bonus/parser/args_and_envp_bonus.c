@@ -6,7 +6,7 @@
 /*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/16 00:56:23 by tairribe          #+#    #+#             */
-/*   Updated: 2023/10/28 16:57:02 by tairribe         ###   ########.fr       */
+/*   Updated: 2023/10/28 17:18:17 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,8 +107,8 @@ char	**list_to_envp(void)
 			envp[i] = join_tmp_key_value(tmp);
 			if (!envp[i])
 				return (NULL);
-			current = current->next;
 		}
+		current = current->next;
 		i++;
 	}
 	return (envp);
