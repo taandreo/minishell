@@ -42,8 +42,8 @@ t_redirections	*parse_redirections(t_token_list *tokens, t_parser_state *state)
 }
 
 t_bool	next_redirection_and_arguments(t_command_part *command_part,
-		t_redirections *initial_redirections, t_token_list *tokens,
-		t_parser_state *state)
+			t_redirections *initial_redirections, t_token_list *tokens,
+			t_parser_state *state)
 {
 	next_redirections(command_part, initial_redirections, tokens, state);
 	if (state->error)
