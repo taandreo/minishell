@@ -14,3 +14,5 @@ file.txt
 lucas_kuhn_tester
 thallard_tester/
 chdir_test.c
+make_mandatory.sh
+tester/

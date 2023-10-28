@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_state_error.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ebezerra <ebezerra@student.42sp.org.br>    +#+  +:+       +#+        */
+/*   By: tairribe <tairribe@student.42sp.org.br>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/15 19:41:07 by ebezerra          #+#    #+#             */
-/*   Updated: 2023/10/15 19:41:12 by ebezerra         ###   ########.fr       */
+/*   Updated: 2023/10/28 21:41:50 by tairribe         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
