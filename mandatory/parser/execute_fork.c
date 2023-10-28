@@ -80,6 +80,7 @@ void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 	pid = fork();
 	if (pid == -1)
 		free_and_perror(vars, EXIT_FAILURE);
+	start_signal_forked(pid);
 	if (pid == 0)
 	{
 		sync_process(pid, sync_pipe);
@@ -90,5 +91,4 @@ void	execute_fork(t_pipeline *pipeline, t_vars *vars)
 		pipeline->cmd_part->pid = pid;
 		sync_process(pid, sync_pipe);
 	}
-	start_signal_forked(pid);
 }

@@ -63,10 +63,11 @@ void	update_builtin(t_command_part *cmd_part, t_string *concat_str,
 }
 
 void	update_cmd_name(t_command_part *cmd_part, t_string *concat_str,
-		t_vars *vars)
+			t_vars *vars)
 {
 	free_string(cmd_part->u_cmd.cmd_name->next);
 	cmd_part->u_cmd.cmd_name->next = NULL;
+	free(cmd_part->u_cmd.cmd_name->value);
 	cmd_part->u_cmd.cmd_name->value = ft_strdup(concat_str->value);
 	if (!cmd_part->u_cmd.cmd_name->value)
 	{
@@ -79,7 +80,7 @@ void	update_cmd_name(t_command_part *cmd_part, t_string *concat_str,
 }
 
 void	update_redirections(t_command_part *cmd_part, t_string *concat_str,
-		t_vars *vars)
+			t_vars *vars)
 {
 	t_redirection	*redir;
 
@@ -99,7 +100,7 @@ void	update_redirections(t_command_part *cmd_part, t_string *concat_str,
 }
 
 void	update_arguments(t_command_part *cmd_part, t_string *concat_str,
-		t_vars *vars)
+			t_vars *vars)
 {
 	t_arguments	*current_args;
 

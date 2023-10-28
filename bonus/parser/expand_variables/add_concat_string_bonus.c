@@ -67,6 +67,7 @@ void	update_cmd_name(t_command_part *cmd_part, t_string *concat_str,
 {
 	free_string(cmd_part->u_cmd.cmd_name->next);
 	cmd_part->u_cmd.cmd_name->next = NULL;
+	free(cmd_part->u_cmd.cmd_name->value);
 	cmd_part->u_cmd.cmd_name->value = ft_strdup(concat_str->value);
 	if (!cmd_part->u_cmd.cmd_name->value)
 	{
