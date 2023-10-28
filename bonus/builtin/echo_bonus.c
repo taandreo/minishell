@@ -52,9 +52,9 @@ int	builtin_echo(char **params)
 		write(STDOUT_FILENO, params[i], ft_strlen(params[i]));
 		i++;
 		if (params[i] != NULL)
-			printf(" ");
+			write(STDOUT_FILENO, " ", 1);
 	}
 	if (nl)
-		printf("\n");
+		write(STDOUT_FILENO, "\n", 1);
 	return (0);
 }
