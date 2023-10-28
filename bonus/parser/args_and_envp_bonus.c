@@ -78,15 +78,6 @@ size_t	get_env_size(void)
 	return (i);
 }
 
-void	print_envp(char *envp[]){
-    int i = 0;
-    while(envp[i])
-    {
-        printf("%s\n", envp[i]);
-        i++;
-    }
-}
-
 char	**list_to_envp(void)
 {
 	size_t	len;

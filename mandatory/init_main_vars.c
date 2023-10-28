@@ -24,7 +24,7 @@ char	*get_pwd(t_vars *vars)
 		free_minishell(vars);
 		exit(EXIT_FAILURE);
 	}
-	prompt = ft_strdup("( minishell ):");
+	prompt = ft_strdup("(minishell):");
 	prompt = join_and_cleanup(&prompt, &cwd);
 	prompt = join_1st_and_cleanup(&prompt, "$ ");
 	return (prompt);

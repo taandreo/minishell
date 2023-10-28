@@ -93,9 +93,12 @@ char	**list_to_envp(void)
 	while (current)
 	{
 		tmp = current->content;
-		envp[i] = join_tmp_key_value(tmp);
-		if (!envp[i])
-			return (NULL);
+		if (tmp->value)
+		{
+			envp[i] = join_tmp_key_value(tmp);
+			if (!envp[i])
+				return (NULL);
+		}
 		current = current->next;
 		i++;
 	}

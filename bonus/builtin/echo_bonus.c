@@ -49,7 +49,8 @@ int	builtin_echo(char **params)
 		nl = false;
 	while (params[i])
 	{
-		printf("%s", params[i++]);
+		write(STDOUT_FILENO, params[i], ft_strlen(params[i]));
+		i++;
 		if (params[i] != NULL)
 			printf(" ");
 	}
