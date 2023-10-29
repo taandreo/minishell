@@ -30,7 +30,7 @@ int	update_cmd_part_values(t_command_part *cmd_part, t_vars *vars)
 
 int	cmd_name_quotes_routine(t_command_part *cmd_part, t_vars *vars)
 {
-	if (vars->state.status != SUCCESS && vars->state.error == true)
+	if (vars->state.error == true)
 		return (vars->state.status);
 	if (cmd_part->type == TOKEN_COMMAND_NAME_QUOTES)
 	{
@@ -57,7 +57,7 @@ int	cmd_name_quotes_routine(t_command_part *cmd_part, t_vars *vars)
 
 int	cmd_name_unquotes_routine(t_command_part *cmd_part, t_vars *vars)
 {
-	if (vars->state.status != SUCCESS && vars->state.error == true)
+	if (vars->state.error == true)
 		return (vars->state.status);
 	if (cmd_part->type == TOKEN_COMMAND_NAME_UNQUOTES)
 	{
@@ -86,7 +86,7 @@ int	args_routine(t_command_part *cmd_part, t_vars *vars)
 {
 	t_arguments		*current_args;
 
-	if (vars->state.status != SUCCESS && vars->state.error)
+	if (vars->state.error)
 		return (vars->state.status);
 	current_args = cmd_part->arguments;
 	while (current_args)
@@ -105,7 +105,7 @@ int	redirections_routine(t_command_part *cmd_part, t_vars *vars)
 {
 	t_redirections	*current_redir;
 
-	if (vars->state.status != SUCCESS && vars->state.error == true)
+	if (vars->state.error == true)
 		return (vars->state.status);
 	if (cmd_part->redirections && cmd_part->redirections->redirection)
 	{

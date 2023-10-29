@@ -37,12 +37,14 @@ void	execute_builtin(t_command_part *data, t_vars *vars)
 	if (data->forked)
 	{
 		vars->state.status = execute_builtin_command(data, data->args, vars);
+		vars->state.is_set = true;
 		free_minishell(vars);
 		exit(vars->state.status);
 	}
 	else if (is_builtin_token(data->type) && !data->forked)
 	{
 		vars->state.status = execute_builtin_command(data, data->args, vars);
+		vars->state.is_set = true;
 		if (vars->changed_stdin)
 		{
 			restore_stdin(vars->saved_stdin, vars);
@@ -87,7 +89,7 @@ void	exec_external_command(t_command_part *data, t_vars *vars)
 
 int	execute_command_part(t_command_part *data, t_vars *vars)
 {
-	if (update_cmd_part_values(data, vars) != SUCCESS)
+	if (!update_cmd_part_values(data, vars))
 		return (vars->state.status);
 	data->args = list_to_args(data->arguments, data);
 	execute_redirections(data, vars);

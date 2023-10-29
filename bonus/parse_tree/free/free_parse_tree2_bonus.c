@@ -24,7 +24,7 @@ void	free_string(t_string *str)
 void	free_arguments(t_arguments *args)
 {
 	if (!args)
-		return ;
+		return;
 	free_string(args->string);
 	free_arguments(args->next);
 	free(args);
@@ -37,6 +37,7 @@ void	free_redirection(t_redirection *redir)
 	free_string(redir->filename);
 	free(redir);
 }
+
 
 void	free_redirections(t_redirections *redirs)
 {

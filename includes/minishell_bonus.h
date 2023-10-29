@@ -351,7 +351,7 @@ t_string		*concat_string(t_string *string, t_command_part *cmd_part,
 					t_vars *vars, t_token_type type);
 void			add_concat_string(t_command_part *cmd_part,
 					t_string *concat_str, t_vars *vars, t_token_type type);
-int				update_cmd_part_values(t_command_part *cmd_part, t_vars *vars);
+t_bool			update_cmd_part_values(t_command_part *cmd_part, t_vars *vars);
 char			*builtin_type_to_value(t_token_type type);
 t_string		*delete_first_node(t_string *str);
 t_arguments		*add_first_args(t_string *str_list, t_arguments *args,

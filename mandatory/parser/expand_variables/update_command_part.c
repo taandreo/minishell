@@ -17,15 +17,15 @@ int	cmd_name_unquotes_routine(t_command_part *cmd_part, t_vars *vars);
 int	args_routine(t_command_part *cmd_part, t_vars *vars);
 int	redirections_routine(t_command_part *cmd_part, t_vars *vars);
 
-int	update_cmd_part_values(t_command_part *cmd_part, t_vars *vars)
+t_bool	update_cmd_part_values(t_command_part *cmd_part, t_vars *vars)
 {
 	vars->state.status = cmd_name_quotes_routine(cmd_part, vars);
 	vars->state.status = cmd_name_unquotes_routine(cmd_part, vars);
 	vars->state.status = args_routine(cmd_part, vars);
 	vars->state.status = redirections_routine(cmd_part, vars);
-	if (vars->state.error == false)
-		vars->state.status = SUCCESS;
-	return (vars->state.status);
+	if (vars->state.error)
+		return (false);
+	return (true);
 }
 
 int	cmd_name_quotes_routine(t_command_part *cmd_part, t_vars *vars)

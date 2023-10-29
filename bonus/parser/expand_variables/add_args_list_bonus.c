@@ -31,7 +31,7 @@ t_arguments	*init_args(t_string *str, t_token_type type)
 }
 
 t_arguments	*add_first_args(t_string *str_list, t_arguments *args,
-				t_vars *vars, t_token_type type)
+		t_vars *vars, t_token_type type)
 {
 	t_arguments	*first_args;
 	t_arguments	*last_args;
@@ -60,7 +60,7 @@ t_arguments	*add_first_args(t_string *str_list, t_arguments *args,
 }
 
 t_arguments	*add_last_arg_list(t_string *str_list, t_arguments *args,
-				t_vars *vars, t_token_type type)
+		t_vars *vars, t_token_type type)
 {
 	t_arguments	*new_arg;
 	t_arguments	*last_args;
@@ -90,7 +90,7 @@ t_arguments	*add_last_arg_list(t_string *str_list, t_arguments *args,
 }
 
 t_bool	add_middle_into_args(t_arguments *current_args,
-			t_arguments *new_args_list, t_arguments *prev_args)
+		t_arguments *new_args_list, t_arguments *prev_args)
 {
 	t_arguments	*post_args;
 
@@ -137,3 +137,4 @@ t_arguments	*add_middle_args(t_string *str_list, t_arguments *args,
 		args = prev_args;
 	return (args);
 }
+

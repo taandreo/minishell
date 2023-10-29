@@ -13,13 +13,13 @@
 #include "minishell_bonus.h"
 
 void	update_builtin(t_command_part *cmd_part, t_string *concat_str,
-			t_vars *vars);
+		t_vars *vars);
 void	update_cmd_name(t_command_part *cmd_part, t_string *concat_str,
-			t_vars *vars);
+		t_vars *vars);
 void	update_redirections(t_command_part *cmd_part, t_string *concat_str,
-			t_vars *vars);
+		t_vars *vars);
 void	update_arguments(t_command_part *cmd_part, t_string *concat_str,
-			t_vars *vars);
+		t_vars *vars);
 
 void	add_concat_string(t_command_part *cmd_part, t_string *concat_str,
 		t_vars *vars, t_token_type type)

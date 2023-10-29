@@ -26,6 +26,7 @@ int	wait_process(t_pipeline *pipeline)
 		waitpid(pid, &status, 0);
 		pipeline = pipeline->next;
 	}
+	g_vars.state.is_set = true;
 	return (check_for_sign(status));
 }
 
