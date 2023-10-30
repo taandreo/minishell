@@ -137,4 +137,3 @@ t_arguments	*add_middle_args(t_string *str_list, t_arguments *args,
 		args = prev_args;
 	return (args);
 }
-

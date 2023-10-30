@@ -77,7 +77,6 @@ SRCS = $(addprefix $(MANDATORY_DIR)/, minishell.c\
             parser/get_cmd_from_path.c\
             parser/expand_variables/update_command_part.c\
             parser/expand_variables/expand_and_concat_exit_code.c\
-            parser/expand_variables/add_concat_string.c\
             parser/expand_variables/concat_string_utils.c\
             parser/expand_variables/expand_wildcard.c\
             parser/expand_variables/concat_string.c\
@@ -149,7 +148,6 @@ BONUS = $(addprefix $(BONUS_DIR)/, minishell_bonus.c\
 			parser/get_cmd_from_path_bonus.c\
             parser/expand_variables/update_command_part_bonus.c\
             parser/expand_variables/expand_and_concat_exit_code_bonus.c\
-            parser/expand_variables/add_concat_string_bonus.c\
             parser/expand_variables/concat_string_utils_bonus.c\
             parser/expand_variables/expand_wildcard_bonus.c\
             parser/expand_variables/concat_string_bonus.c\

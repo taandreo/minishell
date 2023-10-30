@@ -347,7 +347,7 @@ t_string		*concat_exit_code(t_string *string, t_vars *vars,
 					t_token_type type);
 t_token_type	peek_string_type(t_string	*string);
 t_string		*clean_next_token(t_string *current);
-t_string		*concat_string(t_string *string, t_command_part *cmd_part,
+t_string		*concat_string(t_string *string,
 					t_vars *vars, t_token_type type);
 void			add_concat_string(t_command_part *cmd_part,
 					t_string *concat_str, t_vars *vars, t_token_type type);

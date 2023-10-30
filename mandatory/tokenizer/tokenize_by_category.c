@@ -27,7 +27,5 @@ int	tokenize_by_category(char **input, size_t *position,
 		return (tokenize_operators(*input, position, tokens, flags));
 	else if (c == '(' || c == ')')
 		return (tokenize_parenthesis(*input, position, tokens, flags));
-	else if (c == '*')
-		return (tokenize_wildcard(*input, position, tokens, flags));
 	return (tokenize_strings(input, position, tokens, flags));
 }

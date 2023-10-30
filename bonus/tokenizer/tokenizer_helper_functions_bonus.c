@@ -29,7 +29,7 @@ t_bool	is_string_start(char c, t_token_flags *flags)
 	}
 	if (flags->has_heredoc)
 		return (!ft_is_space(c) && !ft_strchr("><|&()", c));
-	return (!ft_is_space(c) && !ft_strchr("><|&()*", c));
+	return (!ft_is_space(c) && !ft_strchr("><|&()", c));
 }
 
 t_bool	has_quotes(char c)
